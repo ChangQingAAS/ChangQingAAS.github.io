@@ -1,211 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Policy Gradient Methods</title>
-    <url>/MARL/MADRL/Policy%20Gradient%20Mwthods/</url>
-    <content><![CDATA[<p>上一篇博文的内容整理了我们如何去近似价值函数或者是动作价值函数的方法：</p>
-<script type="math/tex; mode=display">
-V_{\theta}(s)\approx V^{\pi}(s) \\
-Q_{\theta}(s)\approx Q^{\pi}(s, a)</script><p>通过机器学习的方法我们一旦近似了价值函数或者是动作价值函数就可以通过一些策略进行控制，比如  ϵ-greedy。</p>
-<p>通过机器学习的方法我们一旦近似了价值函数或者是动作价值函数就可以通过一些策略进行控制，比如 ϵ -greedy。</p>
-<p>那么我们简单回顾下 RL 的学习目标：通过 agent 与环境进行交互，获取累计回报最大化。既然我们最终要学习如何与环境交互的策略，那么我们可以直接学习策略 ，而之前先近似价值函数，再通过贪婪策略控制的思路更像是”曲线救国”。<br>这就是本篇文章的内容，我们如何直接来学习策略，用数学的形式表达就是：</p>
-<p>$\pi_{\theta}(s, a) = P[a | s, \theta]$</p>
-<p>这就是被称为策略梯度（Policy Gradient，简称PG）算法。</p>
-<p>当然，本篇内容同样的是针对 model-free 的强化学习。</p>
-<h1 id="Value-Based-vs-Policy-Based-RL"><a href="#Value-Based-vs-Policy-Based-RL" class="headerlink" title="Value-Based vs. Policy-Based RL"></a>Value-Based vs. Policy-Based RL</h1><p>Value-Based：</p>
-<ul>
-<li>学习价值函数</li>
-<li>Implicit policy，比如 ϵϵ-greedy</li>
-</ul>
-<p>Policy-Based：</p>
-<ul>
-<li>没有价值函数</li>
-<li>直接学习策略</li>
-</ul>
-<p>Actor-Critic：</p>
-<ul>
-<li>学习价值函数</li>
-<li>学习策略</li>
-</ul>
-<p>三者的关系可以形式化地表示如下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006124701.png" alt=""></p>
-<p>认识到 Value-Based 与 Policy-Based 区别后，我们再来讨论Policy-Based RL 的优缺点：</p>
-<p>优点：</p>
-<ul>
-<li>收敛性更好</li>
-<li>对于具有高维或者连续动作空间的问题更加有效</li>
-<li>可以学习随机策略</li>
-</ul>
-<p>缺点：</p>
-<ul>
-<li>绝大多数情况下收敛到局部最优点，而非全局最优</li>
-<li>评估一个策略一般情况下低效且存在较高的方差</li>
-</ul>
-<h1 id="Policy-Search"><a href="#Policy-Search" class="headerlink" title="Policy Search"></a>Policy Search</h1><p>我们首先定义下目标函数。</p>
-<h2 id="Policy-Objective-Functions"><a href="#Policy-Objective-Functions" class="headerlink" title="Policy Objective Functions"></a>Policy Objective Functions</h2><p>目标：给定一个带有参数 θ 的策略 π~θ~(s,a)  ，找到最优的参数 θ 。<br>但是我们如何评估不同参数下策略 π~θ(~s,a)  的优劣呢？</p>
-<ul>
-<li>对于episode 任务来说，我们可以使用start value：</li>
-</ul>
-<script type="math/tex; mode=display">
-J_1(\theta)=V^{\pi_{\theta}}(s_1)=E_{\pi_{\theta}}[v_1]</script><ul>
-<li>对于连续性任务来说，我们可以使用 average value：</li>
-</ul>
-<script type="math/tex; mode=display">
-J_{avV}(\theta)=\sum_{s}d^{\pi_{\theta}}(s)V^{\pi_{\theta}}(s)</script><p>或者每一步的平均回报：</p>
-<script type="math/tex; mode=display">
-J_{avR}(\theta)=\sum_{s}d^{\pi_{\theta}}(s)\sum_{a}\pi_{\theta}(s, a)R_s^a</script><p>其中 d^πθ^(s)  是马尔卡夫链在 π~θ~  下的静态分布。</p>
-<h1 id="Policy-Optimisation"><a href="#Policy-Optimisation" class="headerlink" title="Policy Optimisation"></a>Policy Optimisation</h1><p>在明确目标以后，我们再来看基于策略的 RL 为一个典型的优化问题：找出 θ 最大化 J(θ)<br>最优化的方法有很多，比如不依赖梯度（gradient-free）的算法：</p>
-<ul>
-<li>爬山算法</li>
-<li>模拟退火</li>
-<li>进化算法</li>
-<li>…</li>
-</ul>
-<p>但是一般来说，如果我们能在问题中获得梯度的话，基于梯度的最优化方法具有比较好的效果：</p>
-<ul>
-<li>梯度下降</li>
-<li>共轭梯度</li>
-<li>拟牛顿法</li>
-<li>…</li>
-</ul>
-<p>我们本篇讨论梯度下降的方法。</p>
-<h1 id="策略梯度定理"><a href="#策略梯度定理" class="headerlink" title="策略梯度定理"></a>策略梯度定理</h1><h1 id="蒙特卡洛策略梯度算法（REINFORCE）"><a href="#蒙特卡洛策略梯度算法（REINFORCE）" class="headerlink" title="蒙特卡洛策略梯度算法（REINFORCE）"></a>蒙特卡洛策略梯度算法（REINFORCE）</h1><h1 id="Actir-Critic-策略梯度算法"><a href="#Actir-Critic-策略梯度算法" class="headerlink" title="Actir-Critic 策略梯度算法"></a>Actir-Critic 策略梯度算法</h1><p>Monte-Carlo策略梯度的方差较高，因此放弃用return来估计行动-价值函数Q，而是使用 critic 来估计Q：</p>
-<p>$Q_w(s, a)\approx Q^{\pi_{\theta}}(s, a)$</p>
-<p>这就是大名鼎鼎的 Actor-Critic 算法，它有两套参数：</p>
-<ul>
-<li>Critic：更新动作价值函数参数 w </li>
-<li>Actor： 朝着 Critic 方向更新策略参数 θ</li>
-</ul>
-<p>Actor-Critic 算法是一个近似的策略梯度算法：</p>
-<script type="math/tex; mode=display">
-\triangledown_\theta J(\theta)\approx E_{\pi_{\theta}}[\triangledown_{\theta}\log \pi_{\theta}(s, a)Q_w(s, a)]\\
-\Delta\theta = \alpha\triangledown_\theta\log\pi_{\theta}(s,a)Q_w(s,a)</script><p>Critic 本质就是在进行策略评估：How good is policy π~θ~  for current parameters θ </p>
-<p>策略评估我们之前介绍过MC、TD、TD(λλ)，以及价值函数近似方法。如下所示，简单的 Actir-Critic 算法 Critic 为动作价值函数近似，使用最为简单的线性方程，即：$Q_w(s, a) = \phi(s, a)^T w$，具体的伪代码如下所示：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006125435.png" alt="img"></p>
-<p>在 Actir-Critic 算法中，对策略进行了估计，这会产生误差（bias），但是当满足以下两个条件时，策略梯度是准确的：</p>
-<ul>
-<li>价值函数的估计值没有和策略相违背，即： $\triangledown_w Q_w(s,a) = \triangledown_\theta\log\pi_{\theta}(s,a)$</li>
-<li>价值函数的参数w能够最小化误差，即： $\epsilon = E_{\pi_{\theta}}[(Q^{\pi_{\theta}}(s, a) - Q_w(s,a))^2]$</li>
-</ul>
-<p>最后总结一下策略梯度算法：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006125705.png" alt="img"></p>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Value Function Approximation</title>
-    <url>/MARL/MADRL/Value%20Function%20Approximation/</url>
-    <content><![CDATA[<h1 id="为什么需要值函数近似？"><a href="#为什么需要值函数近似？" class="headerlink" title="为什么需要值函数近似？"></a>为什么需要值函数近似？</h1><p>之前我们提到过各种计算值函数的方法，比如对于 MDP 已知的问题可以使用 Bellman 期望方程求得值函数；对于 MDP 未知的情况，可以通过 MC 以及 TD 方法来获得值函数，为什么需要再进行值函数近似呢？</p>
-<p>其实到目前为止，我们介绍的值函数计算方法都是通过查表的方式获取的：</p>
-<ul>
-<li>表中每一个状态 s  均对应一个 V(s) </li>
-<li>或者每一个状态-动作 <s,a ></li>
-</ul>
-<p>但是对于大型 MDP 问题，上述方法会遇到瓶颈：</p>
-<ul>
-<li>太多的 MDP 状态、动作需要存储</li>
-<li>单独计算每一个状态的价值都非常的耗时</li>
-</ul>
-<p>因此我们需要有一种能够适用于解决大型 MDP 问题的通用方法，这就是本文介绍的值函数近似方法。即：</p>
-<script type="math/tex; mode=display">
-\hat{v}(s, \mathbf{w}) \approx v_{\pi}(s) \\
-\text{or } \hat{q}(s, a, \mathbf{w}) \approx q_{\pi}(s, a)</script><p>那么为什么值函数近似的方法可以求解大型 MDP 问题？</p>
-<blockquote>
-<p>对于大型 MDP 问题而言，我们可以近似认为其所有的状态和动作都被采样和计算是不现实的，那么我们一旦获取了近似的值函数，我们就可以对于那些在历史经验或者采样中没有出现过的状态和动作进行泛化（generalize）。</p>
-</blockquote>
-<p>进行值函数近似的训练方法有很多，比如：</p>
-<ul>
-<li>线性回归</li>
-<li>神经网络</li>
-<li>决策树</li>
-<li>…</li>
-</ul>
-<p>此外，针对 MDP 问题的特点，训练函数必须可以适用于非静态、非独立同分布（non-i.i.d）的数据。</p>
-<h1 id="增量方法"><a href="#增量方法" class="headerlink" title="增量方法"></a>增量方法</h1><h2 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h2><h3 id="通过随机梯度下降进行值函数近似"><a href="#通过随机梯度下降进行值函数近似" class="headerlink" title="通过随机梯度下降进行值函数近似"></a>通过随机梯度下降进行值函数近似</h3><p>我们优化的目标函数是找到一组参数 w  来最小化最小平方误差（MSE），即：</p>
-<script type="math/tex; mode=display">
-J(\mathbf{w}) = E_{\pi}[(v_{\pi}(S) - \hat{v}(S, \mathbf{w}))^2]</script><p>通过梯度下降方法来寻优：</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\Delta\mathbf{w}
-&=-\frac{1}{2}\alpha\triangledown_{\mathbf{w}}J(\mathbf{w})\\
-&=\alpha E_{\pi}\Bigl[\Bigl(v_{\pi}(S) - \hat{v}(S, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}J(\mathbf{w})\Bigr]
-\end{align}</script><p>对于随机梯度下降（Stochastic Gradient Descent，SGD），对应的梯度：</p>
-<script type="math/tex; mode=display">
-\Delta\mathbf{w} = \alpha\underbrace{\Bigl(v_{\pi}(S) - \hat{v}(S, \mathbf{w})\Bigr)}_{\text{error}}\underbrace{\triangledown_{\mathbf{w}}\hat{v}(S, \mathbf{w})}_{\text{gradient}}</script><h2 id="值函数近似"><a href="#值函数近似" class="headerlink" title="值函数近似"></a>值函数近似</h2><p>上述公式中需要真实的策略价值函数 vπ(S)vπ(S) 作为学习的目标（supervisor），但是在RL中没有真实的策略价值函数，只有rewards。在实际应用中，我们用v~π~(S)来代替target vπ(S)：</p>
-<ul>
-<li>对于MC，target 为 return G~t ~：</li>
-</ul>
-<script type="math/tex; mode=display">
-\Delta\mathbf{w}=\alpha\Bigl(G_t - \hat{v}(S_t, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}\hat{v}(S_t, \mathbf{w})</script><ul>
-<li>对于TD(0)，target 为TD target $_{t+1}+\gamma\hat{v}(S_{t+1}, \mathbf{w})$：</li>
-</ul>
-<script type="math/tex; mode=display">
-\Delta\mathbf{w}=\alpha\Bigl(R_{t+1} + \gamma\hat{v}(S_{t+1}, \mathbf{w})- \hat{v}(S_t, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}\hat{v}(S_t, \mathbf{w})</script><ul>
-<li>对于TD(λ)，target 为 TD λ-return  $G_t^{\lambda}$：</li>
-</ul>
-<script type="math/tex; mode=display">
-\Delta\mathbf{w}=\alpha\Bigl(G_t^{\lambda}- \hat{v}(S_t, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}\hat{v}(S_t, \mathbf{w})</script><p>在获取了值函数近似后就可以进行控制了，具体示意图如下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006115744.png" alt=""></p>
-<h2 id="动作价值函数近似"><a href="#动作价值函数近似" class="headerlink" title="动作价值函数近似"></a>动作价值函数近似</h2><p>动作价值函数近似：</p>
-<script type="math/tex; mode=display">
-\hat{q}(S, A, \mathbf{w})\approx q_{\pi}(S, A)</script><p>优化目标：最小化MSE</p>
-<script type="math/tex; mode=display">
-J(\mathbf{w}) = E_{\pi}[(q_{\pi}(S, A) - \hat{q}(S, A, \mathbf{w}))^2]</script><p>使用SGD寻优：</p>
-<script type="math/tex; mode=display">
-\begin{align} \Delta\mathbf{w} &=-\frac{1}{2}\alpha\triangledown_{\mathbf{w}}J(\mathbf{w})\\ &=\alpha\Bigl(q_{\pi}(S, A)-\hat{q}_{\pi}(S, A, \mathbf{w})\Bigr) \triangledown_{\mathbf{w}}\hat{q}_{\pi}(S, A, \mathbf{w}) \end{align}</script><h1 id="批量方法"><a href="#批量方法" class="headerlink" title="批量方法"></a>批量方法</h1><p>随机梯度下降SGD简单，但是批量的方法可以根据agent的经验来更好的拟合价值函数。</p>
-<h2 id="值函数近似-1"><a href="#值函数近似-1" class="headerlink" title="值函数近似"></a>值函数近似</h2><p>优化目标：批量方法解决的问题同样是  $\hat{v}(s, \mathbf{w})\approx v_{\pi}(s)$</p>
-<p>经验集合  D 包含了一系列的 <state, value> pair：</p>
-<script type="math/tex; mode=display">
-D=\{<s_1, v_1^{\pi}>, <s_2, v_2^{\pi}>, ..., <s_T, v_T^{\pi}>\}</script><p>根据最小化平方误差之和来拟合 $\hat{v}(s, \mathbf{w})$和 v~π~(s) ，即：</p>
-<script type="math/tex; mode=display">
-\begin{align}
-LS(w) 
-&= \sum_{t=1}^{T}(v_{t}^{\pi}-\hat{v}(s_t, \mathbf{w}))^2\\
-&= E_{D}[(v^{\pi}-\hat{v}(s, \mathbf{w}))^2]
-\end{align}</script><p>经验回放（Experience Replay）：</p>
-<blockquote>
-<p>给定经验集合：</p>
-<script type="math/tex; mode=display">
-D=\{<s_1, v_1^{\pi}>, <s_2, v_2^{\pi}>, ..., <s_T, v_T^{\pi}>\}</script><p>Repeat：</p>
-<ol>
-<li>从经验集合中采样状态和价值：<s,v^π^>∼D </li>
-<li>使用SGD进行更新：$\Delta\mathbf{w}=\alpha\Bigl(v^{\pi}-\hat{v}(s, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}\hat{v}(s, \mathbf{w})$<br>通过上述经验回放，获得最小化平方误差的参数值：</li>
-</ol>
-<p>$\mathbf{w}^{\pi}=\arg\min_{\mathbf{w}}LS(\mathbf{w})$</p>
-</blockquote>
-<p>我们经常听到的 DQN 算法就使用了经验回放的手段，这个后续会在《深度强化学习》中整理。</p>
-<p>通过上述经验回放和不断的迭代可以获取最小平方误差的参数值，然后就可以通过 greedy 的策略进行策略提升，具体如下图所示：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006120213.png" alt=""></p>
-<h2 id="动作价值函数近似-1"><a href="#动作价值函数近似-1" class="headerlink" title="动作价值函数近似"></a>动作价值函数近似</h2><p>同样的套路：</p>
-<ul>
-<li>优化目标： $\hat{q}(s, a, \mathbf{w})\approx q_{\pi}(s, a)$</li>
-<li>采取包含 <state, action, value> 的经验集合 D </li>
-<li>通过最小化平方误差来拟合</li>
-</ul>
-<p>对于控制环节，我们采取与Q-Learning一样的思路：</p>
-<ul>
-<li>利用之前策略的经验</li>
-<li>但是考虑另一个后继动作 $A’=\pi_{\text{new}}(S_{t+1})$</li>
-<li>朝着另一个后继动作的方向去更新 $\hat{q}(S_t, A_t, \mathbf{w})$，即</li>
-</ul>
-<p>$\delta = R_{t+1} + \gamma\hat{q}(S_{t+1}, \pi{S_{t+1}, \mathbf{\pi}}) - \hat{q}(S_t, A_t, \mathbf{w})$</p>
-<ul>
-<li>梯度：线性拟合情况，$\Delta\mathbf{w}=\alpha\delta\mathbf{x}(S_t, A_t)$</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Cross-entrpy Method</title>
     <url>/MARL/MADRL/Cross-entroy%20Method/</url>
     <content><![CDATA[<h3 id="CEM-amp-amp-RL"><a href="#CEM-amp-amp-RL" class="headerlink" title="CEM &amp;&amp; RL"></a>CEM &amp;&amp; RL</h3><p>注：以下内容引自博文《进化策略优化算法CEM(Cross Entropy Method)》[1]。</p>
@@ -572,6 +367,330 @@ Q(S_t, A_t) ← Q(S_t, A_t) + \alpha\Bigl(R_{t+1}+\gamma Q(S_{t+1}, A')-Q(S_t, A
       </tags>
   </entry>
   <entry>
+    <title>Policy Gradient Methods</title>
+    <url>/MARL/MADRL/Policy%20Gradient%20Mwthods/</url>
+    <content><![CDATA[<p>上一篇博文的内容整理了我们如何去近似价值函数或者是动作价值函数的方法：</p>
+<script type="math/tex; mode=display">
+V_{\theta}(s)\approx V^{\pi}(s) \\
+Q_{\theta}(s)\approx Q^{\pi}(s, a)</script><p>通过机器学习的方法我们一旦近似了价值函数或者是动作价值函数就可以通过一些策略进行控制，比如  ϵ-greedy。</p>
+<p>通过机器学习的方法我们一旦近似了价值函数或者是动作价值函数就可以通过一些策略进行控制，比如 ϵ -greedy。</p>
+<p>那么我们简单回顾下 RL 的学习目标：通过 agent 与环境进行交互，获取累计回报最大化。既然我们最终要学习如何与环境交互的策略，那么我们可以直接学习策略 ，而之前先近似价值函数，再通过贪婪策略控制的思路更像是”曲线救国”。<br>这就是本篇文章的内容，我们如何直接来学习策略，用数学的形式表达就是：</p>
+<p>$\pi_{\theta}(s, a) = P[a | s, \theta]$</p>
+<p>这就是被称为策略梯度（Policy Gradient，简称PG）算法。</p>
+<p>当然，本篇内容同样的是针对 model-free 的强化学习。</p>
+<h1 id="Value-Based-vs-Policy-Based-RL"><a href="#Value-Based-vs-Policy-Based-RL" class="headerlink" title="Value-Based vs. Policy-Based RL"></a>Value-Based vs. Policy-Based RL</h1><p>Value-Based：</p>
+<ul>
+<li>学习价值函数</li>
+<li>Implicit policy，比如 ϵϵ-greedy</li>
+</ul>
+<p>Policy-Based：</p>
+<ul>
+<li>没有价值函数</li>
+<li>直接学习策略</li>
+</ul>
+<p>Actor-Critic：</p>
+<ul>
+<li>学习价值函数</li>
+<li>学习策略</li>
+</ul>
+<p>三者的关系可以形式化地表示如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006124701.png" alt=""></p>
+<p>认识到 Value-Based 与 Policy-Based 区别后，我们再来讨论Policy-Based RL 的优缺点：</p>
+<p>优点：</p>
+<ul>
+<li>收敛性更好</li>
+<li>对于具有高维或者连续动作空间的问题更加有效</li>
+<li>可以学习随机策略</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>绝大多数情况下收敛到局部最优点，而非全局最优</li>
+<li>评估一个策略一般情况下低效且存在较高的方差</li>
+</ul>
+<h1 id="Policy-Search"><a href="#Policy-Search" class="headerlink" title="Policy Search"></a>Policy Search</h1><p>我们首先定义下目标函数。</p>
+<h2 id="Policy-Objective-Functions"><a href="#Policy-Objective-Functions" class="headerlink" title="Policy Objective Functions"></a>Policy Objective Functions</h2><p>目标：给定一个带有参数 θ 的策略 π~θ~(s,a)  ，找到最优的参数 θ 。<br>但是我们如何评估不同参数下策略 π~θ(~s,a)  的优劣呢？</p>
+<ul>
+<li>对于episode 任务来说，我们可以使用start value：</li>
+</ul>
+<script type="math/tex; mode=display">
+J_1(\theta)=V^{\pi_{\theta}}(s_1)=E_{\pi_{\theta}}[v_1]</script><ul>
+<li>对于连续性任务来说，我们可以使用 average value：</li>
+</ul>
+<script type="math/tex; mode=display">
+J_{avV}(\theta)=\sum_{s}d^{\pi_{\theta}}(s)V^{\pi_{\theta}}(s)</script><p>或者每一步的平均回报：</p>
+<script type="math/tex; mode=display">
+J_{avR}(\theta)=\sum_{s}d^{\pi_{\theta}}(s)\sum_{a}\pi_{\theta}(s, a)R_s^a</script><p>其中 d^πθ^(s)  是马尔卡夫链在 π~θ~  下的静态分布。</p>
+<h1 id="Policy-Optimisation"><a href="#Policy-Optimisation" class="headerlink" title="Policy Optimisation"></a>Policy Optimisation</h1><p>在明确目标以后，我们再来看基于策略的 RL 为一个典型的优化问题：找出 θ 最大化 J(θ)<br>最优化的方法有很多，比如不依赖梯度（gradient-free）的算法：</p>
+<ul>
+<li>爬山算法</li>
+<li>模拟退火</li>
+<li>进化算法</li>
+<li>…</li>
+</ul>
+<p>但是一般来说，如果我们能在问题中获得梯度的话，基于梯度的最优化方法具有比较好的效果：</p>
+<ul>
+<li>梯度下降</li>
+<li>共轭梯度</li>
+<li>拟牛顿法</li>
+<li>…</li>
+</ul>
+<p>我们本篇讨论梯度下降的方法。</p>
+<h1 id="策略梯度定理"><a href="#策略梯度定理" class="headerlink" title="策略梯度定理"></a>策略梯度定理</h1><h1 id="蒙特卡洛策略梯度算法（REINFORCE）"><a href="#蒙特卡洛策略梯度算法（REINFORCE）" class="headerlink" title="蒙特卡洛策略梯度算法（REINFORCE）"></a>蒙特卡洛策略梯度算法（REINFORCE）</h1><h1 id="Actir-Critic-策略梯度算法"><a href="#Actir-Critic-策略梯度算法" class="headerlink" title="Actir-Critic 策略梯度算法"></a>Actir-Critic 策略梯度算法</h1><p>Monte-Carlo策略梯度的方差较高，因此放弃用return来估计行动-价值函数Q，而是使用 critic 来估计Q：</p>
+<p>$Q_w(s, a)\approx Q^{\pi_{\theta}}(s, a)$</p>
+<p>这就是大名鼎鼎的 Actor-Critic 算法，它有两套参数：</p>
+<ul>
+<li>Critic：更新动作价值函数参数 w </li>
+<li>Actor： 朝着 Critic 方向更新策略参数 θ</li>
+</ul>
+<p>Actor-Critic 算法是一个近似的策略梯度算法：</p>
+<script type="math/tex; mode=display">
+\triangledown_\theta J(\theta)\approx E_{\pi_{\theta}}[\triangledown_{\theta}\log \pi_{\theta}(s, a)Q_w(s, a)]\\
+\Delta\theta = \alpha\triangledown_\theta\log\pi_{\theta}(s,a)Q_w(s,a)</script><p>Critic 本质就是在进行策略评估：How good is policy π~θ~  for current parameters θ </p>
+<p>策略评估我们之前介绍过MC、TD、TD(λλ)，以及价值函数近似方法。如下所示，简单的 Actir-Critic 算法 Critic 为动作价值函数近似，使用最为简单的线性方程，即：$Q_w(s, a) = \phi(s, a)^T w$，具体的伪代码如下所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006125435.png" alt="img"></p>
+<p>在 Actir-Critic 算法中，对策略进行了估计，这会产生误差（bias），但是当满足以下两个条件时，策略梯度是准确的：</p>
+<ul>
+<li>价值函数的估计值没有和策略相违背，即： $\triangledown_w Q_w(s,a) = \triangledown_\theta\log\pi_{\theta}(s,a)$</li>
+<li>价值函数的参数w能够最小化误差，即： $\epsilon = E_{\pi_{\theta}}[(Q^{\pi_{\theta}}(s, a) - Q_w(s,a))^2]$</li>
+</ul>
+<p>最后总结一下策略梯度算法：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006125705.png" alt="img"></p>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Value Function Approximation</title>
+    <url>/MARL/MADRL/Value%20Function%20Approximation/</url>
+    <content><![CDATA[<h1 id="为什么需要值函数近似？"><a href="#为什么需要值函数近似？" class="headerlink" title="为什么需要值函数近似？"></a>为什么需要值函数近似？</h1><p>之前我们提到过各种计算值函数的方法，比如对于 MDP 已知的问题可以使用 Bellman 期望方程求得值函数；对于 MDP 未知的情况，可以通过 MC 以及 TD 方法来获得值函数，为什么需要再进行值函数近似呢？</p>
+<p>其实到目前为止，我们介绍的值函数计算方法都是通过查表的方式获取的：</p>
+<ul>
+<li>表中每一个状态 s  均对应一个 V(s) </li>
+<li>或者每一个状态-动作 <s,a ></li>
+</ul>
+<p>但是对于大型 MDP 问题，上述方法会遇到瓶颈：</p>
+<ul>
+<li>太多的 MDP 状态、动作需要存储</li>
+<li>单独计算每一个状态的价值都非常的耗时</li>
+</ul>
+<p>因此我们需要有一种能够适用于解决大型 MDP 问题的通用方法，这就是本文介绍的值函数近似方法。即：</p>
+<script type="math/tex; mode=display">
+\hat{v}(s, \mathbf{w}) \approx v_{\pi}(s) \\
+\text{or } \hat{q}(s, a, \mathbf{w}) \approx q_{\pi}(s, a)</script><p>那么为什么值函数近似的方法可以求解大型 MDP 问题？</p>
+<blockquote>
+<p>对于大型 MDP 问题而言，我们可以近似认为其所有的状态和动作都被采样和计算是不现实的，那么我们一旦获取了近似的值函数，我们就可以对于那些在历史经验或者采样中没有出现过的状态和动作进行泛化（generalize）。</p>
+</blockquote>
+<p>进行值函数近似的训练方法有很多，比如：</p>
+<ul>
+<li>线性回归</li>
+<li>神经网络</li>
+<li>决策树</li>
+<li>…</li>
+</ul>
+<p>此外，针对 MDP 问题的特点，训练函数必须可以适用于非静态、非独立同分布（non-i.i.d）的数据。</p>
+<h1 id="增量方法"><a href="#增量方法" class="headerlink" title="增量方法"></a>增量方法</h1><h2 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h2><h3 id="通过随机梯度下降进行值函数近似"><a href="#通过随机梯度下降进行值函数近似" class="headerlink" title="通过随机梯度下降进行值函数近似"></a>通过随机梯度下降进行值函数近似</h3><p>我们优化的目标函数是找到一组参数 w  来最小化最小平方误差（MSE），即：</p>
+<script type="math/tex; mode=display">
+J(\mathbf{w}) = E_{\pi}[(v_{\pi}(S) - \hat{v}(S, \mathbf{w}))^2]</script><p>通过梯度下降方法来寻优：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\Delta\mathbf{w}
+&=-\frac{1}{2}\alpha\triangledown_{\mathbf{w}}J(\mathbf{w})\\
+&=\alpha E_{\pi}\Bigl[\Bigl(v_{\pi}(S) - \hat{v}(S, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}J(\mathbf{w})\Bigr]
+\end{align}</script><p>对于随机梯度下降（Stochastic Gradient Descent，SGD），对应的梯度：</p>
+<script type="math/tex; mode=display">
+\Delta\mathbf{w} = \alpha\underbrace{\Bigl(v_{\pi}(S) - \hat{v}(S, \mathbf{w})\Bigr)}_{\text{error}}\underbrace{\triangledown_{\mathbf{w}}\hat{v}(S, \mathbf{w})}_{\text{gradient}}</script><h2 id="值函数近似"><a href="#值函数近似" class="headerlink" title="值函数近似"></a>值函数近似</h2><p>上述公式中需要真实的策略价值函数 vπ(S)vπ(S) 作为学习的目标（supervisor），但是在RL中没有真实的策略价值函数，只有rewards。在实际应用中，我们用v~π~(S)来代替target vπ(S)：</p>
+<ul>
+<li>对于MC，target 为 return G~t ~：</li>
+</ul>
+<script type="math/tex; mode=display">
+\Delta\mathbf{w}=\alpha\Bigl(G_t - \hat{v}(S_t, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}\hat{v}(S_t, \mathbf{w})</script><ul>
+<li>对于TD(0)，target 为TD target $_{t+1}+\gamma\hat{v}(S_{t+1}, \mathbf{w})$：</li>
+</ul>
+<script type="math/tex; mode=display">
+\Delta\mathbf{w}=\alpha\Bigl(R_{t+1} + \gamma\hat{v}(S_{t+1}, \mathbf{w})- \hat{v}(S_t, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}\hat{v}(S_t, \mathbf{w})</script><ul>
+<li>对于TD(λ)，target 为 TD λ-return  $G_t^{\lambda}$：</li>
+</ul>
+<script type="math/tex; mode=display">
+\Delta\mathbf{w}=\alpha\Bigl(G_t^{\lambda}- \hat{v}(S_t, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}\hat{v}(S_t, \mathbf{w})</script><p>在获取了值函数近似后就可以进行控制了，具体示意图如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006115744.png" alt=""></p>
+<h2 id="动作价值函数近似"><a href="#动作价值函数近似" class="headerlink" title="动作价值函数近似"></a>动作价值函数近似</h2><p>动作价值函数近似：</p>
+<script type="math/tex; mode=display">
+\hat{q}(S, A, \mathbf{w})\approx q_{\pi}(S, A)</script><p>优化目标：最小化MSE</p>
+<script type="math/tex; mode=display">
+J(\mathbf{w}) = E_{\pi}[(q_{\pi}(S, A) - \hat{q}(S, A, \mathbf{w}))^2]</script><p>使用SGD寻优：</p>
+<script type="math/tex; mode=display">
+\begin{align} \Delta\mathbf{w} &=-\frac{1}{2}\alpha\triangledown_{\mathbf{w}}J(\mathbf{w})\\ &=\alpha\Bigl(q_{\pi}(S, A)-\hat{q}_{\pi}(S, A, \mathbf{w})\Bigr) \triangledown_{\mathbf{w}}\hat{q}_{\pi}(S, A, \mathbf{w}) \end{align}</script><h1 id="批量方法"><a href="#批量方法" class="headerlink" title="批量方法"></a>批量方法</h1><p>随机梯度下降SGD简单，但是批量的方法可以根据agent的经验来更好的拟合价值函数。</p>
+<h2 id="值函数近似-1"><a href="#值函数近似-1" class="headerlink" title="值函数近似"></a>值函数近似</h2><p>优化目标：批量方法解决的问题同样是  $\hat{v}(s, \mathbf{w})\approx v_{\pi}(s)$</p>
+<p>经验集合  D 包含了一系列的 <state, value> pair：</p>
+<script type="math/tex; mode=display">
+D=\{<s_1, v_1^{\pi}>, <s_2, v_2^{\pi}>, ..., <s_T, v_T^{\pi}>\}</script><p>根据最小化平方误差之和来拟合 $\hat{v}(s, \mathbf{w})$和 v~π~(s) ，即：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+LS(w) 
+&= \sum_{t=1}^{T}(v_{t}^{\pi}-\hat{v}(s_t, \mathbf{w}))^2\\
+&= E_{D}[(v^{\pi}-\hat{v}(s, \mathbf{w}))^2]
+\end{align}</script><p>经验回放（Experience Replay）：</p>
+<blockquote>
+<p>给定经验集合：</p>
+<script type="math/tex; mode=display">
+D=\{<s_1, v_1^{\pi}>, <s_2, v_2^{\pi}>, ..., <s_T, v_T^{\pi}>\}</script><p>Repeat：</p>
+<ol>
+<li>从经验集合中采样状态和价值：<s,v^π^>∼D </li>
+<li>使用SGD进行更新：$\Delta\mathbf{w}=\alpha\Bigl(v^{\pi}-\hat{v}(s, \mathbf{w})\Bigr)\triangledown_{\mathbf{w}}\hat{v}(s, \mathbf{w})$<br>通过上述经验回放，获得最小化平方误差的参数值：</li>
+</ol>
+<p>$\mathbf{w}^{\pi}=\arg\min_{\mathbf{w}}LS(\mathbf{w})$</p>
+</blockquote>
+<p>我们经常听到的 DQN 算法就使用了经验回放的手段，这个后续会在《深度强化学习》中整理。</p>
+<p>通过上述经验回放和不断的迭代可以获取最小平方误差的参数值，然后就可以通过 greedy 的策略进行策略提升，具体如下图所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006120213.png" alt=""></p>
+<h2 id="动作价值函数近似-1"><a href="#动作价值函数近似-1" class="headerlink" title="动作价值函数近似"></a>动作价值函数近似</h2><p>同样的套路：</p>
+<ul>
+<li>优化目标： $\hat{q}(s, a, \mathbf{w})\approx q_{\pi}(s, a)$</li>
+<li>采取包含 <state, action, value> 的经验集合 D </li>
+<li>通过最小化平方误差来拟合</li>
+</ul>
+<p>对于控制环节，我们采取与Q-Learning一样的思路：</p>
+<ul>
+<li>利用之前策略的经验</li>
+<li>但是考虑另一个后继动作 $A’=\pi_{\text{new}}(S_{t+1})$</li>
+<li>朝着另一个后继动作的方向去更新 $\hat{q}(S_t, A_t, \mathbf{w})$，即</li>
+</ul>
+<p>$\delta = R_{t+1} + \gamma\hat{q}(S_{t+1}, \pi{S_{t+1}, \mathbf{\pi}}) - \hat{q}(S_t, A_t, \mathbf{w})$</p>
+<ul>
+<li>梯度：线性拟合情况，$\Delta\mathbf{w}=\alpha\delta\mathbf{x}(S_t, A_t)$</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>tf.graph()</title>
+    <url>/tensorflow/MADRL/tf.graph()/</url>
+    <content><![CDATA[<h2 id="tf-graph"><a href="#tf-graph" class="headerlink" title="tf.graph()"></a>tf.graph()</h2><p> tf.Graph()表示实例化一个用于tensorflow计算和表示用的数据流图，不负责运行计算。在代码中添加的操作和数据都是画在纸上的画，而图就是呈现这些画的纸。我们可以利用很多线程生成很多张图，但是默认图就只有一张。</p>
+<p>  tf中可以定义多个计算图，不同计算图上的张量和运算是相互独立的，不会共享。计算图可以用来隔离张量和计算，同时提供了管理张量和计算的机制。</p>
+<p>  1、使用g = tf.Graph()函数创建新的计算图</p>
+<p>  2、在with g.as_default():语句下定义属于计算图g的张量和操作</p>
+<p>  3、在with tf.Session()中通过参数graph=xxx指定当前会话所运行的计算图</p>
+<p>  4、如果没有显示指定张量和操作所属的计算图，则这些张量和操作属于默认计算图</p>
+<p>  5、一个图可以在多个sess中运行，一个ses也能运行多个图</p>
+<p>  操作示例：</p>
+<p># 默认计算图上的操作</p>
+<p>a = tf.constant([1.0, 2.0])</p>
+<p>b = tf.constant([2.0, 3.0])</p>
+<p>result = a + b</p>
+<p># 定义两个计算图</p>
+<p>g1 = tf.Graph()</p>
+<p>g2 = tf.Graph()</p>
+<p># 在g1中定义张量和操作</p>
+<p>with g1.as_default():</p>
+<p>  a = tf.constant([1.0, 1.0])</p>
+<p>  b = tf.constant([1.0, 1.0])</p>
+<p>  result1 = a + b</p>
+<p># 在g2中定义张量和操作</p>
+<p>with g2.as_default():</p>
+<p>  a = tf.constant([2.0, 2.0])</p>
+<p>  b = tf.constant([2.0, 2.0])</p>
+<p>  result2 = a + b</p>
+<p># 创建会话</p>
+<p>with tf.Session(graph=g1) as sess:</p>
+<p>  out = sess.run(result1)</p>
+<p>  print(out)</p>
+<p>with tf.Session(graph=g2) as sess:</p>
+<p>  out = sess.run(result2)</p>
+<p>  print(out)</p>
+<p>with tf.Session(graph=tf.get_default_graph()) as sess:</p>
+<p>  out = sess.run(result)</p>
+<p>  print(out)</p>
+<p>返回：</p>
+<p>[2.0, 2.0]</p>
+<p>[4.0, 4.0]</p>
+<p>[3.0, 5.0]</p>
+]]></content>
+      <categories>
+        <category>tensorflow</category>
+      </categories>
+      <tags>
+        <tag>tensorflow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一些关于DRL的概念</title>
+    <url>/MARL/MADRL/%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<p>注意力机制（方法论）：为了让计算机更加适应人类交流场景，我们必须教会计算机选择遗忘和关联上下文，这种机制就是所谓的「注意力机制」 </p>
+<p>1、将<strong>卷积神经网络</strong> 的感知能力与强化学习的决策能力结合在一起,可以较好地解决传统算法存在的容易陷入局部最优、在相近的障碍物群中震荡且不能识别路径、在狭窄通道中摆动以及障碍物附近目标不可达等问题, 并且大大提高了机器人轨迹跟踪和动态避障的实时性和适应性。</p>
+<p>2、制约传统强化学习算法的瓶颈在于Q-learning是一种表格方法，根据过去出现过的状态动作空间，更新和迭代Q值，使得其适用的状态和动作空间非常小，如果一个状态从未出现过，强化学习是无法处理的，模型几乎就没有泛化能力，为增强模型预测能力，可以使用<strong>回归函数拟合Q值</strong> 。</p>
+<p>3、算法可以平衡运用探索和利用策略，<strong>搜索策略定义为小概率随机搜索策略和及时回报小于设定阈值进行随机动作搜索的引导式(δ)策略</strong> 。可以使强化学习智能体与环境的交互中学习一个好的策略，同时又不至于在试错的过程中丢失太多的奖励。</p>
+<p>4、深度卷积神经网络进行训练时存在的假设是训练数据是独立同分布，而从环境中采集到的数据之间存在着关联性，利用这些数据进行顺序训练，算法模型将存在不稳定问题. 通过<strong>经验回放的方式</strong> 可以令训练出的模型收敛且稳定。</p>
+<p>5、奖惩函数可以定义为与距离有关（如避障时智能体与障碍物之间的距离等）。</p>
+<p>6、目标函数可以使用基于梯度下降的<strong>Adam 优化算法。</strong></p>
+<p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103622.png" alt="image-20210710170957091"></p>
+<p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103632.png" alt="image-20210710171922815"></p>
+<p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103638.png" alt="image-20210710184402541" style="zoom:50%;" /></p>
+<p>DDPG 结合了 DQN、确定性策略梯度算法 DPG ( deterministic policy gradient) 和 演 员-评 论 家 算 法( actor-critic methods) ，可解决强化学习中连续动作 空间问题。DQN 利用神经网络来逼近值函数，其 参数是每层网络的权重，对值函数进行更新其实就 是更新权重参数。DPG 算法采用异策略学习方法， 行动策略采用随机策略，以保证足够的探索，评估策 略采用 确 定 策 略，以减少动作空间的采样数量。 DPG 采用演员-评论家算法框架，它通过分离策略函 数和价值函数来降低学习难度，策略函数被称为演 员，价值函数被称为评论家，演员根据当前的环境状态产生一个动作，而评论家则对演员采取的动作进 行评价。</p>
+<p>评论家网络模型选择 （On policy 类还是 off policy ) 算法，演员网络模型选择策略梯度算法。 在常规 DDPG 算法中，网络从回放缓冲区中随机采样进行离线训练。回放缓冲区是一个有限大小 的缓冲区 Ｒ，元祖( s<sub>t</sub>，a<sub>t</sub>，rt，s<sub>t + 1</sub> ) 储存在缓冲区中并 且根据探索策略随机采样。</p>
+<p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103704.png" alt="image-20210711112606803"></p>
+<p>　传统的强化学习方法主要针对的是离散状态和行为空间的马尔科 夫决策过程，也就是状态的值函数或行为的值函数采用了表格的形式 来进行存储和迭代计算。但是实际工程应用中的许多优化决策问题是 具有大规模或连续的状态或行为空间的情况，所以表格型强化学习算 法也同动态规划法一样存在维数灾难。为了克服维数灾难，以实现对 连续性状态或行为空间的马尔科夫决策过程的最优值函数和最优策略 的逼近，我们就必须研究强化学习的泛化问题或推广问题，也就是利 用有限的学习经验和记忆以实现对一个大范围空间的有效知识获取和 表示的方法。</p>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一些比较好的文章</title>
+    <url>/MARL/MADRL/%E4%B8%80%E4%BA%9B%E6%AF%94%E8%BE%83%E5%A5%BD%E7%9A%84%E6%96%87%E7%AB%A0/</url>
+    <content><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/bfa4054.html">深度学习 | 《深度学习入门之PyTorch》阅读笔记 | Justlovesmile’s BLOG</a></p>
+<p>注： 这本书的github代码已经4年没更新了，只适合速览一下，做个overview, 并不适合手敲学习</p>
+<p><a href="https://blog.justlovesmile.top/posts/43678.html">深度学习 | “花书”，Deep Learning笔记 | Justlovesmile’s BLOG</a></p>
+<p> 注：偏数学</p>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+        <tag>机器学习，碎碎念</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>人工蜂群算法</title>
+    <url>/MARL/MADRL/%E4%BA%BA%E5%B7%A5%E8%9C%82%E7%BE%A4%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="人工蜂群算法"><a href="#人工蜂群算法" class="headerlink" title="**人工蜂群算法"></a>**人工蜂群算法</h3><ul>
+<li><p><strong>模仿蜜蜂行为提出的一种优化方法 群智能算法</strong></p>
+</li>
+<li><p><strong>特点</strong></p>
+</li>
+</ul>
+<ul>
+<li><p><strong>其使用了较少的控制参数，并且鲁棒性强，在每次迭代过程中都会进行全局和局部的最优解搜索，因此能够找到最优解的概率大大增加。</strong></p>
+</li>
+<li><p><strong>不需要了解问题的特殊信息，只需要对问题进行优劣的比较，通过各人工蜂个体的局部寻优行为，最终在群体中使全局最优值突现出来，有着较快的收敛速度。</strong></p>
+</li>
+</ul>
+<ul>
+<li>人工蜂群算法详解**](<a href="https://zhuanlan.zhihu.com/p/253220840">https://zhuanlan.zhihu.com/p/253220840</a>)</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+        <tag>群体智能</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>动态规划</title>
     <url>/MARL/MADRL/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
     <content><![CDATA[<h2 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h2><p>动态规划（Dynamic Programming，简称DP）是一种通过把原问题分解为相对简单的子问题的方式求解复杂问题的方法。</p>
@@ -701,6 +820,199 @@ v_*(s) ← \max_{a\in A}\Bigl(R_s^a + \gamma \sum_{s'\in S}P_{ss'}^{a}v_*(s') \B
       </tags>
   </entry>
   <entry>
+    <title>墨子平台训练教程</title>
+    <url>/MARL/MADRL/%E5%A2%A8%E5%AD%90%E5%B9%B3%E5%8F%B0%E8%AE%AD%E7%BB%83%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<p>下面介绍一下windows版本墨子平台的使用流程：</p>
+<ol>
+<li><h2 id="进入华戍防务-官网-hs-defense-com-下载软件"><a href="#进入华戍防务-官网-hs-defense-com-下载软件" class="headerlink" title="进入华戍防务 官网(hs-defense.com)下载软件"></a>进入<a href="http://www.hs-defense.com/col.jsp?id=105">华戍防务 官网(hs-defense.com)</a>下载软件</h2></li>
+</ol>
+<p>我下载的是<code>墨子·联合作战推演系统（个人版）</code> </p>
+<p><code>墨子·AI开发包</code>主要是一些开发会用到的代码和文档。代码也可以在gitee.com上找到：<a href="https://gitee.com/hs-defense/moziai">moziai: 墨子AI开发包及“子牙”智能体开源代码  </a></p>
+<p><code>竞赛客户端(互联网)</code> 主要是用来军事推演比赛的，与强化学习训练关系不大，可以不下载。</p>
+<p><code>墨子·AI版（Linux)</code> 因为一开始没办法下载，后面断断续续也没有弄出什么效果</p>
+<p>注：</p>
+<ul>
+<li><p>文件采用ftp协议下载，下载链接格式为：ftp: ip/port/文件夹s/文件</p>
+</li>
+<li><p>由于部分浏览器不支持，推荐使用QQ浏览器下载</p>
+</li>
+<li><p>一般点击下载按钮后，会默认让迅雷接管下载</p>
+</li>
+</ul>
+<ol>
+<li><h2 id="安装软件"><a href="#安装软件" class="headerlink" title="安装软件"></a>安装软件</h2><p>​    根据安装手册安装该软件，基本上按照手册进行就可以了</p>
+</li>
+<li><h2 id="启动该软件"><a href="#启动该软件" class="headerlink" title="启动该软件"></a>启动该软件</h2><ol>
+<li>进入安装目录下的\MoziData，右键点击<code>mysql.bat</code>，以管理员身份运行它，随后退出</li>
+<li>进入安装目录下的\MoziServer，运行MoziServer.exe，尽量关掉杀毒软件，最好以管理员身份运行<ul>
+<li>这里大概会遇到一个问题：<code>临时许可码过期，请联系华戍防务重新授权</code>，具体解决方案略</li>
+<li>我在数据库方面也出过问题，不过忘了具体细节了</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><h2 id="运行代码，进行仿真训练"><a href="#运行代码，进行仿真训练" class="headerlink" title="运行代码，进行仿真训练"></a>运行代码，进行仿真训练</h2><ol>
+<li><p>获取代码，在IDE打开代码</p>
+</li>
+<li><p>加载代码所需的scen想定文件</p>
+<ul>
+<li>进入墨子平台，可以在想定一栏下找到<code>加载想定</code>的选项，想定文件是从<code>安装路径\MoziServer\bin\Scenarios\</code>获取的，因此需要把代码包里的scen文件放到这里。</li>
+<li>加载想定文件，选择推演方</li>
+<li>随后可以看到墨子平台上有了具体的想定环境</li>
+<li>如果要更改想定文件，改完之后，需要保存，再重新加载<ul>
+<li>因为训练的每个回合都会刷新环境，如果不保存更改到新scen文件，那么这个更改只能用于一个回合</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>运行main.py代码即可看到效果</p>
+<ul>
+<li><p>注：</p>
+<ul>
+<li><p>这里可能需要指定一下 墨子平台的路径，可以执行代码</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">os.environ[&#39;MOZIPATH&#39;] &#x3D; &#39;D:\\MoZiSystem\\Mozi\\MoziServer\\bin&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>也可以在<code>编辑系统环境变量</code>中添加路径</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<p>注：Linux版本的墨子平台还在折腾，因为虚拟机比较卡，服务器上又没办法弄出显示界面，还折腾了一堆配置，最近还没弄，如果有结果了，会在这里更新的</p>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+        <tag>机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>多智能体强化学习</title>
+    <url>/MARL/MADRL/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h3 id="多智能体强化学习"><a href="#多智能体强化学习" class="headerlink" title="多智能体强化学习"></a>多智能体强化学习</h3><ul>
+<li>强化学习的核心思想是“试错”（trial-and-error）：智能体通过与环境的交互，根据获得的反馈信息迭代地优化** </li>
+<li><strong><strong>多智能体问题的建模——博弈论基础</strong></strong></li>
+</ul>
+<ul>
+<li><p><strong>马尔科夫博弈</strong></p>
+</li>
+<li><p><strong>纳什均衡</strong></p>
+</li>
+<li><p><strong><strong>均衡求解方法**</strong></strong>是多智能体强化学习的基本方法，它对于多智能体学习的问题，结合了强化学习的经典方法（如 Q-learning）和博弈论中的均衡概念，通过 RL 的方法来求解该均衡目标，从而完成多智能体的相关任务。** </p>
+<ul>
+<li><strong>**多智能体问题的求解——多智能体强化学习算法</strong></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>independent Q-learning</strong></li>
+</ul>
+<pre><code>* **每个智能体把其他智能体都当做环境中的因素，仍然按照单智能体学习的方式、通过与环境的交互来更新策略**
+* **简单易实现**
+* **忽略了其他智能体也具备决策的能力、所有个体的动作共同影响环境的状态** 
+* **很难稳定地学习并达到良好的效果。**
+</code></pre><ul>
+<li><p><strong>智能体之间是完全竞争关系（零和随机博弈</strong></p>
+<ul>
+<li><strong>minimax Q-learning 算法</strong></li>
+</ul>
+</li>
+</ul>
+<pre><code>  *  **对于智能体 i，它需要考虑在其他智能体（i-）采取的动作（a-）令自己（i）回报最差（min）的情况下，能够获得的最大（max）期望回报**
+</code></pre><ul>
+<li><p><strong>智能体之间是半合作半竞争（混合）关系</strong></p>
+<ul>
+<li><p><strong>Nash Q-learning 方法</strong></p>
+<ul>
+<li><strong>当每个智能体采用普通的 Q 学习方法，并且都采取贪心的方式、即最大化各自的 Q 值时，这样的方法容易收敛到纳什均衡策略</strong></li>
+<li><strong>Nash Q-learning 方法可用于处理以纳什均衡为解的多智能体学习问题。</strong></li>
+<li><strong>它的目标是通过寻找每一个状态的纳什均衡点，从而在学习过程中基于纳什均衡策略来更新 Q 值。</strong></li>
+<li><strong>对于单个智能体 i，在使用 Nash Q 值进行更新时，它除了需要知道全局状态 s 和其他智能体的动作 a 以外，还需要知道其他所有智能体在下一状态对应的纳什均衡策略π。进一步地，当前智能体就需要知道其他智能体的 Q(s’)值，这通常是根据观察到的其他智能体的奖励和动作来猜想和计算。所以，Nash Q-learning 方法对智能体能够获取的其他智能体的信息（包括动作、奖励等）具有较强的假设，在复杂的真实问题中一般不满足这样严格的条件，方法的适用范围受限。</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>智能体之间是完全合作关系</strong></p>
+<ul>
+<li><p><strong><strong>智能体通过协作获得最优回报时，不需要协调机制</strong></strong></p>
+<ul>
+<li><p><strong>假设对于环境中的所有智能体 {A,B} 存在不只一个最优联合动作，即有 {πA,πB} 和{hA,hB}，那么 A 和 B 之间就需要协商机制，决定是同时取π，还是同时取 h；因为如果其中一个取π、另一个取 h，得到的联合动作就不一定是最优的了。</strong></p>
+</li>
+<li><p><strong>Team Q-learning 是一种适用于不需要协作机制的问题的学习方法，它提出对于单个智能体 i，可以通过下面这个式子来求出它的最优动作 hi：</strong><br><img src="https://pic3.zhimg.com/80/v2-8904fe3a6f84d280ed2ba3cef5ce1b26_720w.jpg" alt="img"></p>
+</li>
+<li><strong>Distributed Q-learning 也是一种适用于不需要协作机制的问题的学习方法，不同于 Team Q-learning 在选取个体最优动作的时候需要知道其他智能体的动作，在该方法中智能体维护的是只依据自身动作所对应的 Q 值，从而得到个体最优动作。</strong></li>
+</ul>
+</li>
+<li><p><strong><strong>隐式的协调机制</strong></strong><br><strong>在智能体之间需要相互协商、从而达成最优的联合动作的问题中，<em>**</em></strong>个体之间的相互建模<strong>**</strong>，能够为智能体的决策提供潜在的协调机制**</p>
+<ul>
+<li><p><strong>联合动作学习（joint action learner，JAL）方法</strong></p>
+</li>
+<li><p><strong>智能体 i 会基于观察到的其他智能体 j 的历史动作、对其他智能体 j 的策略进行建模</strong></p>
+</li>
+<li><p><strong>频率最大 Q 值（frequency maximum Q-value, FMQ）方法</strong></p>
+</li>
+<li><p><strong>在个体 Q 值的定义中引入了个体动作所在的联合动作取得最优回报的频率，从而在学习过程中引导智能体选择能够取得最优回报的联合动作中的自身动作，那么所有智能体的最优动作组合被选择的概率也会更高。</strong></p>
+</li>
+<li><p><strong>基于平均场理论的多智能体强化学习（Mean Field MARL, MFMARL）方法</strong></p>
+</li>
+<li><p><strong>针对大规模群体问题</strong></p>
+</li>
+<li><p><strong>将传统强化学习方法（Q-learning）和平均场理论（mean field theory）相结合。平均场理论适用于对复杂的大规模系统建模，它使用了一种简化的建模思想：对于其中的某个个体，所有其他个体产生的联合作用可以用一个 “平均量” 来定义和衡量</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>显式的协作机制</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>  * **主要是人机之间的交互，考虑现存的一些约束条件 / 先验规则等**
+</code></pre><ul>
+<li><p><strong>多智能体深度强化学习</strong></p>
+<ul>
+<li><strong>中心化的控制器（centralized controller）并不一定可行，或者说不一定是比较理想的决策方式。而如果采用完全分布式的方式，每个智能体独自学习自己的值函数网络以及策略网络、不考虑其他智能体对自己的影响，无法很好处理环境的不稳定问题。利用强化学习中 actor-critic 框架的特点，能够在这两种极端方式中找到协调的办法。</strong></li>
+<li><strong><strong>policy-based 的方法</strong></strong></li>
+</ul>
+</li>
+</ul>
+<pre><code>* ****MADDPG******（Multi-Agent Deep Deterministic Policy Gradient**
+
+  *  **这种方法是在深度确定策略梯度（Deep Deterministic Policy Gradient，DDPG）方法的基础上、对其中涉及到的 actor-critic 框架进行改进，使用集中式训练、分布式执行的机制（centralized training and decentralized execution），为解决多智能体问题提供了一种比较通用的思路。**
+  *  **MADDPG 为每个智能体都建立了一个中心化的 critic，它能够获取全局信息（包括全局状态和所有智能体的动作）并给出对应的值函数 Qi(x,a1,...,an)，这在一定程度上能够缓解多智能体系统环境不稳定的问题。另一方面，每个智能体的 actor 则只需要根据局部的观测信息作出决策，这能够实现对多智能体的分布式控制。**
+    **在基于 actor-critic 框架的学习过程中，critic 和 actor 的更新方式和 DDPG 类似。对于 critic，它的优化目标为：**
+    ![img](https://pic3.zhimg.com/80/v2-1af4b831552fa91e51e36c59c537594a_720w.jpg)
+    **对于 actor，考虑确定性策略μi(ai|oi)，策略更新时的梯度计算可以表示为：**
+    ![img](https://pic3.zhimg.com/80/v2-1af4b831552fa91e51e36c59c537594a_720w.jpg)
+  *  **MADDPG 进一步提出了可以通过维护策略逼近函数 来估计其他智能体的策略，******通过对其他智能体的行为建模******使得维护中心化的 Q 值、考虑联合动作效应对单个个体来说是可行的。**
+
+  *  **MADDPG 在处理环境不稳定问题方面还使用了******策略集成（policies ensemble）******的技巧。由于环境中的每个智能体的策略都在迭代更新，因此很容易出现单个智能体的策略对其他智能体的策略过拟合，即当其他智能体的策略发生改变时，当前得到的最优策略不一定能很好的适应其他智能体的策略。为了缓和过拟合问题，MADDPG 提出了策略集成的思想，即对于单个智能体 i，它的策略μi 是由多个子策略μi^k 构成的集合。在一个 episode 中，只使用一种从集合中采样得到的子策略进行决策和完成交互。在学习过程中最大化的目标是所有子策略的期望回报 **
+
+  *  **总结：MADDPG 的核心是在 DDPG 算法的基础上，对每个智能体使用全局的 Q 值来更新局部的策略，该方法在完全合作、完全竞争和混合关系的问题中都能取得较好效果。 **
+
+*  **COMA（略**
+</code></pre><ul>
+<li><p><strong><strong>value-based 的方法</strong></strong></p>
+<ul>
+<li><strong>policy-based 方法中，中心化的值函数是直接使用全局信息进行建模，没有考虑个体的特点。在多智能体系统是由大规模的多个个体构成时，这样的值函数是难以学习或者是训练到收敛的，很难推导出理想的策略。并且仅依靠局部观测值，无法判断当前奖励是由于自身的行为还是环境中其他队友的行为而获得的。</strong></li>
+<li><strong>值分解网络（value decomposition networks, VDN）（略</strong></li>
+</ul>
+</li>
+</ul>
+<pre><code>  * **将全局的 Q(s,a)值分解为各个局部 Qi(si,ai)的加权和，每个智能体拥有各自的局部值函数。**
+</code></pre>]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+        <tag>机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>强化学习介绍</title>
     <url>/MARL/MADRL/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<h2 id="强化学习四元素"><a href="#强化学习四元素" class="headerlink" title="强化学习四元素"></a>强化学习四元素</h2><ul>
@@ -773,6 +1085,64 @@ v_*(s) ← \max_{a\in A}\Bigl(R_s^a + \gamma \sum_{s'\in S}P_{ss'}^{a}v_*(s') \B
       </categories>
       <tags>
         <tag>MARL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>路径规划</title>
+    <url>/MARL/MADRL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/</url>
+    <content><![CDATA[<p><strong>路径规划</strong></p>
+<ul>
+<li><p>多智能体强化学习路径规划**](<a href="https://zhuanlan.zhihu.com/p/100813774">https://zhuanlan.zhihu.com/p/100813774</a>)</p>
+</li>
+<li><p>基于以上分析，移动机器人智能路径规划方法研究虽然取得了重要成果，但仍存在局限性，如遗传算法、蚁群算法容易陷入局部最优，神经网络算法需要大量样本。目前的改进算法以多种算法相结合、分层优化等方式为主，虽弥补了缺点，但存在诸多发展瓶颈，如算法复杂度增加，收敛速度慢。</p>
+<p>较于其他算法，强化学习，学习能力强，适应复杂未知环境，但目前强化学习的试错学习、状态泛化，需要耗费大量资源。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+        <tag>机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>避障</title>
+    <url>/MARL/MADRL/%E9%81%BF%E9%9A%9C/</url>
+    <content><![CDATA[<h3 id="避障"><a href="#避障" class="headerlink" title="避障"></a><strong>避障</strong></h3><ul>
+<li><p>集群协同避障汇总**](<a href="https://blog.csdn.net/qq_16775293/article/details/88556986">https://blog.csdn.net/qq_16775293/article/details/88556986</a>)</p>
+</li>
+<li><p>奖惩函数 与 避障的关系</p>
+</li>
+<li><p>人工势场法</p>
+<ul>
+<li>人工势场路径规划技术的基本思想是将机器人在环境中的运动视为一种机器人，在虚拟的人工受力场中的运动。障碍物对机器人产生斥力，目标点对机器人产生引力，引力和斥力的合力作为机器人的控制力，从而控制机器人避开障碍物而到达目标位置。</li>
+<li>对于动态路径规划问题来说，与机器人避障相关的主要是机器人与障碍物之间的<strong>相对位置和相对速度</strong>，而非绝对位置和速度。将机器人与目标物的相对位置与相对速度引入吸引势函数，将机器人与障碍的相对位置与相对速度引入排斥势函数，提出动态环境下的机器人路径规划算法。 </li>
+<li>人工势场路径规划技术<em>原理简单，便于底层的实时控制，在机器人的实时避障和平滑轨迹控制等方面得到了广泛研究</em>。但人工势场路径规划方法通常<strong>存在局部极小点</strong>，尽管也有不少针对局部极小的改进方法，但到目前为止，仍未找到完全满意的答案。另外,在引力和斥力场设计时<strong>存在人为不确定因素</strong>，<strong>在障碍物较多时还存在计算量过大等问题</strong>，这些因素的存在限制了人工势场路径规划方法的广泛应用。应用中的<strong>难点是动态环境中引力场与斥力场的设计、局部极小问题的解决</strong>。</li>
+</ul>
+</li>
+<li><p>无人机群 在运动过程中 需要（通过传感器）感知到动态障碍物的运动状态方可避障</p>
+</li>
+<li><p>无人机基于当前环境信息的局部路径规划算法，将对环境的建模与搜索避障融为一体，能对规划结果进行实时反馈和校正，动态性高，但是由于缺乏全局环境信息，规划结果往往不是全局最优，甚至可能找不到正确路径或完整路径</p>
+</li>
+<li><h3 id="移动机器人路径规划算法存在的问题"><a href="#移动机器人路径规划算法存在的问题" class="headerlink" title="移动机器人路径规划算法存在的问题"></a>移动机器人路径规划算法存在的问题</h3></li>
+</ul>
+<ul>
+<li><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103725.png" alt="image-20210710162533883" style="zoom: 67%;" /><ul>
+<li>要解决的问题是 未知环境下的动态障碍物路径规划 基于传感器信息的局部路径规划</li>
+<li>环境是啥？</li>
+<li><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103730.png" alt="image-20210710182339529"></li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+        <tag>机器学习</tag>
       </tags>
   </entry>
   <entry>
@@ -909,873 +1279,6 @@ R_s^a + \gamma \sum_{s'\in S}P_{ss'}^a\max_{a}q_{*}(s, a) \qquad (8)</script><h3
       </categories>
       <tags>
         <tag>MARL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GAMES101</title>
-    <url>/CG/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/GAMES101/</url>
-    <content><![CDATA[<h2 id="Lecture1-intro"><a href="#Lecture1-intro" class="headerlink" title="Lecture1:  intro"></a>Lecture1:  intro</h2><h3 id="计算机图形学"><a href="#计算机图形学" class="headerlink" title="计算机图形学"></a>计算机图形学</h3><p>使用计算机synthesize(合成)  manipulate（操作) 可视化信息</p>
-<h3 id="why-study-computer-graphics"><a href="#why-study-computer-graphics" class="headerlink" title="why study computer graphics?"></a>why study computer graphics?</h3><ul>
-<li>Application<ul>
-<li>video games 电子游戏</li>
-<li>animations 动画</li>
-<li>visualization 可视化</li>
-<li>virtual reality</li>
-<li>augmented reality 增强现实</li>
-<li>digital illustration 数码插画</li>
-<li>simulation 模拟</li>
-<li>graphical user interfaces 图形用户界面</li>
-<li>typography  排版</li>
-</ul>
-</li>
-<li>technical chanllenges </li>
-</ul>
-<h3 id="Course-topics"><a href="#Course-topics" class="headerlink" title="Course topics"></a>Course topics</h3><ul>
-<li><p>Rasterization  光栅化</p>
-<ul>
-<li><p>project geometry primitives (3D triangles / polygons) onto the screen</p>
-<p>将几何图形（3D三角形 / 多边形）投射到屏幕上</p>
-</li>
-<li><p>break projected primitives into fragments (pixels)</p>
-<p>将投影图元分解到片段(像素)</p>
-</li>
-<li><p>gold standard in video games (real-time applications)</p>
-</li>
-</ul>
-</li>
-<li><p>curves and meshes 曲线和栅格</p>
-<ul>
-<li>怎样represent geometry in CG</li>
-</ul>
-</li>
-<li><p>ray tracing 光线追踪</p>
-<ul>
-<li>shoot rays from camera though each pixel<ul>
-<li>calculate intersection and shading 交叉点和阴影</li>
-<li>continue to bounce the rays till they hit light sources</li>
-</ul>
-</li>
-<li>gold standard in animations / movies (offline离线 application)</li>
-</ul>
-</li>
-<li><p>animation simulation</p>
-<ul>
-<li>key frame animation 关键帧动画</li>
-<li>mass-spring system 弹簧振子系统</li>
-</ul>
-</li>
-</ul>
-<h3 id=""><a href="#" class="headerlink" title=" "></a> </h3><h3 id="differences-between-cg-and-cv"><a href="#differences-between-cg-and-cv" class="headerlink" title="differences between cg and cv"></a>differences between cg and cv</h3><p>No clear boundaries</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231736.png" alt="image-20210913210044004"></p>
-<h2 id="Lecture2-review-of-linear-algebra"><a href="#Lecture2-review-of-linear-algebra" class="headerlink" title="Lecture2:  review of linear algebra"></a>Lecture2:  review of linear algebra</h2><h3 id="Graphics’-dependcies"><a href="#Graphics’-dependcies" class="headerlink" title="Graphics’ dependcies"></a>Graphics’ dependcies</h3><ul>
-<li>basic mathematics<ul>
-<li>Linear algebra 线性代数<ul>
-<li>mostly dependent on linear algebra</li>
-<li>vectors（dot products点乘,cross products叉乘<ul>
-<li>An operation like translating or rotating objects  can be matrix-vector multiplication</li>
-</ul>
-</li>
-<li>matrices 矩阵（复数</li>
-</ul>
-</li>
-<li>calculus 微积分</li>
-<li>statistics 统计</li>
-</ul>
-</li>
-<li>basic physics <ul>
-<li>Optics, 光学的</li>
-<li>Mechanics  机械的</li>
-</ul>
-</li>
-<li>misc 杂项<ul>
-<li>Numerical analysis  数值分析</li>
-<li>signal processing 信号处理</li>
-<li>aesthetics 审美</li>
-</ul>
-</li>
-</ul>
-<h3 id="vectors"><a href="#vectors" class="headerlink" title="vectors"></a>vectors</h3><p>noting: 只记了part</p>
-<ul>
-<li><p>unit vector </p>
-<ul>
-<li>单位向量，</li>
-<li>用来代表方向</li>
-</ul>
-</li>
-<li><p>dot  product in graphics</p>
-<ul>
-<li><p>$\vec{a}\cdot\vec{b} = |\vec{a}|\cdot|\vec{b}|cos\theta$ </p>
-</li>
-<li><p>Find angle between two vectors  (e.g. cosine of angle between light source 光源 and surface表面)</p>
-</li>
-<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231823.png" alt="image-20210913215253056"></p>
-</li>
-<li><p>Finding <strong>projection</strong> of one vector on another</p>
-<ul>
-<li><p>measure how close two directions are</p>
-</li>
-<li><p>decompose分解 a vector </p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231937.png" alt="image-20210913215715680" style="zoom:50%;" /></p>
-</li>
-<li><p>determine forward or backward</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231938.png" alt="image-20210913215758162" style="zoom: 50%;" /></p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>cross product in graphics</p>
-<p>​    <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231939.png" alt="image-20210913220439863" style="zoom: 50%;" /></p>
-<ul>
-<li>Direction determined by right-hand rule</li>
-</ul>
-</li>
-<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231940.png" alt="image-20210913220739158"></p>
-<ul>
-<li>Useful in constructing coordinate systems (later)</li>
-<li>Determine left / right</li>
-<li>Determine inside / outside</li>
-</ul>
-</li>
-<li>Orthonormal bases and coordinate frames  正交基底和坐标系<ul>
-<li>Critical issue is transforming between these systems/ bases</li>
-</ul>
-</li>
-</ul>
-<h3 id="matrices"><a href="#matrices" class="headerlink" title="matrices"></a>matrices</h3><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231941.png" alt="image-20210913223344462" style="zoom:50%;" /></p>
-<ul>
-<li>$(AB)^{T} = B^{T}A^{T}$</li>
-<li>$AA^{-1} = A^{-1}A = I$</li>
-<li>$(AB)^{-1} = B^{-1}A^{-1}$</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231942.png" alt="image-20210913223854494" style="zoom: 50%;" /></p>
-<p>In Graphics, pervasively used to represent transformations</p>
-<ul>
-<li>translation, rotation,shear剪切,scale缩放</li>
-</ul>
-<h2 id="Lecture-3-Transformation"><a href="#Lecture-3-Transformation" class="headerlink" title="Lecture 3: Transformation"></a>Lecture 3: Transformation</h2><h3 id="why-study-transformation"><a href="#why-study-transformation" class="headerlink" title="why study transformation"></a>why study transformation</h3><ul>
-<li>modeling<ul>
-<li>translation</li>
-<li>rotation</li>
-<li>scaling</li>
-</ul>
-</li>
-<li>viewing<ul>
-<li>3D (projection)</li>
-<li>2D (projection)</li>
-</ul>
-</li>
-</ul>
-<h3 id="2D-transformations"><a href="#2D-transformations" class="headerlink" title="2D transformations:"></a>2D transformations:</h3><ul>
-<li><p>representing transformations using matrices</p>
-</li>
-<li><p>rotation</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914135044.png" alt="image-20210914135044036" style="zoom:50%;" /></p>
-<ul>
-<li>$R_{\theta} = \begin{bmatrix} cos\theta &amp; -sin\theta \\ sin\theta &amp; cos\theta \end{bmatrix} $</li>
-<li>$R_{-\theta} = \begin{bmatrix} cos\theta &amp; sin\theta \\ -sin\theta &amp; cos\theta \end{bmatrix} = R_{\theta}^{T} = R_{\theta}^{-1}(by \quad definition) $</li>
-<li>正交矩阵： A·A^T^ = E</li>
-<li>默认绕原点旋转</li>
-<li>默认逆时针旋转</li>
-</ul>
-</li>
-<li><p>scale matrix</p>
-<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} s_{x} &amp; 0 \\ 0 &amp; s_{y} \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</p>
-</li>
-<li><p>reflection matrix 反射（镜像）矩阵</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914124142.png" alt="image-20210914124142211" style="zoom: 50%;" /></p>
-<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} -1 &amp; 0 \\ 0 &amp; 1\end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</p>
-</li>
-<li><p>shear matrix</p>
-<p>​    <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914134639.png" alt="image-20210914134632720" style="zoom: 50%;" /></p>
-<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} -1 &amp; a \\ 0 &amp; 1\end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</p>
-<ul>
-<li>Hints:<ul>
-<li>horizontal shift is 0 at y = 0</li>
-<li>horizontal shift is a at y = 1</li>
-<li>vertical shift is always</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>Linear transforms </p>
-<ul>
-<li>线性变换：可以用一个矩阵表示的变换</li>
-<li>x’ = ax + by</li>
-<li>y’ = cx + dy</li>
-<li>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} a &amp; b \\ c &amp; d \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</li>
-</ul>
-</li>
-</ul>
-<h3 id="Homogeneous-coordinates-齐次坐标"><a href="#Homogeneous-coordinates-齐次坐标" class="headerlink" title="Homogeneous coordinates 齐次坐标"></a>Homogeneous coordinates 齐次坐标</h3><ul>
-<li><p>Why homogeneous coordinates  </p>
-<p>for example:  translation</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914135553.png" alt="image-20210914135548707" style="zoom:50%;" /></p>
-<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} a &amp; b \\ c &amp; d \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} + \begin{bmatrix} t_{x} \\ t_{y} \end{bmatrix} $</p>
-<ul>
-<li><p>so, translation is not linear transform!</p>
-</li>
-<li><p>因为平移变换不能直接用一个矩阵表示，必须加一个向量；  </p>
-</li>
-<li><p>add a third coordinates</p>
-<p>引入齐次坐标可以解决问题，让平移也能只用一个矩阵表示</p>
-</li>
-<li><p>2D point = (x,y,1)^T^</p>
-</li>
-<li><p>2D vector = (x,y,0)^T^</p>
-</li>
-<li><p>向量 + 向量，结果齐次项是0，还是向量</p>
-</li>
-<li><p>点 - 点，得到的是一个向量，齐次项也变成0 </p>
-</li>
-<li><p>点 + 向量，表示一个点的移动，结果 还是点 ！</p>
-</li>
-<li><p>点 + 点是什么呢？齐次项变成2。将所有项除以2，齐次项又变为1 。所以点 + 点结果实际上是两个点的中点。</p>
-</li>
-</ul>
-</li>
-<li><p>Affine  transformation 仿射变换</p>
-<ul>
-<li><p>仿射变换：先线性变换再加上一次平移</p>
-</li>
-<li><p>$\begin{bmatrix} x^{‘} \\ y^{‘} \\ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; t_{x}\\ c &amp; d  &amp; t_{y}  \\ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} x \\  y \\ 1 \end{bmatrix} $</p>
-</li>
-<li><p>scale </p>
-<p>$ S(s_{x}, s_{y}) = \begin{bmatrix} s_{x} &amp; 0 &amp; 0 \\ 0 &amp; s_{y}  &amp; 0  \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
-</li>
-<li><p>rotation </p>
-<p>$ R(\alpha) = \begin{bmatrix} cos\alpha &amp; -sin\alpha &amp; 0 \\ sin\alpha &amp; cos\alpha  &amp; 0  \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
-</li>
-<li><p>translation</p>
-<p>$ T(t_{x}, t_{y}) = \begin{bmatrix} 1 &amp; 0 &amp; t_{x} \\ 0 &amp; 1  &amp; t_{y} \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
-</li>
-</ul>
-</li>
-<li><p>transform ordering matters</p>
-<ul>
-<li>matrix multiplication is not commutative 可交换的</li>
-</ul>
-</li>
-</ul>
-<h3 id="composing-transforms"><a href="#composing-transforms" class="headerlink" title="composing transforms"></a>composing transforms</h3><ul>
-<li><p>decomposing complex transforms</p>
-<ul>
-<li>translate center to origin</li>
-<li>rotate</li>
-<li>translate back</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914142248.png" alt="image-20210914142248083"></p>
-<p>which means $T(c) · R(\alpha) · T(-c)$</p>
-<ul>
-<li><p>分解：变换可以分解，注意先后顺序是从右到左</p>
-</li>
-<li><p>2D变换矩阵（缩放，旋转，平移变换）</p>
-</li>
-</ul>
-</li>
-<li></li>
-</ul>
-<h2 id="Lecture-4：-Transformation-Cont"><a href="#Lecture-4：-Transformation-Cont" class="headerlink" title="Lecture 4： Transformation Cont"></a>Lecture 4： Transformation Cont</h2><h3 id="3D-transformations"><a href="#3D-transformations" class="headerlink" title="3D transformations"></a>3D transformations</h3><ul>
-<li><p>3D point = (x,y,z,1)^T^</p>
-</li>
-<li><p>3D vector = (x,y,z,0)^T^</p>
-</li>
-<li><p>$\begin{bmatrix} x^{‘} \\ y^{‘} \\ z_{‘} \\ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; c &amp; t_{x}\\ d &amp; e &amp; f &amp; t_{y}\\g &amp; h &amp; i &amp; t_{z}  \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} x \\ y \\z \\ 1 \end{bmatrix} $</p>
-</li>
-<li><p>三维空间中的齐次变换，最后一行和二维变换类似，是0 0 0 1，平移还是在矩阵最后一列</p>
-</li>
-<li><p>对于仿射变换，是先应用线性变换，再加上平移</p>
-</li>
-<li><p>what is order?</p>
-<ul>
-<li><p>linear transform first or translation first?</p>
-</li>
-<li><p>scale </p>
-<p> $S(s_{x}, s_{y},s_{z}) = \begin{bmatrix} s_{x} &amp; 0 &amp; 0 &amp; 0\\ 0 &amp;  s_{y} &amp; 0 &amp; 0\\0 &amp; 0 &amp;  s_{z} &amp; 0  \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}  $</p>
-</li>
-<li><p>translation</p>
-<p> $T(t_{x}, t_{y}, t_{z}) = \begin{bmatrix} 1 &amp; 0 &amp; 0 &amp; t_{x}\\ 0 &amp;  1 &amp; 0 &amp; t_{y} \\0 &amp; 0 &amp;  1 &amp; t_{z}  \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}  $</p>
-</li>
-<li><p>rolation</p>
-<ul>
-<li>rolation around x-, y-,or  z-axis</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914203113.png" alt="image-20210914203043532" style="zoom:50%;" /></p>
-<ul>
-<li>绕哪个轴旋转，哪个坐标就不变</li>
-<li><p>不过𝑅𝑦矩阵稍微不同，其他两个都是右上角𝑠𝑖𝑛是负的，只有他是左下角𝑠𝑖𝑛是负的 因为𝑥叉乘𝑦得到𝑧，𝑧叉乘𝑦得到𝑥，但是𝑧叉乘𝑥得到𝑦（而不是𝑥叉乘𝑧），所以是反的</p>
-</li>
-<li><p>$R_{xyz}(\alpha, \beta, \gamma) = R_{x}(\alpha)R_{y}(\beta)R_{z}(\gamma)$</p>
-</li>
-</ul>
-</li>
-<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914220209.png" alt="image-20210914220208915"></p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="Viewing-观测-transformation"><a href="#Viewing-观测-transformation" class="headerlink" title="Viewing (观测) transformation"></a>Viewing (观测) transformation</h3><ul>
-<li><p>View (视图) / Camera transformation  </p>
-<ul>
-<li>Think about how to take a photo <ul>
-<li>Find a good place and arrange people (model transformation) </li>
-<li>Find a good “angle” to put the camera (view transformation)</li>
-<li>Cheese! (projection transformation)<ul>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914224154.png" alt="image-20210914224154439"></li>
-<li>定义相机</li>
-<li>位置</li>
-<li>往哪看</li>
-<li>向上方向</li>
-<li>现实中是移动相机，变换景物</li>
-<li>图形学中，相机不动，永远在原点</li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914223830.png" alt="image-20210914223829896" style="zoom:50%;" /></li>
-<li>经过变换，把相机的位置移动到原点，同时保持看到的景物不变</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914225726.png" alt="image-20210914225726865"></p>
-</li>
-<li><p>这个从“歪”的坐标轴旋转回正的坐标轴，不太好写。 但是这个变换的逆过程，即：从正的坐标轴旋转到“歪”的坐标轴，是好写的， 于是我们先写从“正”坐标轴变换到“歪”坐标轴的变换矩阵，再求其逆矩阵，就可以得到待求的变换矩阵。 又因为旋转矩阵是正交矩阵，所以他的逆矩阵就只需要转置一下就可以得到了！ 注意，不但相机要做这个变换，其他物体也要做这个变换，因为我们想让相机看到的景物相对不变。 （以上部分个人认为非常巧妙和关键！）</p>
-</li>
-<li><p>Projection (投影) transformation</p>
-<ul>
-<li><p>3D to 2D</p>
-</li>
-<li><p>Orthographic (正交) projection  </p>
-<p> <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914230822.png" alt="image-20210914230821994"></p>
-<ul>
-<li><em>没有近大远小</em></li>
-<li>平行投影<ul>
-<li>首先定义空间中一个立方体，将其translate，使其中心在原点，再scale成标准立方体（边长为2</li>
-</ul>
-</li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915120758.png" alt="image-20210915120758604"></li>
-<li>再次提醒，注意𝑧轴是近大远小 OpenGL等API是反过来的</li>
-</ul>
-</li>
-<li><p>Perspective (透视) projection</p>
-<p> <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914230840.png" alt="image-20210914230840011"></p>
-<ul>
-<li><p>更像人眼看到的场景</p>
-</li>
-<li><p>Most common in Computer Graphics, art, visual system </p>
-</li>
-<li><p>Further objects are smaller </p>
-</li>
-<li><p>Parallel lines not parallel; converge to single point</p>
-</li>
-<li>Recall: property of homogeneous coordinates<ul>
-<li>(x, y, z, 1), (kx, ky, kz, k != 0), (xz, yz, z2, z != 0) all represent  the same point (x, y, z) in 3D </li>
-<li>e.g. (1, 0, 0, 1) and (2, 0, 0, 2) both represent (1, 0, 0)</li>
-</ul>
-</li>
-<li>how to do perspective projection<ul>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122816.png" alt="image-20210915122816233"></li>
-<li>先将frustum远平面，挤压成和近平面一样大（从左图变成右图）</li>
-<li>再做正交投影，投影到近平面</li>
-<li>上述操作过程中几点假设：<ul>
-<li>1）近平面保持不变 </li>
-<li>2）z值保持不变，只是向内收缩</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122907.png" alt="image-20210915122907760"></li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122956.png" alt="image-20210915122956833"></li>
-<li>挤压这一步怎么做？ 上图是从侧面观察frustum 用相似三角形知识可以得到新坐标的表达式，但是第三个分量目前还不知道（这里利用之前讲的那个性质： 齐次坐标，如果我们对点的坐标所有分量同时乘以k，他表示的还是原来那个点！  </li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123123.png" alt="image-20210915123123207"></li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123140.png" alt="image-20210915123140120"></li>
-<li>如何求解第三行<ul>
-<li>任何近平面上的点不会改变（也就是对于任意的(𝑥, 𝑦, 𝑛, 1)，经过这个矩阵变换后，点的位置仍然不变）</li>
-<li>任何远平面上的点，𝑧值不会改变</li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123415.png" alt="image-20210915123415483"></li>
-<li>点(𝑥, 𝑦, 𝑧, 1)是可以通过矩阵变换得到(𝑛𝑥, 𝑛𝑦, 𝑢𝑛𝑘𝑛𝑤𝑜𝑛, 𝑧)向量的。 根据上文提到的性质（1），经过这个变换，点实际没有改变 而同时，(𝑥, 𝑦, 𝑧, 1)本身可以写成(𝑥, 𝑦, 𝑛, 1)（为什么把𝑧替换成𝑛？因为近平面的𝑧坐标就是都是𝑛，所以可以做这个替换。）然后同时乘以𝑛， 变成(𝑛𝑥, 𝑛𝑦, 𝑛 ଶ , 𝑛) 经过上面两个推导，可以看出，第三行前两个数一定是0 因为𝑛 ଶ这个分量和𝑥和𝑦都毫无关系，因此前两个数必定是0 这样，我们就解出了第三行前两个数，都是0 接下来求A和B</li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123500.png" alt="image-20210915123459854"></li>
-<li>远平面上有一个特殊点，(0, 0, 𝑓)经过变换挤压仍然不变 所以(0, 0, 𝑓)经过变换仍然是(0, 0, 𝑓) 根据近平面我们得到$An + B = n^{2}$,根据远平面的中心点我们得到$Af + B = f^{2}</li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123625.png" alt="image-20210915123625508"></li>
-<li>这样我们就能解出A和B了， 这样终于把从透视投影挤压成正交投影的矩阵，解出来了</li>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123651.png" alt="image-20210915123651566"></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>思考题</p>
-<ul>
-<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123710.png" alt="image-20210915123709902"></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="Lecture05-Rasterization-1-Triangles"><a href="#Lecture05-Rasterization-1-Triangles" class="headerlink" title="Lecture05: Rasterization 1(Triangles)"></a>Lecture05: Rasterization 1(Triangles)</h2><h3 id="Finishing-up-Viewing"><a href="#Finishing-up-Viewing" class="headerlink" title="Finishing up Viewing"></a>Finishing up Viewing</h3><ul>
-<li>Viewport(视口) transformation</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005190732.png" alt="image-20211005190731847" style="zoom: 50%;" /></p>
-<p>上节课把透视投影转化成正交投影 这里引入另外一个概念 Field of View，表示你能看到的角度的范围 注意看上图中红色线的夹角，就是垂直可视角度，他越大，可视角度越大 同理还有水平可视角度</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005190927.png" alt="image-20211005190926969"></p>
-<p>MVP这三个变换之后，所有东西都会停留在一个1，1，1的位于原点的标准立方体中 下一步就要把这立方体画在屏幕上</p>
-<h3 id="Rasterization（光栅化，即把东西花在屏幕上"><a href="#Rasterization（光栅化，即把东西花在屏幕上" class="headerlink" title="Rasterization（光栅化，即把东西花在屏幕上"></a>Rasterization（光栅化，即把东西花在屏幕上</h3><h4 id="屏幕"><a href="#屏幕" class="headerlink" title="屏幕"></a>屏幕</h4><ul>
-<li><p>像素是最小的屏幕单位</p>
-</li>
-<li><p>每个像素有不同的颜色</p>
-</li>
-<li><p>屏幕空间：就是给屏幕定义一个坐标系 比如，可以定义左下角是原点。 </p>
-</li>
-<li><p>实际上像素的中心是(𝑥 + 0.5, 𝑦 + 0.5)</p>
-</li>
-<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191523.png" alt="image-20211005191523440"></p>
-</li>
-<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191557.png" alt="image-20211005191556944"></p>
-<p>我们要做的就是把标准立方体空间映射到屏幕这个二维世界中去 𝑧暂时不管 其他两个坐标是[−1, 1] ଶ转换到 [0, 𝑤𝑖𝑑𝑡ℎ] ∗ [0, ℎ𝑒𝑖𝑔ℎ𝑡] 使用上面这个矩阵做变换</p>
-</li>
-</ul>
-<h4 id="Rasterizing-a-triangle"><a href="#Rasterizing-a-triangle" class="headerlink" title="Rasterizing  a triangle"></a>Rasterizing  a triangle</h4><ul>
-<li><p>三角形可以拼接在三维空间中的面，或者二维空间中复杂的图形 </p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191718.png" alt="image-20211005191718242"></p>
-</li>
-<li><p>三角形内部一定是平面的 </p>
-</li>
-<li>给三角形顶点定义不同属性，可以在三角形内部进行插值</li>
-<li>通过采样的方式，来画出三角形<ul>
-<li>采样就是把函数离散化的过程</li>
-<li>可以对时间，面积，方向，体积… 进行采样</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191941.png" alt="image-20211005191941468"></p>
-<p>定义二值函数：</p>
-<script type="math/tex; mode=display">
-inside(tri, x,y) = \left\{\begin{array}{rcl}
-1  &      & {Point(x,y) \ in  \ triangle \ t}\\
-0  &      & {otherwise}\\
-\end{array}\right.</script><ul>
-<li><p>这里我们要做的就是给定一个三角形，判断像素中心是否在三角形内部。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005192820.png" alt="image-20211005192820679"></p>
-</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005192920.png" alt="image-20211005192920137"></p>
-<p>那么，如何判断一个点是否在三角形内？用叉乘！！ 比如对上图，判断Q是否在三角形内部 首先$𝑃1𝑃2 \  X \ 𝑃1𝑄 $，将会得到一个z为正数的向量，也就是结果向量朝向屏幕外的，利 用右手定则，可以得知𝑄在𝑃1𝑃2的左侧（因为如果在右侧，那么结果将会是向量𝑧为负 数，那么结果向量就朝向屏幕内部） 类似的𝑃2𝑃0 𝑋 𝑃2𝑄，得到𝑄在右侧，不对劲！ 𝑃0𝑃1 𝑋 𝑃0𝑄，得到𝑄在左侧</p>
-<p>注意，向量按照一定的顺序去判断，比如我们上面是按照P1, P2, P0去判断的</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005193137.png" alt="image-20211005193137111"></p>
-<p>检查屏幕所有的像素太花时间！ 可以只检查蓝色的包围盒（Bounding box）部分</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005193213.png" alt="image-20211005193213667"></p>
-<p>也可以每一行设置一个包围盒，进一步减小包围盒 很适用于那种三角形很小，但是包围盒很大的（窄长三角形</p>
-<h2 id="some-words"><a href="#some-words" class="headerlink" title="some words"></a>some words</h2><p>syllabus  教学大纲</p>
-<p>cube  立方体</p>
-<p>canonical 标准的</p>
-<p>aspect ratio 横纵比</p>
-<p>requirements 要求</p>
-<p>submission 提交</p>
-<p>slides 幻灯片</p>
-<p>Bulletin Board System BBS</p>
-<p>Semantic Segmentation 语义切割</p>
-<p>code skeletons 代码框架</p>
-<p>IDE: Integrated Development Environment</p>
-<p>parse 解析</p>
-<p>Academic integrity 学术诚信</p>
-<p>Valentine’s Day 情人节</p>
-<p>brutal 粗暴的</p>
-<p>coordinates 坐标</p>
-<p> Parallelogram law 平行四边形法则</p>
-<p>Triangle law 三角法则</p>
-<p>orthogonal 正交的</p>
-<p> scalar 标量</p>
-<p>decompose 分解</p>
-<p>haunt 出没</p>
-<p>pervasively 普遍地</p>
-<p>multiplication 乘法</p>
-<p>trivial 琐碎的</p>
-]]></content>
-      <categories>
-        <category>CG</category>
-      </categories>
-      <tags>
-        <tag>CG</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>墨子平台训练教程</title>
-    <url>/MARL/MADRL/%E5%A2%A8%E5%AD%90%E5%B9%B3%E5%8F%B0%E8%AE%AD%E7%BB%83%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<p>下面介绍一下windows版本墨子平台的使用流程：</p>
-<ol>
-<li><h2 id="进入华戍防务-官网-hs-defense-com-下载软件"><a href="#进入华戍防务-官网-hs-defense-com-下载软件" class="headerlink" title="进入华戍防务 官网(hs-defense.com)下载软件"></a>进入<a href="http://www.hs-defense.com/col.jsp?id=105">华戍防务 官网(hs-defense.com)</a>下载软件</h2></li>
-</ol>
-<p>我下载的是<code>墨子·联合作战推演系统（个人版）</code> </p>
-<p><code>墨子·AI开发包</code>主要是一些开发会用到的代码和文档。代码也可以在gitee.com上找到：<a href="https://gitee.com/hs-defense/moziai">moziai: 墨子AI开发包及“子牙”智能体开源代码  </a></p>
-<p><code>竞赛客户端(互联网)</code> 主要是用来军事推演比赛的，与强化学习训练关系不大，可以不下载。</p>
-<p><code>墨子·AI版（Linux)</code> 因为一开始没办法下载，后面断断续续也没有弄出什么效果</p>
-<p>注：</p>
-<ul>
-<li><p>文件采用ftp协议下载，下载链接格式为：ftp: ip/port/文件夹s/文件</p>
-</li>
-<li><p>由于部分浏览器不支持，推荐使用QQ浏览器下载</p>
-</li>
-<li><p>一般点击下载按钮后，会默认让迅雷接管下载</p>
-</li>
-</ul>
-<ol>
-<li><h2 id="安装软件"><a href="#安装软件" class="headerlink" title="安装软件"></a>安装软件</h2><p>​    根据安装手册安装该软件，基本上按照手册进行就可以了</p>
-</li>
-<li><h2 id="启动该软件"><a href="#启动该软件" class="headerlink" title="启动该软件"></a>启动该软件</h2><ol>
-<li>进入安装目录下的\MoziData，右键点击<code>mysql.bat</code>，以管理员身份运行它，随后退出</li>
-<li>进入安装目录下的\MoziServer，运行MoziServer.exe，尽量关掉杀毒软件，最好以管理员身份运行<ul>
-<li>这里大概会遇到一个问题：<code>临时许可码过期，请联系华戍防务重新授权</code>，具体解决方案略</li>
-<li>我在数据库方面也出过问题，不过忘了具体细节了</li>
-</ul>
-</li>
-</ol>
-</li>
-<li><h2 id="运行代码，进行仿真训练"><a href="#运行代码，进行仿真训练" class="headerlink" title="运行代码，进行仿真训练"></a>运行代码，进行仿真训练</h2><ol>
-<li><p>获取代码，在IDE打开代码</p>
-</li>
-<li><p>加载代码所需的scen想定文件</p>
-<ul>
-<li>进入墨子平台，可以在想定一栏下找到<code>加载想定</code>的选项，想定文件是从<code>安装路径\MoziServer\bin\Scenarios\</code>获取的，因此需要把代码包里的scen文件放到这里。</li>
-<li>加载想定文件，选择推演方</li>
-<li>随后可以看到墨子平台上有了具体的想定环境</li>
-<li>如果要更改想定文件，改完之后，需要保存，再重新加载<ul>
-<li>因为训练的每个回合都会刷新环境，如果不保存更改到新scen文件，那么这个更改只能用于一个回合</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>运行main.py代码即可看到效果</p>
-<ul>
-<li><p>注：</p>
-<ul>
-<li><p>这里可能需要指定一下 墨子平台的路径，可以执行代码</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">os.environ[&#39;MOZIPATH&#39;] &#x3D; &#39;D:\\MoZiSystem\\Mozi\\MoziServer\\bin&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>也可以在<code>编辑系统环境变量</code>中添加路径</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-</li>
-</ol>
-<p>注：Linux版本的墨子平台还在折腾，因为虚拟机比较卡，服务器上又没办法弄出显示界面，还折腾了一堆配置，最近还没弄，如果有结果了，会在这里更新的</p>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>一些比较好的文章</title>
-    <url>/MARL/MADRL/%E4%B8%80%E4%BA%9B%E6%AF%94%E8%BE%83%E5%A5%BD%E7%9A%84%E6%96%87%E7%AB%A0/</url>
-    <content><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/bfa4054.html">深度学习 | 《深度学习入门之PyTorch》阅读笔记 | Justlovesmile’s BLOG</a></p>
-<p>注： 这本书的github代码已经4年没更新了，只适合速览一下，做个overview, 并不适合手敲学习</p>
-<p><a href="https://blog.justlovesmile.top/posts/43678.html">深度学习 | “花书”，Deep Learning笔记 | Justlovesmile’s BLOG</a></p>
-<p> 注：偏数学</p>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>机器学习，碎碎念</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库基础__笔记</title>
-    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%94%B6%E8%97%8F%E5%A4%B9/</url>
-    <content><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/41347.html">大学课程 | 数据库基础 | Justlovesmile’s BLOG</a></p>
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>算法分析与设计__笔记</title>
-    <url>/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95/%E6%94%B6%E8%97%8F%E5%A4%B9/</url>
-    <content><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/16050.html">大学课程 | 《算法分析与设计》笔记 | Justlovesmile’s BLOG</a></p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>什么是node.js</title>
-    <url>/js/js/%E4%BB%80%E4%B9%88%E6%98%AFnode.js/</url>
-    <content><![CDATA[<h1 id="node-js简介"><a href="#node-js简介" class="headerlink" title="node.js简介"></a>node.js简介</h1><ul>
-<li><p>node.js是运行在服务端的JavaScript,是一个事件驱动I\O服务端JavaScript环境</p>
-</li>
-<li><p>查看版本</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">node -v<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</li>
-<li><p>node版本管理工具nvm</p>
-</li>
-</ul>
-<h1 id="Node-js应用"><a href="#Node-js应用" class="headerlink" title="Node.js应用"></a>Node.js应用</h1><ul>
-<li>Node.js应用的构成：<ul>
-<li>引入required模块</li>
-<li>创建服务器</li>
-<li>接收请求与相应请求</li>
-</ul>
-</li>
-</ul>
-<h2 id="创建Node-js应用"><a href="#创建Node-js应用" class="headerlink" title="创建Node.js应用"></a>创建Node.js应用</h2><ul>
-<li><p>步骤一：引入required模块</p>
-<ul>
-<li>使用require指令来载入http模块，并将实例化的HTTP复制给变量http，实例如下：  <pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> http <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"http"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</li>
-</ul>
-</li>
-<li><p>步骤二： 创建服务器</p>
-<ul>
-<li>创建一个server.js的文件：<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> http <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"http"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-http<span class="token punctuation">,</span><span class="token function">createServer</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span>response</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-    <span class="token comment">// 发送http头部</span>
-    <span class="token comment">//HTTP状态值：200：OK</span>
-    <span class="token comment">//内容类型：text/plain</span>
-    response<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span><span class="token punctuation">&#123;</span><span class="token string">'Content-Type'</span><span class="token operator">:</span>'text<span class="token operator">/</span>plain<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">//发送响应数据 “Hello World"</span>
-    response<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">'Hello World\n'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-
-<span class="token comment">//终端打印如下信息</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Server running at http://127.0.0.1:8888/'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
-<li><p>使用node命令执行以上代码</p>
-  <pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">node server.js<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</li>
-<li><p>访问<a href="http://127.0.0.1:8888">http://127.0.0.1:8888</a></p>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="npm使用介绍"><a href="#npm使用介绍" class="headerlink" title="npm使用介绍"></a>npm使用介绍</h2><ul>
-<li><p>查看npm版本</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm -v <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</li>
-<li><p>升级版本</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm install npm -g<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</li>
-<li><p>安装包</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm install &lt;Module Name&gt; # 本地安装
-npm install &lt;Module Name&gt; -g # 全局安装<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-</li>
-<li><p>查看安装信息</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm list -g 			# 查看全局安装的模块
-npm ist &lt;Module Name&gt;	# 查看某个模块的版本号
-npm ls					# 查看当前目录下的包信息<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-</li>
-<li><p>卸载模块</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm un &lt;Module Name&gt; <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</li>
-<li><p>更新模块</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm update &lt;Module Name&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</li>
-<li><p>搜索模块</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm search &lt;Module Name&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</li>
-<li><p>创建模块</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$npm init			# 会自动生成package.json
-
-$npm adduser 		# 在npm资源库中注册用户
-Username:XXXX
-Password:XXXX
-Email:XXXX
-
-$npm publish		# 发布模块
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-</ul>
-<h2 id="Node-js-REPL-交互式解释器"><a href="#Node-js-REPL-交互式解释器" class="headerlink" title="Node.js REPL(交互式解释器)"></a>Node.js REPL(交互式解释器)</h2><ul>
-<li><p>REPL(Read Eval Print Loop:交互式解释器)，Node自带交互式解释器，可以执行读取,执行,打印,循环等任务</p>
-</li>
-<li><p>在Node的REPL中可以执行：</p>
-<ul>
-<li>简单的表达式计算</li>
-</ul>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$node
-&gt;1 + 4
-5
-&gt; 5 &#x2F; 2
-2.5
-&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<ul>
-<li>使用变量</li>
-</ul>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node
-&gt; 1+4
-5
-&gt; 5&#x2F;2
-2.5
-&gt; x&#x3D;10
-10
-&gt; var y&#x3D;10
-undefined
-&gt; x+y
-20
-&gt; console.log(&quot;Hello World!&quot;)
-Hello World!
-undefined
-&gt;  
- <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<ul>
-<li>多行表达式</li>
-</ul>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node
-&gt; do &#123;
-... x++;
-... console.log(&quot;x:&quot;+x);
-... &#125;while(x&lt;5);
-x:1
-x:2
-x:3
-x:4
-x:5
-undefined
-&gt;  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<ul>
-<li><p>下划线变量<strong>[使用下划线(_)获取上一个表达式的运算结果]</strong></p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node
-&gt; var x&#x3D;10;
-undefined
-&gt; y&#x3D;10;
-10
-&gt; x+y
-20
-&gt; var sum&#x3D;_
-undefined
-&gt; console.log(sum)
-20
-undefined
-&gt; <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-</ul>
-</li>
-<li><p>两次ctrl+c停止REPL</p>
-<h2 id="Node-js的回调函数"><a href="#Node-js的回调函数" class="headerlink" title="Node.js的回调函数"></a>Node.js的回调函数</h2><ul>
-<li><p>Node.js异步编程的直接体现就是回调</p>
-</li>
-<li><p>阻塞代码实例</p>
-<ul>
-<li><p>创建一个文件 input.txt ，内容如下：</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">Hello world!<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</li>
-<li><p>创建 main.js 文件, 代码如下：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"fs"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">var</span> data <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span><span class="token string">'input.txt'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"程序执行结束!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-<li><p>以上代码执行结果如下：</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node main.js
-Hello World！
-
-程序执行结束!<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-</li>
-</ul>
-</li>
-<li><p>非阻塞代码实例</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"fs"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">'input.txt'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> data</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token keyword">return</span> console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"程序执行结束!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>以上代码执行结果如下：</p>
-<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node main.js
-程序执行结束!
-Hello World!<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-</li>
-<li><p>第一个实例在文件读取完后才执行完程序。 第二个实例我们不需要等待文件读取完，这样就可以在读取文件时同时执行接下来的代码，大大提高了程序的性能。</p>
-</li>
-<li><p>因此，阻塞是按顺序执行的，而非阻塞是不需要按顺序的，所以如果需要处理回调函数的参数，我们就需要写在回调函数内。</p>
-</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>js</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>How-to-be-a-good-programmer</title>
-    <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/To-be-a-good-programmer/</url>
-    <content><![CDATA[<h2 id="实例驱动学习"><a href="#实例驱动学习" class="headerlink" title="实例驱动学习"></a>实例驱动学习</h2><p>在知识爆炸的年代, 想成为一个好的程序员, 要具备这样一个精神:</p>
-<p><strong>开发者精神</strong></p>
-<blockquote>
-<p>开发者精神是指, 从学习编程第一天起, 你的目标, 你所做的事, 永远不是以<code>要学会XX</code>为目标, 而是以<code>开发出XX</code>为目标, 深刻意识到你学习的一切, 最终是为了你的开发而服务的。</p>
-</blockquote>
-<p>而开发者精神的反面则是<code>学生气</code>:</p>
-<p><strong>学生气</strong></p>
-<blockquote>
-<p>从学习编程的第一天起, 就把自己当学生, 上课听讲记笔记为第一位, 记忆知识点为第一位, 买教材读教材为第一位, 追求<code>学会XX</code>, 而不是<code>用它开发出XX</code>。</p>
-</blockquote>
-<p>我们举个例子， 假如你要学习Java，<code>学生气</code>的学生行为模式:</p>
-<pre><code>读教材, 听课, 记笔记, 追求把这个语言的每个知识点都记得很清楚, 追求一种&quot;内功&quot;的修炼, 在这个过程中, 从来不想着用它去&quot;创造&quot;什么. 在学习的第一天起, 他给自己定下了一个目标:
-
-&quot;我这个学期一定要把这个语言的基础打牢, 最后在考试中取得高分, 并且为以后的学习提供更坚实的基础.&quot;
-</code></pre><p>那么具有<code>开发者精神</code>的人会这样做:</p>
-<pre><code>先大体了解一下Java语言在哪些领域比较强势, 做一个简单的调研, 得出了Java在Web领域很强势这一个信号, 于是在学习Java的第一天起, 他就给自己定下了一个目标: 
-
-&quot;我要在半年内通过学习Java, 运用Java做出一个中小型的, 基于Web的企业管理后台&quot;
-</code></pre><p>这两种人, 起点都一样, 都是<code>完全不会Java</code>, 但是最后的结果往往是, 后者无论是知识熟练度还是实用性都会超过前者, 而且整个学习过程会有源源不断地动力.</p>
-<p><code>夯实基础</code>这个目标, 其实是空洞的, 什么叫做夯实? 什么叫做基础? 而且就算你真的夯实了基础, 你也极有可能陷入一种<code>虚无感</code>中, 因为你的所有知识, 都会遗忘.</p>
-<p>这就是为什么很多计算机专业学生很爱问的一个问题:</p>
-<pre><code>&quot;学了这么多知识, 忘了怎么办?&quot;
-</code></pre><p>如果你具备<code>开发者精神</code>, 那么你根本不会理会这个问题, 因为, 你开发出的东西, 你做出的产品, 它就是永久存在在这个世界上的, 你的成就感来源于真实的, 具体的, 可持久延续的项目中, 而不是来源于”我学会了什么”.</p>
-<p>我们一定要明白:</p>
-<pre><code>一切不谈成就感, 不谈反馈的学习劝导, 都是在耍流氓
-</code></pre><p>既然我们想获得反馈, 那么一个很现实的建议就是, 在Github上创建你的第一个开源代码仓库, 长期地, 稳定地commit, 当然, 至于这个仓库到底是干啥的, 这个因人而异, 有可能是你自己开发的一个VScode插件, 有可能是你自己写的读书笔记, 在这个不断地commit的过程中, 感受你的代码仓库不断增长不断完善的过程中, 你会获得一个比较持久的反馈和成就感, 一旦有了反馈和成就感, 那么你的学习动力就会一直保持, 也可以从学习中获得快乐.</p>
-<p><strong>记住, 你不是学生, 你是开发者.</strong></p>
-<h2 id="知识输入与输出"><a href="#知识输入与输出" class="headerlink" title="知识输入与输出"></a>知识输入与输出</h2><p>当你学习一个东西的时候, 如果学完马上用语言讲给别人听, 你会学的更好, 而且会发现新问题.</p>
-<p>很多学习理论都指出, 知识的学习, 输入固然重要, 输出更为重要.</p>
-<p>输入就是学习别人的知识, 输出就是把自己学会的知识用文字, 语言的形式表达出来, 很多人的学习, 只有输入, 没有输出, 这样的学习肯定是不行的.</p>
-<p>几乎所有优秀的程序员, 都有攥写技术文章的习惯, 很多时候, 并不是他们什么都懂, 而是他们刚学会了什么, 然后就围绕着这个刚学会的东西, 用自己的语言讲出来, 久而久之, 就会被别人觉得是大牛, 但是他和你的区别, 有可能仅仅是是否输出的区别.</p>
-<p>建议所有计算机学习者, 都要有写技术文章/读书笔记的习惯, 可以发表在自己的个人主页, 其他平台上, 攥写技术文章也可以很好地增加面试官对你的好感.</p>
-<p>写技术文章的时候, 最好用<code>MarkDown</code>哦, 程序员是不需要用<code>Word</code>这种东西的, 我们的内容是要方便发表在网站上, <code>Word</code>不能直接在网站里显示, 而<code>MarkDown</code>可以轻易地转换成<code>html</code>格式文件, 在浏览器中显示.</p>
-<h2 id="代码风格篇"><a href="#代码风格篇" class="headerlink" title="代码风格篇"></a>代码风格篇</h2><p>现在几乎所有主流语言都有相应的代码风格检查工具, 一般已IDE或Editor的插件或扩展形式给出</p>
-<h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><p>设计模式并不是针对任何一种语言, 而是一种用编程语言描述现实世界问题广泛采用的各种模式, 比如, 观察者模式, 工厂模式, 依赖注入模式等.</p>
-<p>好的设计模式, 是好代码的保证, 只有先学会了设计模式, 才能在软件设计中游刃有余, 而且更现实的问题是, 现在很多框架, 比如Spring, Angular等, 都充斥了大量的设计模式, 比如<code>Factory Pattern</code>, <code>Dependency Injection Pattern</code>, 你必须理解这些设计模式, 你才能理解这个框架.</p>
-<p>个人认为设计模式没有必要买本教材, 结合视频和技术文章, 就足以理解和运用.</p>
-<h3 id="小习惯"><a href="#小习惯" class="headerlink" title="小习惯"></a>小习惯</h3><ol>
-<li>不要嫌变量名长, 最好可以直接通过变量名推测变量的作用.</li>
-<li>重复出现的代码, 封装成独立的类或函数.</li>
-<li>提前降低代码的耦合度, 不同作用, 不同类别的代码, 不要混在一起, 最好分成独立的文件</li>
-<li>将代码进行业务分层, 比如在Web开发中, 有数据层, 服务层, DTO层, Controller层, 渲染层等, 只有将层次分开了, 才能获得足够的可拓展性, 不然代码多了你就全乱了.</li>
-<li>用良好的设计模式去”设计”软件, 在执行一些算法的时候, 可以想一想它的时空复杂度, 想一想怎么可以让它执行地更快.</li>
-</ol>
-<h2 id="如何管理自己的电脑"><a href="#如何管理自己的电脑" class="headerlink" title="如何管理自己的电脑"></a>如何管理自己的电脑</h2><h3 id="包管理工具"><a href="#包管理工具" class="headerlink" title="包管理工具"></a>包管理工具</h3><p>为了更好的管理我们的各种应用包，最好使用包管理工具来进行各种包，软件的安装和使用, 方便进行卸载, 更新, 安装, 无需打开浏览器即可完成一系列操作.</p>
-<blockquote>
-<p>linux : apt-get (ubuntu distro)<br>    osx : brew<br>    windows: Chocolatey</p>
-</blockquote>
-<p>另外, windows平台上的包管理工具, 在国内的网络环境下经常慢的感人, 所以<code>Chocolatey</code>可能使用体验并不好.  推荐使用今年微软新发布的 <code>WSL2</code>, 这个东西不是那种传统的虚拟机, 有了它你可以像操作linux系统那样操作windows系统, 而且支持 <code>docker</code>, 甚至我推荐以后大家所有命令都可以在<code>WSL2</code>里执行.</p>
-<h3 id="容器-Docker"><a href="#容器-Docker" class="headerlink" title="容器 - Docker"></a>容器 - Docker</h3><p>为了更方便的进行开发环境配置，我推荐所有计算机学生尽早了解和使用Docker。</p>
-<p>Docker 就是为了解决复杂的环境配置问题而生的。</p>
-<p>它将你的软件和软件所依赖的所有环境打包成一个镜像(Image), 该镜像可以在任何一台装有docker 的电脑上运行, 和操作系统无关, 也就是docker 把运行环境和你的操作系统隔离开来了，中间隔了一层docker engine 。</p>
-<p>写过不少代码的你一定见过这种现象：你的代码在自己电脑上能运行，但是在别人电脑上就会报错，无法运行，原因很简单，任何软件的运行都需要环境。</p>
-<p>比如，jar包的运行需要jre ，python脚本的运行需要python 解释器安装在电脑上，以后你可能还需要运行一些服务，比如数据库mysql server , redis , rabbitmq , 随着软件运行环境复杂度的增加, 你的软件运行条件也变得苛刻，如果你想把本地的应用部署到服务器上，那事更多，需要的环境得一个个地装到你的linux服务器上，如何彻底解决这个问题？</p>
-<p>只需在你的电脑中安装docker , 你就可以毫无后顾之忧。</p>
-<p>所有的环境，服务，软件都是以Image 的形式打包的，Image 中包含了运行你软件的所有东西，比如你的软件是个python 脚本, 并且使用了第三方库flask，那这个Image 中就包含了python ,也就是它的base image , 也同时包含了flask, 这样的话任何一个装有docker的电脑都可以运行你的image。</p>
-]]></content>
-      <categories>
-        <category>碎碎念</category>
-      </categories>
-      <tags>
-        <tag>Advice</tag>
       </tags>
   </entry>
   <entry>
@@ -2478,6 +1981,302 @@ driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;
       </categories>
   </entry>
   <entry>
+    <title>英文单词</title>
+    <url>/MARL/code_notes/%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E8%8B%B1%E6%96%87/</url>
+    <content><![CDATA[<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>reg  寄存器</p>
+<p>mean 平均值</p>
+<p>clip  裁剪</p>
+<p>fluid ?流动的</p>
+<p>spawn 产卵</p>
+<p>denom 分母</p>
+<p>dim 维度</p>
+<p>utils 工具</p>
+<p>lemma 引理</p>
+<p>priority 优先权</p>
+<p>Dueling 决斗 竞争</p>
+<p>minibatch 小批量</p>
+<p>algo 算法（简写</p>
+<p>built-in 内置</p>
+<p>renderer 渲染器</p>
+<p>gridworld 网格</p>
+<p>Placeholder  占位符</p>
+<p>render 渲染 刷新</p>
+<p>enumerate 枚举</p>
+<p>Norm  常态 定额 标准</p>
+<p>pred  预测</p>
+<p>session 一节，一段时间</p>
+<p>eval 评估</p>
+<p>adversaries 对手</p>
+<p>benchmark 基准</p>
+<p>scenario 设想 方案，预测/场景</p>
+<p>parser 解析器</p>
+<p>script 脚本</p>
+<p>optimizer 优化器</p>
+<p>discount factor 折扣因子通常表示为 <em>γ</em>，是一个乘以未来预期奖励的因子，在[0，1]的范围内变化。它控制着未来奖励相对于眼前奖励的重要性。折扣因子越低，未来的奖励就越不重要，代理将倾向专注于只产生即时奖励的动作。</p>
+<p>MLP 多层感知器</p>
+<p>preset 预设</p>
+<p>discrete 离散的</p>
+<p>landmark 特征<del>地标</del></p>
+<p>round 回合</p>
+<p>properties 属性</p>
+<p>diagnostic 诊断的</p>
+<p>metrics 指标</p>
+<p>deception 欺骗</p>
+<p>interval 间隔</p>
+<p>deceive 欺骗</p>
+<p>Covert 隐蔽</p>
+<p>crypto 秘密(支持者)</p>
+<p>encrypt 加密</p>
+<p>policy  策略</p>
+<p>跑完整个训练数据集，叫做一个epoch。一个epoch包含多个episode。一个episode完成一次模型验证，保存最优模型，简单来说就是多少个step进行一次模型验证。</p>
+<p>假设整个训练数据集有n=10,000个样本，batch_size=10，那么一个epoch就包含10,000/10=1,000个step（或iteration）。假设episodes=100，即一个episode包含100个step，那么一个epoch就包含1,000/100=10个episode。每一个episode完成后，进行一次模型验证，并保存模型（一般模型性能没有提升，则不保存）</p>
+<p>agent根据某个策略执行一系列action到结束就是一个episode。</p>
+<p>episode就是每次游戏达到结束后所有action的集合，就是每局完整游戏的策略</p>
+<ul>
+<li><strong>Episode</strong>：介于初始状态和最终状态之间的所有状态；例如一局象棋。代理的目标是在一个情景（Episode）内获得最大的总奖励。在没有终态的情况下，考虑无限的情景。重要的是，不同的情景是完全相互独立的。</li>
+<li><strong>Episodic Tasks</strong>：由不同情景组成的强化学习任务，意味着，每个情景都有最终状态。</li>
+<li><strong>Expected Return</strong>：有时称为总体奖励（overall reward），有时称为G，是整个情景的预期奖励。</li>
+<li><strong>Experience Replay</strong>：由于强化学习任务没有预先生成的可以学习的训练集，代理必须记录它遇到的所有状态转换，以便以后可以从中学习。用于存储这些内容的内存缓冲区（memory-buffer）通常被称为 Experience Replay。这些内存缓冲区有几种类型和架构，最常见的是 <a href="https://en.wikipedia.org/wiki/Circular_buffer">循环内存缓冲区（cyclic memory buffer）</a>，确保代理保持对其新行为的训练，而不是对可能不再相关的事情的训练；另一种是 <a href="https://en.wikipedia.org/wiki/Reservoir_sampling">基于存储区采样的内存缓冲区（reservoir-sampling-based memory）</a>，确保记录的每个状态转换都有均匀的概率插入缓冲区。</li>
+<li><strong>Exploitation &amp; Exploration</strong>：强化学习任务没有预先生成的训练集，他们可以从中学习——他们创建自己的经验并“动态”学习。为了做到这一点，代理需要在许多不同的状态下尝试许多不同的动作，以便尝试和学习所有可用的可能性，并找到使其整体奖励最大化的路径，这被称为探索（Exploitation），因为代理探索环境。另一方面，如果代理所做的只是探索，它将永远不会最大化整体奖励——它还必须使用它学到的信息来这样做，这被称为开发（Exploration），因为代理人利用其知识来最大化其获得的回报。两者之间的权衡是强化学习问题的最大挑战之一，因为两者必须平衡，以便代理既能充分探索环境，又能利用它所学的知识，并重复它发现的最有价值的路径。</li>
+<li><strong>Greedy Policy, \</strong>ε ε*ε**<em>-Greedy Policy*</em>：贪婪策略意味着代理不断执行被认为能产生最高预期回报的操作。显然，这样的策略根本不允许代理进行探索。为了仍然允许一些探索，通常使用ε-贪婪策略：选择[0，1]范围内的数字(称为ε)，并且在选择动作之前，选择[0，1]范围内的随机数。如果该数字大于ε，则选择贪婪操作；但如果该数字小于ε，则选择随机操作。注意，如果ε=0，则策略成为贪婪策略，如果ε=1，则始终探索。</li>
+<li><strong>k-Armed Bandits: See Bandits</strong>。</li>
+<li><strong>Markov Decision Process (MDP)</strong>：马尔可夫属性意味着每个状态只依赖于它的前一个状态、从该状态采取的选定动作以及在该动作执行后立即获得的奖励。数学表示为：s ′ = s ′ ( s , a , r ) s’ = s’(s, a, r)<em>s</em>′=<em>s</em>′(<em>s</em>,<em>a</em>,<em>r</em>)，其中 s ′ s’<em>s</em>′ 是未来状态，s s<em>s</em> 是它的前一个状态，a a<em>a</em> 和 r r<em>r</em> 是动作和奖励。不需要事先知道 s s<em>s</em> 之前发生了什么——马尔可夫属性假设 s s<em>s</em> 包含了所有相关信息。马尔可夫决策过程是基于这些假设的决策过程。</li>
+<li><strong>Model-Based &amp; Model-Free</strong>：基于模型和无模型是代理在试图优化其策略时可以选择的两种不同方法。最好用一个例子来解释：假设你正在学习如何玩21点（Blackjack）。你可以通过两种方式做到这一点：第一种选择是提前计算，在游戏开始之前，所有状态的获胜概率，以及给定所有可能动作的所有状态转移概率（state-transition probabilities），然后简单地按照你的计算动作。第二种选择是在没有任何先验知识的情况下简单地执行，利用 试错法（trial-and-error）获取信息。注意，使用第一种方法，是在建模环境，而第二种方法不需要关于环境的信息。这正是基于模型和无模型的区别；第一种方法是基于模型的，而后者是无模型的。</li>
+<li><strong>Monte Carlo (MC)</strong>：蒙特卡罗方法是使用重复随机抽样（repeated random sampling）来获得结果的算法。它们在强化学习算法中经常被用来获得期望值（expected values）；例如，通过一次又一次地返回到相同的状态来计算状态值函数（state Value function），并对每次收到的实际累积奖励进行平均。</li>
+<li><strong>On-Policy &amp; Off-Policy</strong>：每个强化学习算法都必须遵循一些策略，以便决定在每个状态下执行哪些操作。然而，算法的学习过程在学习时不必考虑该策略。关注产生过去状态动作决策的策略的算法被称为策略（on-policy）算法，而忽略它的算法被称为无策略（off-policy）算法。一个众所周知的无策略算法是 <em>Q</em>−<em>L<strong>e</strong>a<strong>r</strong>n<strong>i</strong>n**g</em>，因为它的更新规则使用将产生最高 Q-Value 的动作，而实际使用的策略可能会限制该动作或选择另一个动作。Q<em>−</em>L<strong>e</strong>a<strong>r</strong>n<strong>i</strong>n<strong>g<em> 的策略变体称为 </em>S</strong>a<strong>r</strong>s<em>*a</em>，其中更新规则使用遵循的策略选择的操作。</li>
+<li><strong>Q-Learning</strong>：Q-Learning 是一种无策略强化学习算法，被认为是最基本的算法之一。在其最简化的形式中，它使用一个表来存储所有可能的状态-动作对（ state-action pairs）的所有Q-Values。它使用贝尔曼方程（Bellman equation）更新这个表，而动作选择通常是用 ε-贪婪策略 进行的。最简单的形式（状态转换和预期回报中没有不确定性）的 Q-Learning 的更新规则是：<em>Q</em>(<em>s</em>,<em>a</em>)=<em>r</em>(<em>s</em>,<em>a</em>)+<em>γ</em> <em>m<strong>a</strong>x**a</em> <em>Q</em>(<em>s</em>′,<em>a</em>)</li>
+</ul>
+<p>它的一个更复杂的版本 Deep Q-Network variant 更受欢迎，有时简称为 Deep Q-Learning 或 Q-Learning。这种变体用神经网络代替了状态-动作表（state-action table），以便处理大规模任务，其中可能的状态-动作对的数量可能是巨大的。可以在<a href="https://medium.com/@shakedzy/qrash-course-deep-q-networks-from-the-ground-up-1bbda41d3677">这里</a>找到这个算法的教程。</p>
+<ul>
+<li><strong>Q Value (Q Function)</strong>：通常记为 Q ( s , a ) Q(s, a)<em>Q</em>(<em>s</em>,<em>a</em>)，有时带 π π<em>π</em> 下标，有时在Deep RL中表示为 Q ( s , a ; θ ) Q(s, a; θ)<em>Q</em>(<em>s</em>,<em>a</em>;<em>θ</em>)，Q Value是对总体预期回报的度量，假设代理处于状态 s s<em>s</em> 并执行动作 a a<em>a</em>，然后按照某些策略 π π<em>π</em> 继续执行，直到情景结束。Q 是 Quality 一词的缩写，数学上定义为：<br>Q ( s , a ) = E [ ∑ n = 0 N γ n r n ] Q(s,a) = E[\sum^N_{n=0}\gamma^n r_n]<em>Q</em>(<em>s</em>,<em>a</em>)=<em>E</em>[<em>n</em>=0∑<em>N</em>​<em>γ<strong>n</strong>r**n</em>​]<br>其中 N N<em>N</em> 是从状态 s s<em>s</em> 到结束状态的状态数，γ γ<em>γ</em> 是折扣因子，r 0 r^0<em>r</em>0 是在状态 s s<em>s</em> 中执行动作 a a<em>a</em> 后立即获得的奖励。</li>
+<li><strong>REINFORCE Algorithms</strong>：强化算法是一类强化学习算法，它们根据策略相对于<a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">策略参数</a>的梯度来更新策略参数。该名称通常只用大写字母书写，因为它最初是原始算法组设计的首字母缩写：REward Increment = <a href="https://link.springer.com/content/pdf/10.1007/BF00992696.pdf">Nonnegative Factor x Offset Reinforcement x Characteristic Eligibility</a></li>
+<li><strong>Reinforcement Learning (RL)</strong>：与监督学习和无监督学习一样，强化学习是机器学习和人工智能的主要领域之一。它与一个任意存在的学习过程有关，这个任意存在被称为代理（Agent），它周围的世界被称为环境（Environment）。代理寻求从环境中获得最大的回报，并执行不同的动作，以了解环境如何响应并获得更多的回报。RL任务的最大挑战之一是将动作与延迟奖励相关联，延迟奖励是代理在产生奖励的动作完成后很久才收到的奖励。因此，它被大量用于解决不同类型的游戏，从井字棋、象棋、Atari 2600到围棋和星际争霸。</li>
+<li><strong>Reward</strong>：代理从环境中接收的数值，作为对代理操作的直接响应。代理的目标是最大化它在一个情景内获得的整体奖励，因此奖励是代理采取所需行为的动机。所有的动作都会产生奖励，奖励可以大致分为三种：强调期望行为的积极奖励；强调代理应该偏离的行为的消极奖励；以及零奖励，这意味着代理没有做任何特殊或独特的事情。</li>
+<li><strong>Sarsa</strong>：Sarsa 算法基本上是Q-Learning算法，为了使它成为一个在线算法，做了一些修改。Q-Learning 更新规则基于最佳Q-Value 的贝尔曼方程（Bellman equation），因此在状态转换和预期回报没有不确定性的情况下，Q-Learning 更新规则是：<br>Q ( s , a ) = r ( s , a ) + γ  m a x a  Q ( s ′ , a ) Q(s,a) = r(s,a) + \gamma\ max_a\ Q(s’, a)<em>Q</em>(<em>s</em>,<em>a</em>)=<em>r</em>(<em>s</em>,<em>a</em>)+<em>γ</em> <em>m<strong>a</strong>x**a</em>​ <em>Q</em>(<em>s</em>′,<em>a</em>)<br>为了将其转换为基于策略的算法，修改了最后一项：<br>Q ( s , a ) = r ( s , a ) + γ  Q ( s ′ , a ) Q(s,a) = r(s,a) + \gamma\ Q(s’, a)<em>Q</em>(<em>s</em>,<em>a</em>)=<em>r</em>(<em>s</em>,<em>a</em>)+<em>γ</em> <em>Q</em>(<em>s</em>′,<em>a</em>)<br>这里，动作 a a<em>a</em> 和 a ’ a’<em>a</em>’ 由相同的策略选择。算法的名称源自其更新规则，该规则基于 ( s , a , r , s ’ , a ’ ) (s,a,r,s’,a’)(<em>s</em>,<em>a</em>,<em>r</em>,<em>s</em>’,<em>a</em>’)，所有这些都来自同一个策略。</li>
+<li><strong>State</strong>：代理在环境中遇到的每个场景都被正式称为状态。代理通过执行操作在不同状态之间转换。还值得一提的是标志着一集结束的终端状态。在达到终端状态后，没有可能的状态，新的一集开始了。通常，终端状态被表示为一种特殊状态，在这种状态下，所有动作都转换到相同的终端状态，奖励为0。</li>
+<li><strong>State-Value Function</strong>：See Value Function。</li>
+<li><strong>Temporal-Difference (TD)</strong>：时间差分是一种结合动态规划和蒙特卡罗原理的学习方法；它像蒙特卡洛一样“在飞行中”学习，但是像动态规划一样更新它的估计。最简单的时域差分算法之一，称为一步时域或时域(0)。它根据以下更新规则更新值函数（Value Function）：<br>V ( s t ) = V ( s t ) + α [ r t + 1 + γ V ( s t + 1 ) − V ( s t ) V(s_t) = V(s_t) + \alpha [r_{t+1} + \gamma V(s_{t+1}) - V(s_t)<em>V</em>(<em>s**t</em>​)=<em>V</em>(<em>s**t</em>​)+<em>α</em>[<em>r**t</em>+1​+<em>γ**V</em>(<em>s**t</em>+1​)−<em>V</em>(<em>s**t</em>​)<br>其中 V V<em>V</em> 是值函数，s s<em>s</em> 是状态，r r<em>r</em> 是奖励，γ γ<em>γ</em> 是折扣因子，α α<em>α</em> 是学习率，t t<em>t</em> 是时间步长，<strong>等号用作更新运算符，而不是等式</strong>。方括号中的术语被称为 <strong>时间差异误差（temporal difference error）</strong>。</li>
+<li><strong>Terminal State</strong>：See State。</li>
+<li><strong>Upper Confident Bound (UCB)</strong>：UCB是一种探索方法，它试图确保每个动作都得到很好的探索。考虑一个完全随机的探索策略——也就是说，每个可能的动作都有相同的被选择的机会。有些动作很有可能会比其他动作被探索得更多。选择的动作越少，代理对其预期奖励的信心就越低，其开发阶段就可能受到损害。UCB的探索考虑了每一个动作被选择的次数，并给那些不太被探索的动作额外的权重。从数学上对此进行形式化，所选择的动作是通过：<br>a c t i o n = a r g m a x a  [ R ( a ) + c l n t N ( a ) ] action = argmax_a\ [R(a) + c\sqrt{\frac{lnt}{N(a)}}]<em>a<strong>c</strong>t<strong>i</strong>o**n</em>=<em>a<strong>r</strong>g<strong>m</strong>a<strong>x</strong>a</em>​ [<em>R</em>(<em>a</em>)+<em>c**N</em>(<em>a</em>)<em>l<strong>n</strong>t</em>​​]<br>其中，R ( a ) R(a)<em>R</em>(<em>a</em>) 是动作 a a<em>a</em> 的预期总回报，t t<em>t</em> 是采取的步骤数（总共选择了多少个动作），N ( a ) N(a)<em>N</em>(<em>a</em>) 是选择动作 a a<em>a</em> 的次数，c c<em>c</em> 是可配置的超参数。这种方法有时也被称为 乐观探索（exploration through optimism），因为它给不太被探索的行为一个更高的价值，鼓励模型选择它们。</li>
+<li><strong>Value Function</strong>：价值函数通常表示为<em>V</em>(<em>s</em>)，有时带有 π 下标，它是对总体预期奖励的一种度量，假设代理处于状态<em>s</em>，然后按照某个策略<em>π</em> 继续执行，直到情景结束。它在数学上定义为：<em>V</em>(<em>s</em>)=<em>E</em>[<em>n</em>=0∑<em>N</em>​<em>γ<strong>n</strong>r**n</em>​]<br>虽然它看起来确实类似于 Q-Value 的定义，但是有一个隐含的，重要的区别：对于n<em>=0，V</em>(<em>s</em>) 的 <em>r</em>0 的奖励是在任何动作被执行之前处于状态<em>s</em> 的预期奖励，而在Q-Value中，<em>r</em>0 是在某个动作被执行之后的预期奖励。这种差异也产生了优势函数（Advantage function）。</li>
+</ul>
+<p>env  环境</p>
+<p>obs  观察</p>
+<p>arg 参量</p>
+<p>arglist 参量表</p>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>什么是node.js</title>
+    <url>/js/js/%E4%BB%80%E4%B9%88%E6%98%AFnode.js/</url>
+    <content><![CDATA[<h1 id="node-js简介"><a href="#node-js简介" class="headerlink" title="node.js简介"></a>node.js简介</h1><ul>
+<li><p>node.js是运行在服务端的JavaScript,是一个事件驱动I\O服务端JavaScript环境</p>
+</li>
+<li><p>查看版本</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">node -v<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>node版本管理工具nvm</p>
+</li>
+</ul>
+<h1 id="Node-js应用"><a href="#Node-js应用" class="headerlink" title="Node.js应用"></a>Node.js应用</h1><ul>
+<li>Node.js应用的构成：<ul>
+<li>引入required模块</li>
+<li>创建服务器</li>
+<li>接收请求与相应请求</li>
+</ul>
+</li>
+</ul>
+<h2 id="创建Node-js应用"><a href="#创建Node-js应用" class="headerlink" title="创建Node.js应用"></a>创建Node.js应用</h2><ul>
+<li><p>步骤一：引入required模块</p>
+<ul>
+<li>使用require指令来载入http模块，并将实例化的HTTP复制给变量http，实例如下：  <pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> http <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"http"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+</ul>
+</li>
+<li><p>步骤二： 创建服务器</p>
+<ul>
+<li>创建一个server.js的文件：<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> http <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"http"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+http<span class="token punctuation">,</span><span class="token function">createServer</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span>response</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token comment">// 发送http头部</span>
+    <span class="token comment">//HTTP状态值：200：OK</span>
+    <span class="token comment">//内容类型：text/plain</span>
+    response<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span><span class="token punctuation">&#123;</span><span class="token string">'Content-Type'</span><span class="token operator">:</span>'text<span class="token operator">/</span>plain<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//发送响应数据 “Hello World"</span>
+    response<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">'Hello World\n'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+
+<span class="token comment">//终端打印如下信息</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Server running at http://127.0.0.1:8888/'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>使用node命令执行以上代码</p>
+  <pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">node server.js<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>访问<a href="http://127.0.0.1:8888">http://127.0.0.1:8888</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="npm使用介绍"><a href="#npm使用介绍" class="headerlink" title="npm使用介绍"></a>npm使用介绍</h2><ul>
+<li><p>查看npm版本</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm -v <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>升级版本</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm install npm -g<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>安装包</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm install &lt;Module Name&gt; # 本地安装
+npm install &lt;Module Name&gt; -g # 全局安装<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>查看安装信息</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm list -g 			# 查看全局安装的模块
+npm ist &lt;Module Name&gt;	# 查看某个模块的版本号
+npm ls					# 查看当前目录下的包信息<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>卸载模块</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm un &lt;Module Name&gt; <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>更新模块</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm update &lt;Module Name&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>搜索模块</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">npm search &lt;Module Name&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>创建模块</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$npm init			# 会自动生成package.json
+
+$npm adduser 		# 在npm资源库中注册用户
+Username:XXXX
+Password:XXXX
+Email:XXXX
+
+$npm publish		# 发布模块
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+<h2 id="Node-js-REPL-交互式解释器"><a href="#Node-js-REPL-交互式解释器" class="headerlink" title="Node.js REPL(交互式解释器)"></a>Node.js REPL(交互式解释器)</h2><ul>
+<li><p>REPL(Read Eval Print Loop:交互式解释器)，Node自带交互式解释器，可以执行读取,执行,打印,循环等任务</p>
+</li>
+<li><p>在Node的REPL中可以执行：</p>
+<ul>
+<li>简单的表达式计算</li>
+</ul>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$node
+&gt;1 + 4
+5
+&gt; 5 &#x2F; 2
+2.5
+&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>使用变量</li>
+</ul>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node
+&gt; 1+4
+5
+&gt; 5&#x2F;2
+2.5
+&gt; x&#x3D;10
+10
+&gt; var y&#x3D;10
+undefined
+&gt; x+y
+20
+&gt; console.log(&quot;Hello World!&quot;)
+Hello World!
+undefined
+&gt;  
+ <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>多行表达式</li>
+</ul>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node
+&gt; do &#123;
+... x++;
+... console.log(&quot;x:&quot;+x);
+... &#125;while(x&lt;5);
+x:1
+x:2
+x:3
+x:4
+x:5
+undefined
+&gt;  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>下划线变量<strong>[使用下划线(_)获取上一个表达式的运算结果]</strong></p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node
+&gt; var x&#x3D;10;
+undefined
+&gt; y&#x3D;10;
+10
+&gt; x+y
+20
+&gt; var sum&#x3D;_
+undefined
+&gt; console.log(sum)
+20
+undefined
+&gt; <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+</li>
+<li><p>两次ctrl+c停止REPL</p>
+<h2 id="Node-js的回调函数"><a href="#Node-js的回调函数" class="headerlink" title="Node.js的回调函数"></a>Node.js的回调函数</h2><ul>
+<li><p>Node.js异步编程的直接体现就是回调</p>
+</li>
+<li><p>阻塞代码实例</p>
+<ul>
+<li><p>创建一个文件 input.txt ，内容如下：</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">Hello world!<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>创建 main.js 文件, 代码如下：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"fs"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> data <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span><span class="token string">'input.txt'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"程序执行结束!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>以上代码执行结果如下：</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node main.js
+Hello World！
+
+程序执行结束!<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+</li>
+<li><p>非阻塞代码实例</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"fs"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">'input.txt'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> data</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token keyword">return</span> console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"程序执行结束!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>以上代码执行结果如下：</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">$ node main.js
+程序执行结束!
+Hello World!<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>第一个实例在文件读取完后才执行完程序。 第二个实例我们不需要等待文件读取完，这样就可以在读取文件时同时执行接下来的代码，大大提高了程序的性能。</p>
+</li>
+<li><p>因此，阻塞是按顺序执行的，而非阻塞是不需要按顺序的，所以如果需要处理回调函数的参数，我们就需要写在回调函数内。</p>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>js</category>
+      </categories>
+  </entry>
+  <entry>
     <title>jupyter_notebook常用插件介绍</title>
     <url>/others/jupyter-notebook/jupyter-notebook%E5%B8%B8%E7%94%A8%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<h2 id="Jupyter-NbExtensions-Configurator"><a href="#Jupyter-NbExtensions-Configurator" class="headerlink" title="Jupyter NbExtensions Configurator"></a>Jupyter NbExtensions Configurator</h2><p>Jupyter NbExtensions Configurator 是Jupyter Notebook的一个扩展工具，它提供了一系列标签，只需勾选相应插件就能自动载入。里面的插件能帮助减少工作量，书写更优雅的代码和更好的展示结构。</p>
@@ -2522,6 +2321,61 @@ jupyter nbextensions_configurator enable --user<span aria-hidden="true" class="l
 <p>这个工具对于从RStudio迁移来的项目来说是非常宝贵的。或是当我们不想继续打印df.shape、无法回忆x的类型时，Variableinspector将变得非常有用。</p>
 <p>如果有其他用到的插件会继续添加</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>服务器上配置jupyter_notebook_个人简易教程</title>
+    <url>/%E6%9C%8D%E5%8A%A1%E5%99%A8/jupyter-notebook/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E9%85%8D%E7%BD%AEjupyter-notebook-%E4%B8%AA%E4%BA%BA%E7%AE%80%E6%98%93%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="后续有时间再细写"><a href="#后续有时间再细写" class="headerlink" title="后续有时间再细写"></a>后续有时间再细写</h2><h2 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h2><p>现在服务器上下载anaconda和jupyter notebook</p>
+<p>然后配置文件，密码之类的</p>
+<p>然后在xshell连接端口</p>
+<p>然后localhost:8888，输入密码即可</p>
+<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p><a href="https://blog.csdn.net/watermel__/article/details/114988331">https://blog.csdn.net/watermel__/article/details/114988331</a></p>
+<p><a href="https://blog.csdn.net/qq_24027563/article/details/80589880">https://blog.csdn.net/qq_24027563/article/details/80589880</a></p>
+<p><a href="https://www.baidu.com/link?url=V_stHI6UhDDIIwOfI1dRk0CxGUz7JLQJvAAVplwItVLOykn1ZuSlBmJK_OaKaSui&amp;wd=&amp;eqid=eb38869200037c5e00000003610f9dfc">https://www.baidu.com/link?url=V_stHI6UhDDIIwOfI1dRk0CxGUz7JLQJvAAVplwItVLOykn1ZuSlBmJK_OaKaSui&amp;wd=&amp;eqid=eb38869200037c5e00000003610f9dfc</a></p>
+]]></content>
+      <categories>
+        <category>服务器</category>
+      </categories>
+      <tags>
+        <tag>jupyter_notebook</tag>
+        <tag>踩坑</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>css语法学习</title>
+    <url>/css/marp/css%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h2 id="图片设置"><a href="#图片设置" class="headerlink" title="图片设置"></a>图片设置</h2><h3 id="更改长宽"><a href="#更改长宽" class="headerlink" title="更改长宽"></a>更改长宽</h3><pre class="line-numbers language-none"><code class="language-none">![width:200px](image.jpg)
+![height:300px](image.jpg)
+![w:200px h:30cm](image.jpg)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="图片滤镜（Image-Filter）"><a href="#图片滤镜（Image-Filter）" class="headerlink" title="图片滤镜（Image Filter）"></a>图片滤镜（Image Filter）</h3><p>基于 CSS 的 filter 属性，Marp 可以对图片进行一些基于模糊、亮度、对比度等的操作，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">![blur:15px](image.png)
+![brightness:0.5](image.png)
+![contract:150%](image.png)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="背景图片"><a href="#背景图片" class="headerlink" title="背景图片"></a>背景图片</h3><p><img src="background.png" alt="bg"></p>
+<p>同时通过在 <code>bg</code> 后追加图片的格式属性，如 <code>[bg fit]</code> ，可以具体设置背景图片的缩放方式。其中 <code>cover</code> 表示充满页面， <code>fit</code> 表示拉伸以适应页面， <code>auto</code> 为不做缩放使用原图片比例。</p>
+<h3 id="更改布局"><a href="#更改布局" class="headerlink" title="更改布局"></a>更改布局</h3><h4 id="背景图片布局"><a href="#背景图片布局" class="headerlink" title="背景图片布局"></a><strong>背景图片布局</strong></h4><pre class="line-numbers language-text" data-language="text"><code class="language-text">![bg](images/9BBDF9.png)
+![bg](images/2EC0F9.png)
+![bg](images/B95F89.png)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>在其中一张图片后加入属性 <code>vertical</code> 将使图片纵向组合。</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">![bg vertical](images/9BBDF9.png)
+![bg](images/2EC0F9.png)
+![bg](images/B95F89.png)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="更新图片与文字位置"><a href="#更新图片与文字位置" class="headerlink" title="更新图片与文字位置"></a><strong>更新图片与文字位置</strong></h3><p>有时候想左文右图，或者左图右文的布局，可以设置背景图片的位置</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">![bg right w:15cm](images/prometheuslogo.png)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h5 id="图片加阴影drop-shadow"><a href="#图片加阴影drop-shadow" class="headerlink" title="图片加阴影drop-shadow"></a>图片加阴影<code>drop-shadow</code></h5><pre class="line-numbers language-plantuml" data-language="plantuml"><code class="language-plantuml">start 
+if (condition A ) then (yes)
+	:Text 1;
+	endif
+stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>css</category>
+      </categories>
+      <tags>
+        <tag>marp</tag>
+        <tag>css</tag>
+        <tag>折腾</tag>
+      </tags>
   </entry>
   <entry>
     <title>关于marp-theme-for-tju的探索</title>
@@ -2617,6 +2471,409 @@ size: 4K
       <tags>
         <tag>marp</tag>
         <tag>折腾</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《深度学习中的数学》读书记录</title>
+    <url>/%E4%B9%A6%E6%91%98/math/%E3%80%8A%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E6%95%B0%E5%AD%A6%E3%80%8B/</url>
+    <content><![CDATA[<h2 id="《深度学习中的数学》"><a href="#《深度学习中的数学》" class="headerlink" title="《深度学习中的数学》"></a>《深度学习中的数学》</h2><p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903124351.jpeg" alt="深度学习的数学"></p>
+<p>挺水的</p>
+<p>知道了一些基本概念</p>
+<ul>
+<li>神经网络：相较于原来更为抽象的原理学习，这次学到了一些具体的表述方式，以及核函数的意义</li>
+<li>BP：没有仔细看 但是对原理的理解进一步加深了</li>
+<li>CNN： 一些实例加强了我对CNN的理解</li>
+</ul>
+]]></content>
+      <categories>
+        <category>书摘</category>
+      </categories>
+      <tags>
+        <tag>books</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>耶鲁大学博弈论公开课笔记</title>
+    <url>/%E5%8D%9A%E5%BC%88%E8%AE%BA/math/%E8%80%B6%E9%B2%81%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%BC%88%E8%AE%BA%E5%85%AC%E5%BC%80%E8%AF%BE%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="耶鲁大学博弈论公开课笔记"><a href="#耶鲁大学博弈论公开课笔记" class="headerlink" title="耶鲁大学博弈论公开课笔记"></a><strong>耶鲁大学博弈论公开课笔记</strong></h1><p><strong><a href="https://wenku.baidu.com/view/d9e4d40fc5da50e2524d7fc1.html">耶鲁大学公开课博弈论笔记(博弈论24讲) - 百度文库 (baidu.com)</a></strong></p>
+<h2 id="P1-导论-五个入门结论"><a href="#P1-导论-五个入门结论" class="headerlink" title="P1 导论-五个入门结论"></a>P1 导论-五个入门结论</h2><h4 id="理性人"><a href="#理性人" class="headerlink" title="理性人"></a>理性人</h4><p>​    指代这一类人，他们只关心自己的利益<em>(这个定义并不完备，需要修改）</em></p>
+<h4 id="举例："><a href="#举例：" class="headerlink" title="举例："></a>举例：</h4><ul>
+<li>囚徒困境（注意模型的不完备性）</li>
+<li>宿舍卫生打扫问题（没人愿意投入）</li>
+<li>企业打价格战（无限降价会使得自己收到损失）</li>
+</ul>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><ul>
+<li><p>如果选择a的结果严格优于b,那么就说a相当于b来说是一个严格优势策略。结论：不要选择严格劣势策略（<strong>Do not play a strictly dominated strategy.</strong></p>
+</li>
+<li><p>选择严格优势策略（无论对方选择什么，自己的收益都会更高）</p>
+</li>
+<li><p>在不同的参与者，不同的利益关心情况下，做出的选择都会不同</p>
+</li>
+<li><p>理性人的理性选择导致了次优的结果（<strong>Rational choice in this case,can lead to outcomes that suck.(Rational choice by rational players,can lead to bad outcomes.</strong></p>
+</li>
+<li><p>协和谬误 Payoffs matter.苟欲求之，必先知之（<strong>You can’t get what you want,till you know what you want.</strong></p>
+</li>
+<li><p>人总是以自己为出发点思考问题。</p>
+</li>
+<li><p>策略决策的核心：换位思考，站在别人的立场上看比人会怎样做，在考虑自己受益的同时，要注意别人的选择。（<strong>Put yourself in other’s shoes and try to figure out what they will do.</strong></p>
+</li>
+<li><p>耶鲁大学的学生都很自私。（<strong>Yale students are evil.</strong></p>
+</li>
+</ul>
+<h2 id="P2-学会换位思考"><a href="#P2-学会换位思考" class="headerlink" title="P2 学会换位思考"></a>P2 学会换位思考</h2><h4 id="博弈的三大要素"><a href="#博弈的三大要素" class="headerlink" title="博弈的三大要素"></a>博弈的三大要素</h4><ul>
+<li>players;参与人</li>
+<li>strategies；策略集合</li>
+<li>payoffs; 收益</li>
+</ul>
+<h4 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h4><ul>
+<li>打渔问题</li>
+<li>解决全球变暖问题（控制碳排放</li>
+<li>防线布置问题（汉尼拔是否翻越阿尔卑斯山</li>
+</ul>
+<h4 id="严格劣势策略"><a href="#严格劣势策略" class="headerlink" title="严格劣势策略"></a>严格劣势策略</h4><ul>
+<li>​    无论对方做出哪个选择，你的这个选择都是 strictly 不利的 弱劣势策略：其中的一个策略严格劣于另外一个策略。 </li>
+</ul>
+<p>​    </p>
+<p>​    当对手有严格优势策略时，而我方两个策略相同时，考虑对手优势策略下的收益。 </p>
+<h4 id="互动活动：-全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。"><a href="#互动活动：-全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。" class="headerlink" title="互动活动： 全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。"></a>互动活动： 全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。</h4><ul>
+<li><h5 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h5><ul>
+<li>所有人都从 1 到 100 中选个数字，最接近所有人选的数字的均值的2/3 者为获胜方</li>
+</ul>
+</li>
+<li><h5 id="推理过程"><a href="#推理过程" class="headerlink" title="推理过程"></a>推理过程</h5><ul>
+<li>作为理性人．每个人都会选择67（ 100 <em> 2/3 ）以下的数，进一步假设你的对手也是理性的，你会选择 45 ( 100</em> 4/9 ）以下的数 … … </li>
+<li>依据哲学观点，如果大家都是理性程度相当的，（极端理性）那么最后数字将为 1 ，然而结果却是 9 （在本次实验中</li>
+<li>这说明<strong>博弈的复杂性</strong></li>
+</ul>
+</li>
+<li><h5 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h5><ul>
+<li>共同知识的概念<ul>
+<li>在本次实验中，是这样的：要在其中了解到对方都是理性人，知道对方知道对方都是理性人，知道对方知道对方知道对方都是理性人……</li>
+</ul>
+</li>
+<li>共同知识与共有知识之间的区别<ul>
+<li>common knowledge（不同于 mutual knowledge共有知识.） ：站在对手的角度思考对手在这次博弈中有多老练，思考对手知道你在博弈中有多老练，思考对手知道你在思考他有多老练，如此一直循环成立 （<em>这个是网上抄的，我觉得不strict</em> </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>共有知识和共同知识</p>
+<ul>
+<li>共有知识 + 外部信息 -&gt; 共同知识<ul>
+<li>例如：脏脸博弈，皇帝的新衣，沉默的螺旋</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="P3-迭代剔除和中位选民定理"><a href="#P3-迭代剔除和中位选民定理" class="headerlink" title="P3 迭代剔除和中位选民定理"></a>P3 迭代剔除和中位选民定理</h2><p>学会在剔除劣势策略的情况下再重新审视博弈问题，再做决策。站在对方的立场上，考虑他们不会选择什么，再考虑对方会认为我们不会选择什么</p>
+<h5 id="利用迭代剔除法领悟中间选民问题"><a href="#利用迭代剔除法领悟中间选民问题" class="headerlink" title="利用迭代剔除法领悟中间选民问题"></a>利用迭代剔除法领悟中间选民问题</h5><ul>
+<li>迭代剔除法<ul>
+<li>反复消去严格下策，不断把劣势策略剔除出去，最后只剩下相对优势的策略</li>
+</ul>
+</li>
+<li>中间选民问题<ul>
+<li>政治选举候选人的politic position. 如果从极左到极右有10个程度，则大部分人会选择5，6。 在政治上，人们倾向于中间站位。</li>
+<li>在两党制中，政党表述纲领要吸引中间位置的选民，他们认为在选举中处于中间标度可以吸引左右两边的选民，并以此获得胜利。</li>
+<li>理论的不完备性<ul>
+<li>太多了，qaq</li>
+<li>这个公开课是200几年的，此时并没有发生民粹主义的崛起，可以用川普当选等所谓黑天鹅事件来find这个theory的missing</li>
+<li>可以由理论的missing导出理论成立所需的假设条件</li>
+</ul>
+</li>
+<li>理论成立的条件<ul>
+<li>有两个参与人</li>
+<li><del>政治立场能使选民相信</del></li>
+</ul>
+</li>
+<li>延伸出的问题（在商业上，人们倾向于选址集中。）<ul>
+<li>加油站选址</li>
+<li>快餐店选址<ul>
+<li>比如顾客认为这一片都是快餐店，从而帮助顾客选择这个地方（对于快餐企业，在不确定哪个位置较佳的时候会选在同一处）</li>
+<li>对于某快餐企业：根据其他快餐店地址，确定自己的新店地址可以减少决策量</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>在迭代剔除法不能运用时，比如说该博弈方1和2均没有严格下策，可以用二维坐标系画出选择策略之后的收益分布（即<strong>做一个函数辅助决策</strong>）</p>
+<p>最佳策略：在对方不同选择的概率下，做出自己的最佳选择。 列方程，线性规划，求不同范围下的最优解。用数字使得自己的解释更为有力。</p>
+<h2 id="P4-足球比赛和商业合作之最佳对策"><a href="#P4-足球比赛和商业合作之最佳对策" class="headerlink" title="P4 足球比赛和商业合作之最佳对策"></a>P4 足球比赛和商业合作之最佳对策</h2><h3 id="罚点球"><a href="#罚点球" class="headerlink" title="罚点球"></a>罚点球</h3><ul>
+<li>​    一个进过模型简化的点球模型：罚球这可以选择左路，中路，右路3种路线去踢点球，们将可以选择向左扑救或者向右扑救。罚球者的收益很容易计算</li>
+<li>结论<ul>
+<li>无论什么时候，罚球者向中路踢都不是一个最优的选择</li>
+<li>不要选择一个在任何brief下都不是最优策略的策略</li>
+<li>这里的brief并不是门将会向左或向右，而是指概率。我的理解是对中庸之道的批判。所以本例中，虽然罚球者的3种策略里没有劣势策略，不过还是可以用以上原则剔除掉一个策略</li>
+</ul>
+</li>
+<li>missing<ul>
+<li>罚球者是右撇子</li>
+<li>门将可以中出（to be continued)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Partnership-game：商业合作"><a href="#Partnership-game：商业合作" class="headerlink" title="Partnership game：商业合作"></a>Partnership game：商业合作</h3><ul>
+<li>列出合作对象的效用函数，对此求导，令其一介导数为0，即可得出其最佳投入精力关于对方投入精力的函数（使自己的效益最大化，总效益-个人投入）。 </li>
+<li>假设合作只有两方，令两函数相等，所得交点即为纳什均衡。 即双方都不愿意偏离这一点。</li>
+</ul>
+<h2 id="P5-纳什均衡"><a href="#P5-纳什均衡" class="headerlink" title="P5 纳什均衡"></a>P5 纳什均衡</h2><h3 id="1-纳什均衡的两大定义"><a href="#1-纳什均衡的两大定义" class="headerlink" title="1.纳什均衡的两大定义"></a>1.纳什均衡的两大定义</h3><ul>
+<li><p>No individual can do better by divieting. </p>
+</li>
+<li><p>NE can be thought of self-fullfiling. </p>
+</li>
+</ul>
+<p>2.任何参与人都严格不会改变策略，改变策略严格不会使参与人获得增益</p>
+<p>3.其他参与人不改变行为的前提下，自己改变行为并没有任何好处</p>
+<p>4.严格劣势永远不是最佳策略，最佳策略才可以出现NE</p>
+<p>5.博弈会朝着趋向于一个均衡方向自然发展，结果不断趋向于一个NE</p>
+<p>6.协和谬误不同于囚徒困境</p>
+<ul>
+<li>它有两个(nash)均衡，即all in和all out</li>
+<li>前者可以通过沟通解决，本身具有强制力，因为符合自身利益。例如： 在银行里存钱、微软垄断（规模效应） 等。</li>
+<li>后者无沟通</li>
+</ul>
+<p>7.区分协和谬误和沉默的螺旋之间的关系</p>
+<ul>
+<li>沉默的螺旋（The Spiral Of Silence）是一个政治学和大众传播理论。理论基本描述了这样一个现象：人们在表达自己想法和观点的时候，如果看到自己赞同的观点受到广泛欢迎，就会积极参与进来，这类观点就会越发大胆地发表和扩散；而发觉某一观点无人或很少有人理会（有时会有群起而攻之的遭遇），即使自己赞同它，也会保持沉默。意见一方的沉默造成另一方意见的增势，如此循环往复，便形成一方的声音越来越强大，另一方越来越沉默下去的螺旋发展过程。理论是基于这样一个假设：大多数个人会力图避免由于单独持有某些态度和信念而产生的孤立。</li>
+</ul>
+<h2 id="P6-第六讲：约会策略与古诺模型"><a href="#P6-第六讲：约会策略与古诺模型" class="headerlink" title="P6 第六讲：约会策略与古诺模型"></a>P6 第六讲：约会策略与古诺模型</h2><p><del>策略互补博弈 》协调博弈：性别大战（不同人有不同偏好） 策略代替博弈》</del></p>
+<h5 id="古诺模型"><a href="#古诺模型" class="headerlink" title="古诺模型"></a>古诺模型</h5><ul>
+<li>假设：2个公司生产可以完全互补产品，</li>
+<li>在完全竞争市场上，成本=价格 </li>
+<li>在完全垄断市场上，价格=边际成本 </li>
+<li>古诺模型中，价格高于完全竞争市场，低于完全垄断市场</li>
+</ul>
+]]></content>
+      <categories>
+        <category>博弈论</category>
+      </categories>
+      <tags>
+        <tag>数学</tag>
+        <tag>经济学</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How-to-be-a-good-programmer</title>
+    <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/To-be-a-good-programmer/</url>
+    <content><![CDATA[<h2 id="实例驱动学习"><a href="#实例驱动学习" class="headerlink" title="实例驱动学习"></a>实例驱动学习</h2><p>在知识爆炸的年代, 想成为一个好的程序员, 要具备这样一个精神:</p>
+<p><strong>开发者精神</strong></p>
+<blockquote>
+<p>开发者精神是指, 从学习编程第一天起, 你的目标, 你所做的事, 永远不是以<code>要学会XX</code>为目标, 而是以<code>开发出XX</code>为目标, 深刻意识到你学习的一切, 最终是为了你的开发而服务的。</p>
+</blockquote>
+<p>而开发者精神的反面则是<code>学生气</code>:</p>
+<p><strong>学生气</strong></p>
+<blockquote>
+<p>从学习编程的第一天起, 就把自己当学生, 上课听讲记笔记为第一位, 记忆知识点为第一位, 买教材读教材为第一位, 追求<code>学会XX</code>, 而不是<code>用它开发出XX</code>。</p>
+</blockquote>
+<p>我们举个例子， 假如你要学习Java，<code>学生气</code>的学生行为模式:</p>
+<pre><code>读教材, 听课, 记笔记, 追求把这个语言的每个知识点都记得很清楚, 追求一种&quot;内功&quot;的修炼, 在这个过程中, 从来不想着用它去&quot;创造&quot;什么. 在学习的第一天起, 他给自己定下了一个目标:
+
+&quot;我这个学期一定要把这个语言的基础打牢, 最后在考试中取得高分, 并且为以后的学习提供更坚实的基础.&quot;
+</code></pre><p>那么具有<code>开发者精神</code>的人会这样做:</p>
+<pre><code>先大体了解一下Java语言在哪些领域比较强势, 做一个简单的调研, 得出了Java在Web领域很强势这一个信号, 于是在学习Java的第一天起, 他就给自己定下了一个目标: 
+
+&quot;我要在半年内通过学习Java, 运用Java做出一个中小型的, 基于Web的企业管理后台&quot;
+</code></pre><p>这两种人, 起点都一样, 都是<code>完全不会Java</code>, 但是最后的结果往往是, 后者无论是知识熟练度还是实用性都会超过前者, 而且整个学习过程会有源源不断地动力.</p>
+<p><code>夯实基础</code>这个目标, 其实是空洞的, 什么叫做夯实? 什么叫做基础? 而且就算你真的夯实了基础, 你也极有可能陷入一种<code>虚无感</code>中, 因为你的所有知识, 都会遗忘.</p>
+<p>这就是为什么很多计算机专业学生很爱问的一个问题:</p>
+<pre><code>&quot;学了这么多知识, 忘了怎么办?&quot;
+</code></pre><p>如果你具备<code>开发者精神</code>, 那么你根本不会理会这个问题, 因为, 你开发出的东西, 你做出的产品, 它就是永久存在在这个世界上的, 你的成就感来源于真实的, 具体的, 可持久延续的项目中, 而不是来源于”我学会了什么”.</p>
+<p>我们一定要明白:</p>
+<pre><code>一切不谈成就感, 不谈反馈的学习劝导, 都是在耍流氓
+</code></pre><p>既然我们想获得反馈, 那么一个很现实的建议就是, 在Github上创建你的第一个开源代码仓库, 长期地, 稳定地commit, 当然, 至于这个仓库到底是干啥的, 这个因人而异, 有可能是你自己开发的一个VScode插件, 有可能是你自己写的读书笔记, 在这个不断地commit的过程中, 感受你的代码仓库不断增长不断完善的过程中, 你会获得一个比较持久的反馈和成就感, 一旦有了反馈和成就感, 那么你的学习动力就会一直保持, 也可以从学习中获得快乐.</p>
+<p><strong>记住, 你不是学生, 你是开发者.</strong></p>
+<h2 id="知识输入与输出"><a href="#知识输入与输出" class="headerlink" title="知识输入与输出"></a>知识输入与输出</h2><p>当你学习一个东西的时候, 如果学完马上用语言讲给别人听, 你会学的更好, 而且会发现新问题.</p>
+<p>很多学习理论都指出, 知识的学习, 输入固然重要, 输出更为重要.</p>
+<p>输入就是学习别人的知识, 输出就是把自己学会的知识用文字, 语言的形式表达出来, 很多人的学习, 只有输入, 没有输出, 这样的学习肯定是不行的.</p>
+<p>几乎所有优秀的程序员, 都有攥写技术文章的习惯, 很多时候, 并不是他们什么都懂, 而是他们刚学会了什么, 然后就围绕着这个刚学会的东西, 用自己的语言讲出来, 久而久之, 就会被别人觉得是大牛, 但是他和你的区别, 有可能仅仅是是否输出的区别.</p>
+<p>建议所有计算机学习者, 都要有写技术文章/读书笔记的习惯, 可以发表在自己的个人主页, 其他平台上, 攥写技术文章也可以很好地增加面试官对你的好感.</p>
+<p>写技术文章的时候, 最好用<code>MarkDown</code>哦, 程序员是不需要用<code>Word</code>这种东西的, 我们的内容是要方便发表在网站上, <code>Word</code>不能直接在网站里显示, 而<code>MarkDown</code>可以轻易地转换成<code>html</code>格式文件, 在浏览器中显示.</p>
+<h2 id="代码风格篇"><a href="#代码风格篇" class="headerlink" title="代码风格篇"></a>代码风格篇</h2><p>现在几乎所有主流语言都有相应的代码风格检查工具, 一般已IDE或Editor的插件或扩展形式给出</p>
+<h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><p>设计模式并不是针对任何一种语言, 而是一种用编程语言描述现实世界问题广泛采用的各种模式, 比如, 观察者模式, 工厂模式, 依赖注入模式等.</p>
+<p>好的设计模式, 是好代码的保证, 只有先学会了设计模式, 才能在软件设计中游刃有余, 而且更现实的问题是, 现在很多框架, 比如Spring, Angular等, 都充斥了大量的设计模式, 比如<code>Factory Pattern</code>, <code>Dependency Injection Pattern</code>, 你必须理解这些设计模式, 你才能理解这个框架.</p>
+<p>个人认为设计模式没有必要买本教材, 结合视频和技术文章, 就足以理解和运用.</p>
+<h3 id="小习惯"><a href="#小习惯" class="headerlink" title="小习惯"></a>小习惯</h3><ol>
+<li>不要嫌变量名长, 最好可以直接通过变量名推测变量的作用.</li>
+<li>重复出现的代码, 封装成独立的类或函数.</li>
+<li>提前降低代码的耦合度, 不同作用, 不同类别的代码, 不要混在一起, 最好分成独立的文件</li>
+<li>将代码进行业务分层, 比如在Web开发中, 有数据层, 服务层, DTO层, Controller层, 渲染层等, 只有将层次分开了, 才能获得足够的可拓展性, 不然代码多了你就全乱了.</li>
+<li>用良好的设计模式去”设计”软件, 在执行一些算法的时候, 可以想一想它的时空复杂度, 想一想怎么可以让它执行地更快.</li>
+</ol>
+<h2 id="如何管理自己的电脑"><a href="#如何管理自己的电脑" class="headerlink" title="如何管理自己的电脑"></a>如何管理自己的电脑</h2><h3 id="包管理工具"><a href="#包管理工具" class="headerlink" title="包管理工具"></a>包管理工具</h3><p>为了更好的管理我们的各种应用包，最好使用包管理工具来进行各种包，软件的安装和使用, 方便进行卸载, 更新, 安装, 无需打开浏览器即可完成一系列操作.</p>
+<blockquote>
+<p>linux : apt-get (ubuntu distro)<br>    osx : brew<br>    windows: Chocolatey</p>
+</blockquote>
+<p>另外, windows平台上的包管理工具, 在国内的网络环境下经常慢的感人, 所以<code>Chocolatey</code>可能使用体验并不好.  推荐使用今年微软新发布的 <code>WSL2</code>, 这个东西不是那种传统的虚拟机, 有了它你可以像操作linux系统那样操作windows系统, 而且支持 <code>docker</code>, 甚至我推荐以后大家所有命令都可以在<code>WSL2</code>里执行.</p>
+<h3 id="容器-Docker"><a href="#容器-Docker" class="headerlink" title="容器 - Docker"></a>容器 - Docker</h3><p>为了更方便的进行开发环境配置，我推荐所有计算机学生尽早了解和使用Docker。</p>
+<p>Docker 就是为了解决复杂的环境配置问题而生的。</p>
+<p>它将你的软件和软件所依赖的所有环境打包成一个镜像(Image), 该镜像可以在任何一台装有docker 的电脑上运行, 和操作系统无关, 也就是docker 把运行环境和你的操作系统隔离开来了，中间隔了一层docker engine 。</p>
+<p>写过不少代码的你一定见过这种现象：你的代码在自己电脑上能运行，但是在别人电脑上就会报错，无法运行，原因很简单，任何软件的运行都需要环境。</p>
+<p>比如，jar包的运行需要jre ，python脚本的运行需要python 解释器安装在电脑上，以后你可能还需要运行一些服务，比如数据库mysql server , redis , rabbitmq , 随着软件运行环境复杂度的增加, 你的软件运行条件也变得苛刻，如果你想把本地的应用部署到服务器上，那事更多，需要的环境得一个个地装到你的linux服务器上，如何彻底解决这个问题？</p>
+<p>只需在你的电脑中安装docker , 你就可以毫无后顾之忧。</p>
+<p>所有的环境，服务，软件都是以Image 的形式打包的，Image 中包含了运行你软件的所有东西，比如你的软件是个python 脚本, 并且使用了第三方库flask，那这个Image 中就包含了python ,也就是它的base image , 也同时包含了flask, 这样的话任何一个装有docker的电脑都可以运行你的image。</p>
+]]></content>
+      <categories>
+        <category>碎碎念</category>
+      </categories>
+      <tags>
+        <tag>Advice</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python函数参数的传递机制</title>
+    <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/Python%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E7%9A%84%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<h1 id="Python函数参数的传递机制"><a href="#Python函数参数的传递机制" class="headerlink" title="Python函数参数的传递机制"></a>Python函数参数的传递机制</h1><h2 id="不可变对象是值传递"><a href="#不可变对象是值传递" class="headerlink" title="不可变对象是值传递"></a>不可变对象是值传递</h2><p><strong>python中不可变对象，函数实际参数(实参)传递给形式参数(形参)的过程，实际上是把实际参数值的副本(复制品)传入函数，参数本身不会收到任何影响。</strong></p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">def func(a, b):
+    a, b &#x3D; b, a
+    # 函数内 a:2 b:1
+    print(&#39;函数内 a:&#123;&#125; b:&#123;&#125;&#39;.format(a, b))
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    a &#x3D; 1
+    b &#x3D; 2
+    # 可以理解为是将a, b的值复制一份传入
+    func(a, b)
+    # 函数外 a:1 b:2
+    print(&#39;函数外 a:&#123;&#125; b:&#123;&#125;&#39;.format(a, b))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="可变对象是引用传递-地址传递"><a href="#可变对象是引用传递-地址传递" class="headerlink" title="可变对象是引用传递(地址传递)"></a>可变对象是引用传递(地址传递)</h2><p>对于可变对象如字典，列表等，参数传递的方式是引用传递，也就是将可变对象的引用(内存地址)传递给函数，参数会受到影响。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">def func(a):
+    a.append(4)
+    a.append(5)
+    # 函数内 a:[1, 2, 3, 4, 5]
+    print(&#39;函数内 a:&#123;&#125;&#39;.format(a))
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    a &#x3D; [1, 2, 3]
+    func(a)
+    # 函数内 a:[1, 2, 3, 4, 5]
+    print(&#39;函数外 a:&#123;&#125;&#39;.format(a))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>碎碎念</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>FIRST</title>
+    <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/example/</url>
+    <content><![CDATA[<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>大家好，这是第一篇博客</p>
+]]></content>
+      <categories>
+        <category>碎碎念</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>保护变量的访问与设置</title>
+    <url>/python/others/%E4%BF%9D%E6%8A%A4%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE%E4%B8%8E%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<h1 id="保护变量的访问与设置"><a href="#保护变量的访问与设置" class="headerlink" title="保护变量的访问与设置"></a>保护变量的访问与设置</h1><p>对于私有变量（双下划线）或者保护变量（单下划线），不允许外部直接访问，类似于Java的private，可以通过对外提供get，set接口来访问和修改这类变量，便于控制。</p>
+<ul>
+<li>@property装饰器会将方法转换为相同名称的只读属性，相当于实现get方法</li>
+<li>@xxx.setter装饰器使得可以直接通过 对象.xxx来修改保护变量的值，相当于实现set方法</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">class Student(object):
+    def __init__(self, name):
+        self.name &#x3D; name
+        self._score &#x3D; None
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        self._score &#x3D; value
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    s &#x3D; Student(&#39;王大锤&#39;)
+    s.score &#x3D; 100  # 设置保护变量的值
+    print(s.score)  # 访问保护变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>猴子补丁</title>
+    <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/%E7%8C%B4%E5%AD%90%E8%A1%A5%E4%B8%81/</url>
+    <content><![CDATA[<h1 id="猴子补丁"><a href="#猴子补丁" class="headerlink" title="猴子补丁"></a>猴子补丁</h1><p><strong>monkey patch允许在运行期间动态修改一个类或模块</strong></p>
+<ul>
+<li>在运行时替换方法、属性等</li>
+<li>在不修改第三方代码的情况下增加原来不支持的功能</li>
+<li>在运行时为内存中的对象增加patch而不是在磁盘的源代码中增加</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">class A:
+    def func(self):
+        print(&#39;这是A类下的func方法&#39;)
+
+# arg 这个参数是没有用到的，因为func有一个参数，如果这个函数没有参数的话不能这样直接赋值
+def monkey_func(arg):
+    print(&#39;这是猴子补丁方法&#39;)
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    a &#x3D; A()
+    # 运行原类下的方法
+    a.func()  # 这是A类下的func方法
+
+    # 在不改变原类代码的情况下，动态修改原类的方法，打补丁
+    A.func &#x3D; monkey_func
+
+    # 运行替换后的方法
+    a.func()  # 这是猴子补丁方法<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p>gevent通过打补丁的方式，利用自己的socket替换了python的标准socket模块，利用gevent协程处理高并发的情况</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">from gevent import monkey
+monkey.patch_all()
+import gevent
+from socket import *
+
+
+def talk(conn):
+    while 1:  # 循环通讯
+        try:
+            from_client_msg &#x3D; conn.recv(1024)
+            if not from_client_msg:break
+            print(&quot;来自客户端的消息:%s&quot; %(from_client_msg))
+            conn.send(from_client_msg.upper())
+        except:
+            break
+    conn.close()
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    server &#x3D; socket()
+    ip_port &#x3D; (&quot;127.0.0.1&quot;, 8001)
+    server.bind(ip_port)
+    server.listen(5)
+    while 1:  # 循环连接
+        conn, addr &#x3D; server.accept()
+        gevent.spawn(talk, conn)  # 开启一个协程
+    server.close()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>碎碎念</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>数据库基础__笔记</title>
+    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%94%B6%E8%97%8F%E5%A4%B9/</url>
+    <content><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/41347.html">大学课程 | 数据库基础 | Justlovesmile’s BLOG</a></p>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法分析与设计__笔记</title>
+    <url>/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95/%E6%94%B6%E8%97%8F%E5%A4%B9/</url>
+    <content><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/16050.html">大学课程 | 《算法分析与设计》笔记 | Justlovesmile’s BLOG</a></p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
@@ -2995,745 +3252,488 @@ marp: true
       </tags>
   </entry>
   <entry>
-    <title>css语法学习</title>
-    <url>/css/marp/css%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<h2 id="图片设置"><a href="#图片设置" class="headerlink" title="图片设置"></a>图片设置</h2><h3 id="更改长宽"><a href="#更改长宽" class="headerlink" title="更改长宽"></a>更改长宽</h3><pre class="line-numbers language-none"><code class="language-none">![width:200px](image.jpg)
-![height:300px](image.jpg)
-![w:200px h:30cm](image.jpg)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h3 id="图片滤镜（Image-Filter）"><a href="#图片滤镜（Image-Filter）" class="headerlink" title="图片滤镜（Image Filter）"></a>图片滤镜（Image Filter）</h3><p>基于 CSS 的 filter 属性，Marp 可以对图片进行一些基于模糊、亮度、对比度等的操作，如：</p>
-<pre class="line-numbers language-none"><code class="language-none">![blur:15px](image.png)
-![brightness:0.5](image.png)
-![contract:150%](image.png)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h3 id="背景图片"><a href="#背景图片" class="headerlink" title="背景图片"></a>背景图片</h3><p><img src="background.png" alt="bg"></p>
-<p>同时通过在 <code>bg</code> 后追加图片的格式属性，如 <code>[bg fit]</code> ，可以具体设置背景图片的缩放方式。其中 <code>cover</code> 表示充满页面， <code>fit</code> 表示拉伸以适应页面， <code>auto</code> 为不做缩放使用原图片比例。</p>
-<h3 id="更改布局"><a href="#更改布局" class="headerlink" title="更改布局"></a>更改布局</h3><h4 id="背景图片布局"><a href="#背景图片布局" class="headerlink" title="背景图片布局"></a><strong>背景图片布局</strong></h4><pre class="line-numbers language-text" data-language="text"><code class="language-text">![bg](images/9BBDF9.png)
-![bg](images/2EC0F9.png)
-![bg](images/B95F89.png)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p>在其中一张图片后加入属性 <code>vertical</code> 将使图片纵向组合。</p>
-<pre class="line-numbers language-text" data-language="text"><code class="language-text">![bg vertical](images/9BBDF9.png)
-![bg](images/2EC0F9.png)
-![bg](images/B95F89.png)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h3 id="更新图片与文字位置"><a href="#更新图片与文字位置" class="headerlink" title="更新图片与文字位置"></a><strong>更新图片与文字位置</strong></h3><p>有时候想左文右图，或者左图右文的布局，可以设置背景图片的位置</p>
-<pre class="line-numbers language-text" data-language="text"><code class="language-text">![bg right w:15cm](images/prometheuslogo.png)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h5 id="图片加阴影drop-shadow"><a href="#图片加阴影drop-shadow" class="headerlink" title="图片加阴影drop-shadow"></a>图片加阴影<code>drop-shadow</code></h5><pre class="line-numbers language-plantuml" data-language="plantuml"><code class="language-plantuml">start 
-if (condition A ) then (yes)
-	:Text 1;
-	endif
-stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <title>GAMES101</title>
+    <url>/CG/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/GAMES101/</url>
+    <content><![CDATA[<h2 id="Lecture1-intro"><a href="#Lecture1-intro" class="headerlink" title="Lecture1:  intro"></a>Lecture1:  intro</h2><h3 id="计算机图形学"><a href="#计算机图形学" class="headerlink" title="计算机图形学"></a>计算机图形学</h3><p>使用计算机synthesize(合成)  manipulate（操作) 可视化信息</p>
+<h3 id="why-study-computer-graphics"><a href="#why-study-computer-graphics" class="headerlink" title="why study computer graphics?"></a>why study computer graphics?</h3><ul>
+<li>Application<ul>
+<li>video games 电子游戏</li>
+<li>animations 动画</li>
+<li>visualization 可视化</li>
+<li>virtual reality</li>
+<li>augmented reality 增强现实</li>
+<li>digital illustration 数码插画</li>
+<li>simulation 模拟</li>
+<li>graphical user interfaces 图形用户界面</li>
+<li>typography  排版</li>
+</ul>
+</li>
+<li>technical chanllenges </li>
+</ul>
+<h3 id="Course-topics"><a href="#Course-topics" class="headerlink" title="Course topics"></a>Course topics</h3><ul>
+<li><p>Rasterization  光栅化</p>
+<ul>
+<li><p>project geometry primitives (3D triangles / polygons) onto the screen</p>
+<p>将几何图形（3D三角形 / 多边形）投射到屏幕上</p>
+</li>
+<li><p>break projected primitives into fragments (pixels)</p>
+<p>将投影图元分解到片段(像素)</p>
+</li>
+<li><p>gold standard in video games (real-time applications)</p>
+</li>
+</ul>
+</li>
+<li><p>curves and meshes 曲线和栅格</p>
+<ul>
+<li>怎样represent geometry in CG</li>
+</ul>
+</li>
+<li><p>ray tracing 光线追踪</p>
+<ul>
+<li>shoot rays from camera though each pixel<ul>
+<li>calculate intersection and shading 交叉点和阴影</li>
+<li>continue to bounce the rays till they hit light sources</li>
+</ul>
+</li>
+<li>gold standard in animations / movies (offline离线 application)</li>
+</ul>
+</li>
+<li><p>animation simulation</p>
+<ul>
+<li>key frame animation 关键帧动画</li>
+<li>mass-spring system 弹簧振子系统</li>
+</ul>
+</li>
+</ul>
+<h3 id=""><a href="#" class="headerlink" title=" "></a> </h3><h3 id="differences-between-cg-and-cv"><a href="#differences-between-cg-and-cv" class="headerlink" title="differences between cg and cv"></a>differences between cg and cv</h3><p>No clear boundaries</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231736.png" alt="image-20210913210044004"></p>
+<h2 id="Lecture2-review-of-linear-algebra"><a href="#Lecture2-review-of-linear-algebra" class="headerlink" title="Lecture2:  review of linear algebra"></a>Lecture2:  review of linear algebra</h2><h3 id="Graphics’-dependcies"><a href="#Graphics’-dependcies" class="headerlink" title="Graphics’ dependcies"></a>Graphics’ dependcies</h3><ul>
+<li>basic mathematics<ul>
+<li>Linear algebra 线性代数<ul>
+<li>mostly dependent on linear algebra</li>
+<li>vectors（dot products点乘,cross products叉乘<ul>
+<li>An operation like translating or rotating objects  can be matrix-vector multiplication</li>
+</ul>
+</li>
+<li>matrices 矩阵（复数</li>
+</ul>
+</li>
+<li>calculus 微积分</li>
+<li>statistics 统计</li>
+</ul>
+</li>
+<li>basic physics <ul>
+<li>Optics, 光学的</li>
+<li>Mechanics  机械的</li>
+</ul>
+</li>
+<li>misc 杂项<ul>
+<li>Numerical analysis  数值分析</li>
+<li>signal processing 信号处理</li>
+<li>aesthetics 审美</li>
+</ul>
+</li>
+</ul>
+<h3 id="vectors"><a href="#vectors" class="headerlink" title="vectors"></a>vectors</h3><p>noting: 只记了part</p>
+<ul>
+<li><p>unit vector </p>
+<ul>
+<li>单位向量，</li>
+<li>用来代表方向</li>
+</ul>
+</li>
+<li><p>dot  product in graphics</p>
+<ul>
+<li><p>$\vec{a}\cdot\vec{b} = |\vec{a}|\cdot|\vec{b}|cos\theta$ </p>
+</li>
+<li><p>Find angle between two vectors  (e.g. cosine of angle between light source 光源 and surface表面)</p>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231823.png" alt="image-20210913215253056"></p>
+</li>
+<li><p>Finding <strong>projection</strong> of one vector on another</p>
+<ul>
+<li><p>measure how close two directions are</p>
+</li>
+<li><p>decompose分解 a vector </p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231937.png" alt="image-20210913215715680" style="zoom:50%;" /></p>
+</li>
+<li><p>determine forward or backward</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231938.png" alt="image-20210913215758162" style="zoom: 50%;" /></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>cross product in graphics</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231939.png" alt="image-20210913220439863" style="zoom: 50%;" /></p>
+<ul>
+<li>Direction determined by right-hand rule</li>
+</ul>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231940.png" alt="image-20210913220739158"></p>
+<ul>
+<li>Useful in constructing coordinate systems (later)</li>
+<li>Determine left / right</li>
+<li>Determine inside / outside</li>
+</ul>
+</li>
+<li>Orthonormal bases and coordinate frames  正交基底和坐标系<ul>
+<li>Critical issue is transforming between these systems/ bases</li>
+</ul>
+</li>
+</ul>
+<h3 id="matrices"><a href="#matrices" class="headerlink" title="matrices"></a>matrices</h3><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231941.png" alt="image-20210913223344462" style="zoom:50%;" /></p>
+<ul>
+<li>$(AB)^{T} = B^{T}A^{T}$</li>
+<li>$AA^{-1} = A^{-1}A = I$</li>
+<li>$(AB)^{-1} = B^{-1}A^{-1}$</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231942.png" alt="image-20210913223854494" style="zoom: 50%;" /></p>
+<p>In Graphics, pervasively used to represent transformations</p>
+<ul>
+<li>translation, rotation,shear剪切,scale缩放</li>
+</ul>
+<h2 id="Lecture-3-Transformation"><a href="#Lecture-3-Transformation" class="headerlink" title="Lecture 3: Transformation"></a>Lecture 3: Transformation</h2><h3 id="why-study-transformation"><a href="#why-study-transformation" class="headerlink" title="why study transformation"></a>why study transformation</h3><ul>
+<li>modeling<ul>
+<li>translation</li>
+<li>rotation</li>
+<li>scaling</li>
+</ul>
+</li>
+<li>viewing<ul>
+<li>3D (projection)</li>
+<li>2D (projection)</li>
+</ul>
+</li>
+</ul>
+<h3 id="2D-transformations"><a href="#2D-transformations" class="headerlink" title="2D transformations:"></a>2D transformations:</h3><ul>
+<li><p>representing transformations using matrices</p>
+</li>
+<li><p>rotation</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914135044.png" alt="image-20210914135044036" style="zoom:50%;" /></p>
+<ul>
+<li>$R_{\theta} = \begin{bmatrix} cos\theta &amp; -sin\theta \\ sin\theta &amp; cos\theta \end{bmatrix} $</li>
+<li>$R_{-\theta} = \begin{bmatrix} cos\theta &amp; sin\theta \\ -sin\theta &amp; cos\theta \end{bmatrix} = R_{\theta}^{T} = R_{\theta}^{-1}(by \quad definition) $</li>
+<li>正交矩阵： A·A^T^ = E</li>
+<li>默认绕原点旋转</li>
+<li>默认逆时针旋转</li>
+</ul>
+</li>
+<li><p>scale matrix</p>
+<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} s_{x} &amp; 0 \\ 0 &amp; s_{y} \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</p>
+</li>
+<li><p>reflection matrix 反射（镜像）矩阵</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914124142.png" alt="image-20210914124142211" style="zoom: 50%;" /></p>
+<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} -1 &amp; 0 \\ 0 &amp; 1\end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</p>
+</li>
+<li><p>shear matrix</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914134639.png" alt="image-20210914134632720" style="zoom: 50%;" /></p>
+<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} -1 &amp; a \\ 0 &amp; 1\end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</p>
+<ul>
+<li>Hints:<ul>
+<li>horizontal shift is 0 at y = 0</li>
+<li>horizontal shift is a at y = 1</li>
+<li>vertical shift is always</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Linear transforms </p>
+<ul>
+<li>线性变换：可以用一个矩阵表示的变换</li>
+<li>x’ = ax + by</li>
+<li>y’ = cx + dy</li>
+<li>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} a &amp; b \\ c &amp; d \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</li>
+</ul>
+</li>
+</ul>
+<h3 id="Homogeneous-coordinates-齐次坐标"><a href="#Homogeneous-coordinates-齐次坐标" class="headerlink" title="Homogeneous coordinates 齐次坐标"></a>Homogeneous coordinates 齐次坐标</h3><ul>
+<li><p>Why homogeneous coordinates  </p>
+<p>for example:  translation</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914135553.png" alt="image-20210914135548707" style="zoom:50%;" /></p>
+<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} a &amp; b \\ c &amp; d \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} + \begin{bmatrix} t_{x} \\ t_{y} \end{bmatrix} $</p>
+<ul>
+<li><p>so, translation is not linear transform!</p>
+</li>
+<li><p>因为平移变换不能直接用一个矩阵表示，必须加一个向量；  </p>
+</li>
+<li><p>add a third coordinates</p>
+<p>引入齐次坐标可以解决问题，让平移也能只用一个矩阵表示</p>
+</li>
+<li><p>2D point = (x,y,1)^T^</p>
+</li>
+<li><p>2D vector = (x,y,0)^T^</p>
+</li>
+<li><p>向量 + 向量，结果齐次项是0，还是向量</p>
+</li>
+<li><p>点 - 点，得到的是一个向量，齐次项也变成0 </p>
+</li>
+<li><p>点 + 向量，表示一个点的移动，结果 还是点 ！</p>
+</li>
+<li><p>点 + 点是什么呢？齐次项变成2。将所有项除以2，齐次项又变为1 。所以点 + 点结果实际上是两个点的中点。</p>
+</li>
+</ul>
+</li>
+<li><p>Affine  transformation 仿射变换</p>
+<ul>
+<li><p>仿射变换：先线性变换再加上一次平移</p>
+</li>
+<li><p>$\begin{bmatrix} x^{‘} \\ y^{‘} \\ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; t_{x}\\ c &amp; d  &amp; t_{y}  \\ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} x \\  y \\ 1 \end{bmatrix} $</p>
+</li>
+<li><p>scale </p>
+<p>$ S(s_{x}, s_{y}) = \begin{bmatrix} s_{x} &amp; 0 &amp; 0 \\ 0 &amp; s_{y}  &amp; 0  \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+</li>
+<li><p>rotation </p>
+<p>$ R(\alpha) = \begin{bmatrix} cos\alpha &amp; -sin\alpha &amp; 0 \\ sin\alpha &amp; cos\alpha  &amp; 0  \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+</li>
+<li><p>translation</p>
+<p>$ T(t_{x}, t_{y}) = \begin{bmatrix} 1 &amp; 0 &amp; t_{x} \\ 0 &amp; 1  &amp; t_{y} \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+</li>
+</ul>
+</li>
+<li><p>transform ordering matters</p>
+<ul>
+<li>matrix multiplication is not commutative 可交换的</li>
+</ul>
+</li>
+</ul>
+<h3 id="composing-transforms"><a href="#composing-transforms" class="headerlink" title="composing transforms"></a>composing transforms</h3><ul>
+<li><p>decomposing complex transforms</p>
+<ul>
+<li>translate center to origin</li>
+<li>rotate</li>
+<li>translate back</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914142248.png" alt="image-20210914142248083"></p>
+<p>which means $T(c) · R(\alpha) · T(-c)$</p>
+<ul>
+<li><p>分解：变换可以分解，注意先后顺序是从右到左</p>
+</li>
+<li><p>2D变换矩阵（缩放，旋转，平移变换）</p>
+</li>
+</ul>
+</li>
+<li></li>
+</ul>
+<h2 id="Lecture-4：-Transformation-Cont"><a href="#Lecture-4：-Transformation-Cont" class="headerlink" title="Lecture 4： Transformation Cont"></a>Lecture 4： Transformation Cont</h2><h3 id="3D-transformations"><a href="#3D-transformations" class="headerlink" title="3D transformations"></a>3D transformations</h3><ul>
+<li><p>3D point = (x,y,z,1)^T^</p>
+</li>
+<li><p>3D vector = (x,y,z,0)^T^</p>
+</li>
+<li><p>$\begin{bmatrix} x^{‘} \\ y^{‘} \\ z_{‘} \\ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; c &amp; t_{x}\\ d &amp; e &amp; f &amp; t_{y}\\g &amp; h &amp; i &amp; t_{z}  \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} x \\ y \\z \\ 1 \end{bmatrix} $</p>
+</li>
+<li><p>三维空间中的齐次变换，最后一行和二维变换类似，是0 0 0 1，平移还是在矩阵最后一列</p>
+</li>
+<li><p>对于仿射变换，是先应用线性变换，再加上平移</p>
+</li>
+<li><p>what is order?</p>
+<ul>
+<li><p>linear transform first or translation first?</p>
+</li>
+<li><p>scale </p>
+<p> $S(s_{x}, s_{y},s_{z}) = \begin{bmatrix} s_{x} &amp; 0 &amp; 0 &amp; 0\\ 0 &amp;  s_{y} &amp; 0 &amp; 0\\0 &amp; 0 &amp;  s_{z} &amp; 0  \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}  $</p>
+</li>
+<li><p>translation</p>
+<p> $T(t_{x}, t_{y}, t_{z}) = \begin{bmatrix} 1 &amp; 0 &amp; 0 &amp; t_{x}\\ 0 &amp;  1 &amp; 0 &amp; t_{y} \\0 &amp; 0 &amp;  1 &amp; t_{z}  \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}  $</p>
+</li>
+<li><p>rolation</p>
+<ul>
+<li>rolation around x-, y-,or  z-axis</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914203113.png" alt="image-20210914203043532" style="zoom:50%;" /></p>
+<ul>
+<li>绕哪个轴旋转，哪个坐标就不变</li>
+<li><p>不过𝑅𝑦矩阵稍微不同，其他两个都是右上角𝑠𝑖𝑛是负的，只有他是左下角𝑠𝑖𝑛是负的 因为𝑥叉乘𝑦得到𝑧，𝑧叉乘𝑦得到𝑥，但是𝑧叉乘𝑥得到𝑦（而不是𝑥叉乘𝑧），所以是反的</p>
+</li>
+<li><p>$R_{xyz}(\alpha, \beta, \gamma) = R_{x}(\alpha)R_{y}(\beta)R_{z}(\gamma)$</p>
+</li>
+</ul>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914220209.png" alt="image-20210914220208915"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Viewing-观测-transformation"><a href="#Viewing-观测-transformation" class="headerlink" title="Viewing (观测) transformation"></a>Viewing (观测) transformation</h3><ul>
+<li><p>View (视图) / Camera transformation  </p>
+<ul>
+<li>Think about how to take a photo <ul>
+<li>Find a good place and arrange people (model transformation) </li>
+<li>Find a good “angle” to put the camera (view transformation)</li>
+<li>Cheese! (projection transformation)<ul>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914224154.png" alt="image-20210914224154439"></li>
+<li>定义相机</li>
+<li>位置</li>
+<li>往哪看</li>
+<li>向上方向</li>
+<li>现实中是移动相机，变换景物</li>
+<li>图形学中，相机不动，永远在原点</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914223830.png" alt="image-20210914223829896" style="zoom:50%;" /></li>
+<li>经过变换，把相机的位置移动到原点，同时保持看到的景物不变</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914225726.png" alt="image-20210914225726865"></p>
+</li>
+<li><p>这个从“歪”的坐标轴旋转回正的坐标轴，不太好写。 但是这个变换的逆过程，即：从正的坐标轴旋转到“歪”的坐标轴，是好写的， 于是我们先写从“正”坐标轴变换到“歪”坐标轴的变换矩阵，再求其逆矩阵，就可以得到待求的变换矩阵。 又因为旋转矩阵是正交矩阵，所以他的逆矩阵就只需要转置一下就可以得到了！ 注意，不但相机要做这个变换，其他物体也要做这个变换，因为我们想让相机看到的景物相对不变。 （以上部分个人认为非常巧妙和关键！）</p>
+</li>
+<li><p>Projection (投影) transformation</p>
+<ul>
+<li><p>3D to 2D</p>
+</li>
+<li><p>Orthographic (正交) projection  </p>
+<p> <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914230822.png" alt="image-20210914230821994"></p>
+<ul>
+<li><em>没有近大远小</em></li>
+<li>平行投影<ul>
+<li>首先定义空间中一个立方体，将其translate，使其中心在原点，再scale成标准立方体（边长为2</li>
+</ul>
+</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915120758.png" alt="image-20210915120758604"></li>
+<li>再次提醒，注意𝑧轴是近大远小 OpenGL等API是反过来的</li>
+</ul>
+</li>
+<li><p>Perspective (透视) projection</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914230840.png" alt="image-20210914230840011"></p>
+<ul>
+<li><p>更像人眼看到的场景</p>
+</li>
+<li><p>Most common in Computer Graphics, art, visual system </p>
+</li>
+<li><p>Further objects are smaller </p>
+</li>
+<li><p>Parallel lines not parallel; converge to single point</p>
+</li>
+<li>Recall: property of homogeneous coordinates<ul>
+<li>(x, y, z, 1), (kx, ky, kz, k != 0), (xz, yz, z2, z != 0) all represent  the same point (x, y, z) in 3D </li>
+<li>e.g. (1, 0, 0, 1) and (2, 0, 0, 2) both represent (1, 0, 0)</li>
+</ul>
+</li>
+<li>how to do perspective projection<ul>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122816.png" alt="image-20210915122816233"></li>
+<li>先将frustum远平面，挤压成和近平面一样大（从左图变成右图）</li>
+<li>再做正交投影，投影到近平面</li>
+<li>上述操作过程中几点假设：<ul>
+<li>1）近平面保持不变 </li>
+<li>2）z值保持不变，只是向内收缩</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122907.png" alt="image-20210915122907760"></li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122956.png" alt="image-20210915122956833"></li>
+<li>挤压这一步怎么做？ 上图是从侧面观察frustum 用相似三角形知识可以得到新坐标的表达式，但是第三个分量目前还不知道（这里利用之前讲的那个性质： 齐次坐标，如果我们对点的坐标所有分量同时乘以k，他表示的还是原来那个点！  </li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123123.png" alt="image-20210915123123207"></li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123140.png" alt="image-20210915123140120"></li>
+<li>如何求解第三行<ul>
+<li>任何近平面上的点不会改变（也就是对于任意的(𝑥, 𝑦, 𝑛, 1)，经过这个矩阵变换后，点的位置仍然不变）</li>
+<li>任何远平面上的点，𝑧值不会改变</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123415.png" alt="image-20210915123415483"></li>
+<li>点(𝑥, 𝑦, 𝑧, 1)是可以通过矩阵变换得到(𝑛𝑥, 𝑛𝑦, 𝑢𝑛𝑘𝑛𝑤𝑜𝑛, 𝑧)向量的。 根据上文提到的性质（1），经过这个变换，点实际没有改变 而同时，(𝑥, 𝑦, 𝑧, 1)本身可以写成(𝑥, 𝑦, 𝑛, 1)（为什么把𝑧替换成𝑛？因为近平面的𝑧坐标就是都是𝑛，所以可以做这个替换。）然后同时乘以𝑛， 变成(𝑛𝑥, 𝑛𝑦, 𝑛 ଶ , 𝑛) 经过上面两个推导，可以看出，第三行前两个数一定是0 因为𝑛 ଶ这个分量和𝑥和𝑦都毫无关系，因此前两个数必定是0 这样，我们就解出了第三行前两个数，都是0 接下来求A和B</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123500.png" alt="image-20210915123459854"></li>
+<li>远平面上有一个特殊点，(0, 0, 𝑓)经过变换挤压仍然不变 所以(0, 0, 𝑓)经过变换仍然是(0, 0, 𝑓) 根据近平面我们得到$An + B = n^{2}$,根据远平面的中心点我们得到$Af + B = f^{2}</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123625.png" alt="image-20210915123625508"></li>
+<li>这样我们就能解出A和B了， 这样终于把从透视投影挤压成正交投影的矩阵，解出来了</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123651.png" alt="image-20210915123651566"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>思考题</p>
+<ul>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123710.png" alt="image-20210915123709902"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Lecture05-Rasterization-1-Triangles"><a href="#Lecture05-Rasterization-1-Triangles" class="headerlink" title="Lecture05: Rasterization 1(Triangles)"></a>Lecture05: Rasterization 1(Triangles)</h2><h3 id="Finishing-up-Viewing"><a href="#Finishing-up-Viewing" class="headerlink" title="Finishing up Viewing"></a>Finishing up Viewing</h3><ul>
+<li>Viewport(视口) transformation</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005190732.png" alt="image-20211005190731847" style="zoom: 50%;" /></p>
+<p>上节课把透视投影转化成正交投影 这里引入另外一个概念 Field of View，表示你能看到的角度的范围 注意看上图中红色线的夹角，就是垂直可视角度，他越大，可视角度越大 同理还有水平可视角度</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005190927.png" alt="image-20211005190926969"></p>
+<p>MVP这三个变换之后，所有东西都会停留在一个1，1，1的位于原点的标准立方体中 下一步就要把这立方体画在屏幕上</p>
+<h3 id="Rasterization（光栅化，即把东西花在屏幕上"><a href="#Rasterization（光栅化，即把东西花在屏幕上" class="headerlink" title="Rasterization（光栅化，即把东西花在屏幕上"></a>Rasterization（光栅化，即把东西花在屏幕上</h3><h4 id="屏幕"><a href="#屏幕" class="headerlink" title="屏幕"></a>屏幕</h4><ul>
+<li><p>像素是最小的屏幕单位</p>
+</li>
+<li><p>每个像素有不同的颜色</p>
+</li>
+<li><p>屏幕空间：就是给屏幕定义一个坐标系 比如，可以定义左下角是原点。 </p>
+</li>
+<li><p>实际上像素的中心是(𝑥 + 0.5, 𝑦 + 0.5)</p>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191523.png" alt="image-20211005191523440"></p>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191557.png" alt="image-20211005191556944"></p>
+<p>我们要做的就是把标准立方体空间映射到屏幕这个二维世界中去 𝑧暂时不管 其他两个坐标是[−1, 1] ଶ转换到 [0, 𝑤𝑖𝑑𝑡ℎ] ∗ [0, ℎ𝑒𝑖𝑔ℎ𝑡] 使用上面这个矩阵做变换</p>
+</li>
+</ul>
+<h4 id="Rasterizing-a-triangle"><a href="#Rasterizing-a-triangle" class="headerlink" title="Rasterizing  a triangle"></a>Rasterizing  a triangle</h4><ul>
+<li><p>三角形可以拼接在三维空间中的面，或者二维空间中复杂的图形 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191718.png" alt="image-20211005191718242"></p>
+</li>
+<li><p>三角形内部一定是平面的 </p>
+</li>
+<li>给三角形顶点定义不同属性，可以在三角形内部进行插值</li>
+<li>通过采样的方式，来画出三角形<ul>
+<li>采样就是把函数离散化的过程</li>
+<li>可以对时间，面积，方向，体积… 进行采样</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191941.png" alt="image-20211005191941468"></p>
+<p>定义二值函数：</p>
+<script type="math/tex; mode=display">
+inside(tri, x,y) = \left\{\begin{array}{rcl}
+1  &      & {Point(x,y) \ in  \ triangle \ t}\\
+0  &      & {otherwise}\\
+\end{array}\right.</script><ul>
+<li><p>这里我们要做的就是给定一个三角形，判断像素中心是否在三角形内部。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005192820.png" alt="image-20211005192820679"></p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005192920.png" alt="image-20211005192920137"></p>
+<p>那么，如何判断一个点是否在三角形内？用叉乘！！ 比如对上图，判断Q是否在三角形内部 首先$𝑃1𝑃2 \  X \ 𝑃1𝑄 $，将会得到一个z为正数的向量，也就是结果向量朝向屏幕外的，利 用右手定则，可以得知𝑄在𝑃1𝑃2的左侧（因为如果在右侧，那么结果将会是向量𝑧为负 数，那么结果向量就朝向屏幕内部） 类似的𝑃2𝑃0 𝑋 𝑃2𝑄，得到𝑄在右侧，不对劲！ 𝑃0𝑃1 𝑋 𝑃0𝑄，得到𝑄在左侧</p>
+<p>注意，向量按照一定的顺序去判断，比如我们上面是按照P1, P2, P0去判断的</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005193137.png" alt="image-20211005193137111"></p>
+<p>检查屏幕所有的像素太花时间！ 可以只检查蓝色的包围盒（Bounding box）部分</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005193213.png" alt="image-20211005193213667"></p>
+<p>也可以每一行设置一个包围盒，进一步减小包围盒 很适用于那种三角形很小，但是包围盒很大的（窄长三角形</p>
+<h2 id="some-words"><a href="#some-words" class="headerlink" title="some words"></a>some words</h2><p>syllabus  教学大纲</p>
+<p>cube  立方体</p>
+<p>canonical 标准的</p>
+<p>aspect ratio 横纵比</p>
+<p>requirements 要求</p>
+<p>submission 提交</p>
+<p>slides 幻灯片</p>
+<p>Bulletin Board System BBS</p>
+<p>Semantic Segmentation 语义切割</p>
+<p>code skeletons 代码框架</p>
+<p>IDE: Integrated Development Environment</p>
+<p>parse 解析</p>
+<p>Academic integrity 学术诚信</p>
+<p>Valentine’s Day 情人节</p>
+<p>brutal 粗暴的</p>
+<p>coordinates 坐标</p>
+<p> Parallelogram law 平行四边形法则</p>
+<p>Triangle law 三角法则</p>
+<p>orthogonal 正交的</p>
+<p> scalar 标量</p>
+<p>decompose 分解</p>
+<p>haunt 出没</p>
+<p>pervasively 普遍地</p>
+<p>multiplication 乘法</p>
+<p>trivial 琐碎的</p>
 ]]></content>
       <categories>
-        <category>css</category>
+        <category>CG</category>
       </categories>
       <tags>
-        <tag>marp</tag>
-        <tag>css</tag>
-        <tag>折腾</tag>
+        <tag>CG</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>服务器上配置jupyter_notebook_个人简易教程</title>
-    <url>/%E6%9C%8D%E5%8A%A1%E5%99%A8/jupyter-notebook/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E9%85%8D%E7%BD%AEjupyter-notebook-%E4%B8%AA%E4%BA%BA%E7%AE%80%E6%98%93%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<h2 id="后续有时间再细写"><a href="#后续有时间再细写" class="headerlink" title="后续有时间再细写"></a>后续有时间再细写</h2><h2 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h2><p>现在服务器上下载anaconda和jupyter notebook</p>
-<p>然后配置文件，密码之类的</p>
-<p>然后在xshell连接端口</p>
-<p>然后localhost:8888，输入密码即可</p>
-<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p><a href="https://blog.csdn.net/watermel__/article/details/114988331">https://blog.csdn.net/watermel__/article/details/114988331</a></p>
-<p><a href="https://blog.csdn.net/qq_24027563/article/details/80589880">https://blog.csdn.net/qq_24027563/article/details/80589880</a></p>
-<p><a href="https://www.baidu.com/link?url=V_stHI6UhDDIIwOfI1dRk0CxGUz7JLQJvAAVplwItVLOykn1ZuSlBmJK_OaKaSui&amp;wd=&amp;eqid=eb38869200037c5e00000003610f9dfc">https://www.baidu.com/link?url=V_stHI6UhDDIIwOfI1dRk0CxGUz7JLQJvAAVplwItVLOykn1ZuSlBmJK_OaKaSui&amp;wd=&amp;eqid=eb38869200037c5e00000003610f9dfc</a></p>
-]]></content>
-      <categories>
-        <category>服务器</category>
-      </categories>
-      <tags>
-        <tag>jupyter_notebook</tag>
-        <tag>踩坑</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>耶鲁大学博弈论公开课笔记</title>
-    <url>/%E5%8D%9A%E5%BC%88%E8%AE%BA/math/%E8%80%B6%E9%B2%81%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%BC%88%E8%AE%BA%E5%85%AC%E5%BC%80%E8%AF%BE%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<h1 id="耶鲁大学博弈论公开课笔记"><a href="#耶鲁大学博弈论公开课笔记" class="headerlink" title="耶鲁大学博弈论公开课笔记"></a><strong>耶鲁大学博弈论公开课笔记</strong></h1><p><strong><a href="https://wenku.baidu.com/view/d9e4d40fc5da50e2524d7fc1.html">耶鲁大学公开课博弈论笔记(博弈论24讲) - 百度文库 (baidu.com)</a></strong></p>
-<h2 id="P1-导论-五个入门结论"><a href="#P1-导论-五个入门结论" class="headerlink" title="P1 导论-五个入门结论"></a>P1 导论-五个入门结论</h2><h4 id="理性人"><a href="#理性人" class="headerlink" title="理性人"></a>理性人</h4><p>​    指代这一类人，他们只关心自己的利益<em>(这个定义并不完备，需要修改）</em></p>
-<h4 id="举例："><a href="#举例：" class="headerlink" title="举例："></a>举例：</h4><ul>
-<li>囚徒困境（注意模型的不完备性）</li>
-<li>宿舍卫生打扫问题（没人愿意投入）</li>
-<li>企业打价格战（无限降价会使得自己收到损失）</li>
-</ul>
-<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><ul>
-<li><p>如果选择a的结果严格优于b,那么就说a相当于b来说是一个严格优势策略。结论：不要选择严格劣势策略（<strong>Do not play a strictly dominated strategy.</strong></p>
-</li>
-<li><p>选择严格优势策略（无论对方选择什么，自己的收益都会更高）</p>
-</li>
-<li><p>在不同的参与者，不同的利益关心情况下，做出的选择都会不同</p>
-</li>
-<li><p>理性人的理性选择导致了次优的结果（<strong>Rational choice in this case,can lead to outcomes that suck.(Rational choice by rational players,can lead to bad outcomes.</strong></p>
-</li>
-<li><p>协和谬误 Payoffs matter.苟欲求之，必先知之（<strong>You can’t get what you want,till you know what you want.</strong></p>
-</li>
-<li><p>人总是以自己为出发点思考问题。</p>
-</li>
-<li><p>策略决策的核心：换位思考，站在别人的立场上看比人会怎样做，在考虑自己受益的同时，要注意别人的选择。（<strong>Put yourself in other’s shoes and try to figure out what they will do.</strong></p>
-</li>
-<li><p>耶鲁大学的学生都很自私。（<strong>Yale students are evil.</strong></p>
-</li>
-</ul>
-<h2 id="P2-学会换位思考"><a href="#P2-学会换位思考" class="headerlink" title="P2 学会换位思考"></a>P2 学会换位思考</h2><h4 id="博弈的三大要素"><a href="#博弈的三大要素" class="headerlink" title="博弈的三大要素"></a>博弈的三大要素</h4><ul>
-<li>players;参与人</li>
-<li>strategies；策略集合</li>
-<li>payoffs; 收益</li>
-</ul>
-<h4 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h4><ul>
-<li>打渔问题</li>
-<li>解决全球变暖问题（控制碳排放</li>
-<li>防线布置问题（汉尼拔是否翻越阿尔卑斯山</li>
-</ul>
-<h4 id="严格劣势策略"><a href="#严格劣势策略" class="headerlink" title="严格劣势策略"></a>严格劣势策略</h4><ul>
-<li>​    无论对方做出哪个选择，你的这个选择都是 strictly 不利的 弱劣势策略：其中的一个策略严格劣于另外一个策略。 </li>
-</ul>
-<p>​    </p>
-<p>​    当对手有严格优势策略时，而我方两个策略相同时，考虑对手优势策略下的收益。 </p>
-<h4 id="互动活动：-全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。"><a href="#互动活动：-全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。" class="headerlink" title="互动活动： 全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。"></a>互动活动： 全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。</h4><ul>
-<li><h5 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h5><ul>
-<li>所有人都从 1 到 100 中选个数字，最接近所有人选的数字的均值的2/3 者为获胜方</li>
-</ul>
-</li>
-<li><h5 id="推理过程"><a href="#推理过程" class="headerlink" title="推理过程"></a>推理过程</h5><ul>
-<li>作为理性人．每个人都会选择67（ 100 <em> 2/3 ）以下的数，进一步假设你的对手也是理性的，你会选择 45 ( 100</em> 4/9 ）以下的数 … … </li>
-<li>依据哲学观点，如果大家都是理性程度相当的，（极端理性）那么最后数字将为 1 ，然而结果却是 9 （在本次实验中</li>
-<li>这说明<strong>博弈的复杂性</strong></li>
-</ul>
-</li>
-<li><h5 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h5><ul>
-<li>共同知识的概念<ul>
-<li>在本次实验中，是这样的：要在其中了解到对方都是理性人，知道对方知道对方都是理性人，知道对方知道对方知道对方都是理性人……</li>
-</ul>
-</li>
-<li>共同知识与共有知识之间的区别<ul>
-<li>common knowledge（不同于 mutual knowledge共有知识.） ：站在对手的角度思考对手在这次博弈中有多老练，思考对手知道你在博弈中有多老练，思考对手知道你在思考他有多老练，如此一直循环成立 （<em>这个是网上抄的，我觉得不strict</em> </li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>共有知识和共同知识</p>
-<ul>
-<li>共有知识 + 外部信息 -&gt; 共同知识<ul>
-<li>例如：脏脸博弈，皇帝的新衣，沉默的螺旋</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="P3-迭代剔除和中位选民定理"><a href="#P3-迭代剔除和中位选民定理" class="headerlink" title="P3 迭代剔除和中位选民定理"></a>P3 迭代剔除和中位选民定理</h2><p>学会在剔除劣势策略的情况下再重新审视博弈问题，再做决策。站在对方的立场上，考虑他们不会选择什么，再考虑对方会认为我们不会选择什么</p>
-<h5 id="利用迭代剔除法领悟中间选民问题"><a href="#利用迭代剔除法领悟中间选民问题" class="headerlink" title="利用迭代剔除法领悟中间选民问题"></a>利用迭代剔除法领悟中间选民问题</h5><ul>
-<li>迭代剔除法<ul>
-<li>反复消去严格下策，不断把劣势策略剔除出去，最后只剩下相对优势的策略</li>
-</ul>
-</li>
-<li>中间选民问题<ul>
-<li>政治选举候选人的politic position. 如果从极左到极右有10个程度，则大部分人会选择5，6。 在政治上，人们倾向于中间站位。</li>
-<li>在两党制中，政党表述纲领要吸引中间位置的选民，他们认为在选举中处于中间标度可以吸引左右两边的选民，并以此获得胜利。</li>
-<li>理论的不完备性<ul>
-<li>太多了，qaq</li>
-<li>这个公开课是200几年的，此时并没有发生民粹主义的崛起，可以用川普当选等所谓黑天鹅事件来find这个theory的missing</li>
-<li>可以由理论的missing导出理论成立所需的假设条件</li>
-</ul>
-</li>
-<li>理论成立的条件<ul>
-<li>有两个参与人</li>
-<li><del>政治立场能使选民相信</del></li>
-</ul>
-</li>
-<li>延伸出的问题（在商业上，人们倾向于选址集中。）<ul>
-<li>加油站选址</li>
-<li>快餐店选址<ul>
-<li>比如顾客认为这一片都是快餐店，从而帮助顾客选择这个地方（对于快餐企业，在不确定哪个位置较佳的时候会选在同一处）</li>
-<li>对于某快餐企业：根据其他快餐店地址，确定自己的新店地址可以减少决策量</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>在迭代剔除法不能运用时，比如说该博弈方1和2均没有严格下策，可以用二维坐标系画出选择策略之后的收益分布（即<strong>做一个函数辅助决策</strong>）</p>
-<p>最佳策略：在对方不同选择的概率下，做出自己的最佳选择。 列方程，线性规划，求不同范围下的最优解。用数字使得自己的解释更为有力。</p>
-<h2 id="P4-足球比赛和商业合作之最佳对策"><a href="#P4-足球比赛和商业合作之最佳对策" class="headerlink" title="P4 足球比赛和商业合作之最佳对策"></a>P4 足球比赛和商业合作之最佳对策</h2><h3 id="罚点球"><a href="#罚点球" class="headerlink" title="罚点球"></a>罚点球</h3><ul>
-<li>​    一个进过模型简化的点球模型：罚球这可以选择左路，中路，右路3种路线去踢点球，们将可以选择向左扑救或者向右扑救。罚球者的收益很容易计算</li>
-<li>结论<ul>
-<li>无论什么时候，罚球者向中路踢都不是一个最优的选择</li>
-<li>不要选择一个在任何brief下都不是最优策略的策略</li>
-<li>这里的brief并不是门将会向左或向右，而是指概率。我的理解是对中庸之道的批判。所以本例中，虽然罚球者的3种策略里没有劣势策略，不过还是可以用以上原则剔除掉一个策略</li>
-</ul>
-</li>
-<li>missing<ul>
-<li>罚球者是右撇子</li>
-<li>门将可以中出（to be continued)</li>
-</ul>
-</li>
-</ul>
-<h3 id="Partnership-game：商业合作"><a href="#Partnership-game：商业合作" class="headerlink" title="Partnership game：商业合作"></a>Partnership game：商业合作</h3><ul>
-<li>列出合作对象的效用函数，对此求导，令其一介导数为0，即可得出其最佳投入精力关于对方投入精力的函数（使自己的效益最大化，总效益-个人投入）。 </li>
-<li>假设合作只有两方，令两函数相等，所得交点即为纳什均衡。 即双方都不愿意偏离这一点。</li>
-</ul>
-<h2 id="P5-纳什均衡"><a href="#P5-纳什均衡" class="headerlink" title="P5 纳什均衡"></a>P5 纳什均衡</h2><h3 id="1-纳什均衡的两大定义"><a href="#1-纳什均衡的两大定义" class="headerlink" title="1.纳什均衡的两大定义"></a>1.纳什均衡的两大定义</h3><ul>
-<li><p>No individual can do better by divieting. </p>
-</li>
-<li><p>NE can be thought of self-fullfiling. </p>
-</li>
-</ul>
-<p>2.任何参与人都严格不会改变策略，改变策略严格不会使参与人获得增益</p>
-<p>3.其他参与人不改变行为的前提下，自己改变行为并没有任何好处</p>
-<p>4.严格劣势永远不是最佳策略，最佳策略才可以出现NE</p>
-<p>5.博弈会朝着趋向于一个均衡方向自然发展，结果不断趋向于一个NE</p>
-<p>6.协和谬误不同于囚徒困境</p>
-<ul>
-<li>它有两个(nash)均衡，即all in和all out</li>
-<li>前者可以通过沟通解决，本身具有强制力，因为符合自身利益。例如： 在银行里存钱、微软垄断（规模效应） 等。</li>
-<li>后者无沟通</li>
-</ul>
-<p>7.区分协和谬误和沉默的螺旋之间的关系</p>
-<ul>
-<li>沉默的螺旋（The Spiral Of Silence）是一个政治学和大众传播理论。理论基本描述了这样一个现象：人们在表达自己想法和观点的时候，如果看到自己赞同的观点受到广泛欢迎，就会积极参与进来，这类观点就会越发大胆地发表和扩散；而发觉某一观点无人或很少有人理会（有时会有群起而攻之的遭遇），即使自己赞同它，也会保持沉默。意见一方的沉默造成另一方意见的增势，如此循环往复，便形成一方的声音越来越强大，另一方越来越沉默下去的螺旋发展过程。理论是基于这样一个假设：大多数个人会力图避免由于单独持有某些态度和信念而产生的孤立。</li>
-</ul>
-<h2 id="P6-第六讲：约会策略与古诺模型"><a href="#P6-第六讲：约会策略与古诺模型" class="headerlink" title="P6 第六讲：约会策略与古诺模型"></a>P6 第六讲：约会策略与古诺模型</h2><p><del>策略互补博弈 》协调博弈：性别大战（不同人有不同偏好） 策略代替博弈》</del></p>
-<h5 id="古诺模型"><a href="#古诺模型" class="headerlink" title="古诺模型"></a>古诺模型</h5><ul>
-<li>假设：2个公司生产可以完全互补产品，</li>
-<li>在完全竞争市场上，成本=价格 </li>
-<li>在完全垄断市场上，价格=边际成本 </li>
-<li>古诺模型中，价格高于完全竞争市场，低于完全垄断市场</li>
-</ul>
-]]></content>
-      <categories>
-        <category>博弈论</category>
-      </categories>
-      <tags>
-        <tag>数学</tag>
-        <tag>经济学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>《深度学习中的数学》读书记录</title>
-    <url>/%E4%B9%A6%E6%91%98/math/%E3%80%8A%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E6%95%B0%E5%AD%A6%E3%80%8B/</url>
-    <content><![CDATA[<h2 id="《深度学习中的数学》"><a href="#《深度学习中的数学》" class="headerlink" title="《深度学习中的数学》"></a>《深度学习中的数学》</h2><p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903124351.jpeg" alt="深度学习的数学"></p>
-<p>挺水的</p>
-<p>知道了一些基本概念</p>
-<ul>
-<li>神经网络：相较于原来更为抽象的原理学习，这次学到了一些具体的表述方式，以及核函数的意义</li>
-<li>BP：没有仔细看 但是对原理的理解进一步加深了</li>
-<li>CNN： 一些实例加强了我对CNN的理解</li>
-</ul>
-]]></content>
-      <categories>
-        <category>书摘</category>
-      </categories>
-      <tags>
-        <tag>books</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>tf.graph()</title>
-    <url>/tensorflow/MADRL/tf.graph()/</url>
-    <content><![CDATA[<h2 id="tf-graph"><a href="#tf-graph" class="headerlink" title="tf.graph()"></a>tf.graph()</h2><p> tf.Graph()表示实例化一个用于tensorflow计算和表示用的数据流图，不负责运行计算。在代码中添加的操作和数据都是画在纸上的画，而图就是呈现这些画的纸。我们可以利用很多线程生成很多张图，但是默认图就只有一张。</p>
-<p>  tf中可以定义多个计算图，不同计算图上的张量和运算是相互独立的，不会共享。计算图可以用来隔离张量和计算，同时提供了管理张量和计算的机制。</p>
-<p>  1、使用g = tf.Graph()函数创建新的计算图</p>
-<p>  2、在with g.as_default():语句下定义属于计算图g的张量和操作</p>
-<p>  3、在with tf.Session()中通过参数graph=xxx指定当前会话所运行的计算图</p>
-<p>  4、如果没有显示指定张量和操作所属的计算图，则这些张量和操作属于默认计算图</p>
-<p>  5、一个图可以在多个sess中运行，一个ses也能运行多个图</p>
-<p>  操作示例：</p>
-<p># 默认计算图上的操作</p>
-<p>a = tf.constant([1.0, 2.0])</p>
-<p>b = tf.constant([2.0, 3.0])</p>
-<p>result = a + b</p>
-<p># 定义两个计算图</p>
-<p>g1 = tf.Graph()</p>
-<p>g2 = tf.Graph()</p>
-<p># 在g1中定义张量和操作</p>
-<p>with g1.as_default():</p>
-<p>  a = tf.constant([1.0, 1.0])</p>
-<p>  b = tf.constant([1.0, 1.0])</p>
-<p>  result1 = a + b</p>
-<p># 在g2中定义张量和操作</p>
-<p>with g2.as_default():</p>
-<p>  a = tf.constant([2.0, 2.0])</p>
-<p>  b = tf.constant([2.0, 2.0])</p>
-<p>  result2 = a + b</p>
-<p># 创建会话</p>
-<p>with tf.Session(graph=g1) as sess:</p>
-<p>  out = sess.run(result1)</p>
-<p>  print(out)</p>
-<p>with tf.Session(graph=g2) as sess:</p>
-<p>  out = sess.run(result2)</p>
-<p>  print(out)</p>
-<p>with tf.Session(graph=tf.get_default_graph()) as sess:</p>
-<p>  out = sess.run(result)</p>
-<p>  print(out)</p>
-<p>返回：</p>
-<p>[2.0, 2.0]</p>
-<p>[4.0, 4.0]</p>
-<p>[3.0, 5.0]</p>
-]]></content>
-      <categories>
-        <category>tensorflow</category>
-      </categories>
-      <tags>
-        <tag>tensorflow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>一些关于DRL的概念</title>
-    <url>/MARL/MADRL/%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<p>注意力机制（方法论）：为了让计算机更加适应人类交流场景，我们必须教会计算机选择遗忘和关联上下文，这种机制就是所谓的「注意力机制」 </p>
-<p>1、将<strong>卷积神经网络</strong> 的感知能力与强化学习的决策能力结合在一起,可以较好地解决传统算法存在的容易陷入局部最优、在相近的障碍物群中震荡且不能识别路径、在狭窄通道中摆动以及障碍物附近目标不可达等问题, 并且大大提高了机器人轨迹跟踪和动态避障的实时性和适应性。</p>
-<p>2、制约传统强化学习算法的瓶颈在于Q-learning是一种表格方法，根据过去出现过的状态动作空间，更新和迭代Q值，使得其适用的状态和动作空间非常小，如果一个状态从未出现过，强化学习是无法处理的，模型几乎就没有泛化能力，为增强模型预测能力，可以使用<strong>回归函数拟合Q值</strong> 。</p>
-<p>3、算法可以平衡运用探索和利用策略，<strong>搜索策略定义为小概率随机搜索策略和及时回报小于设定阈值进行随机动作搜索的引导式(δ)策略</strong> 。可以使强化学习智能体与环境的交互中学习一个好的策略，同时又不至于在试错的过程中丢失太多的奖励。</p>
-<p>4、深度卷积神经网络进行训练时存在的假设是训练数据是独立同分布，而从环境中采集到的数据之间存在着关联性，利用这些数据进行顺序训练，算法模型将存在不稳定问题. 通过<strong>经验回放的方式</strong> 可以令训练出的模型收敛且稳定。</p>
-<p>5、奖惩函数可以定义为与距离有关（如避障时智能体与障碍物之间的距离等）。</p>
-<p>6、目标函数可以使用基于梯度下降的<strong>Adam 优化算法。</strong></p>
-<p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103622.png" alt="image-20210710170957091"></p>
-<p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103632.png" alt="image-20210710171922815"></p>
-<p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103638.png" alt="image-20210710184402541" style="zoom:50%;" /></p>
-<p>DDPG 结合了 DQN、确定性策略梯度算法 DPG ( deterministic policy gradient) 和 演 员-评 论 家 算 法( actor-critic methods) ，可解决强化学习中连续动作 空间问题。DQN 利用神经网络来逼近值函数，其 参数是每层网络的权重，对值函数进行更新其实就 是更新权重参数。DPG 算法采用异策略学习方法， 行动策略采用随机策略，以保证足够的探索，评估策 略采用 确 定 策 略，以减少动作空间的采样数量。 DPG 采用演员-评论家算法框架，它通过分离策略函 数和价值函数来降低学习难度，策略函数被称为演 员，价值函数被称为评论家，演员根据当前的环境状态产生一个动作，而评论家则对演员采取的动作进 行评价。</p>
-<p>评论家网络模型选择 （On policy 类还是 off policy ) 算法，演员网络模型选择策略梯度算法。 在常规 DDPG 算法中，网络从回放缓冲区中随机采样进行离线训练。回放缓冲区是一个有限大小 的缓冲区 Ｒ，元祖( s<sub>t</sub>，a<sub>t</sub>，rt，s<sub>t + 1</sub> ) 储存在缓冲区中并 且根据探索策略随机采样。</p>
-<p><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103704.png" alt="image-20210711112606803"></p>
-<p>　传统的强化学习方法主要针对的是离散状态和行为空间的马尔科 夫决策过程，也就是状态的值函数或行为的值函数采用了表格的形式 来进行存储和迭代计算。但是实际工程应用中的许多优化决策问题是 具有大规模或连续的状态或行为空间的情况，所以表格型强化学习算 法也同动态规划法一样存在维数灾难。为了克服维数灾难，以实现对 连续性状态或行为空间的马尔科夫决策过程的最优值函数和最优策略 的逼近，我们就必须研究强化学习的泛化问题或推广问题，也就是利 用有限的学习经验和记忆以实现对一个大范围空间的有效知识获取和 表示的方法。</p>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>人工蜂群算法</title>
-    <url>/MARL/MADRL/%E4%BA%BA%E5%B7%A5%E8%9C%82%E7%BE%A4%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="人工蜂群算法"><a href="#人工蜂群算法" class="headerlink" title="**人工蜂群算法"></a>**人工蜂群算法</h3><ul>
-<li><p><strong>模仿蜜蜂行为提出的一种优化方法 群智能算法</strong></p>
-</li>
-<li><p><strong>特点</strong></p>
-</li>
-</ul>
-<ul>
-<li><p><strong>其使用了较少的控制参数，并且鲁棒性强，在每次迭代过程中都会进行全局和局部的最优解搜索，因此能够找到最优解的概率大大增加。</strong></p>
-</li>
-<li><p><strong>不需要了解问题的特殊信息，只需要对问题进行优劣的比较，通过各人工蜂个体的局部寻优行为，最终在群体中使全局最优值突现出来，有着较快的收敛速度。</strong></p>
-</li>
-</ul>
-<ul>
-<li>人工蜂群算法详解**](<a href="https://zhuanlan.zhihu.com/p/253220840">https://zhuanlan.zhihu.com/p/253220840</a>)</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>群体智能</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>多智能体强化学习</title>
-    <url>/MARL/MADRL/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<h3 id="多智能体强化学习"><a href="#多智能体强化学习" class="headerlink" title="多智能体强化学习"></a>多智能体强化学习</h3><ul>
-<li>强化学习的核心思想是“试错”（trial-and-error）：智能体通过与环境的交互，根据获得的反馈信息迭代地优化** </li>
-<li><strong><strong>多智能体问题的建模——博弈论基础</strong></strong></li>
-</ul>
-<ul>
-<li><p><strong>马尔科夫博弈</strong></p>
-</li>
-<li><p><strong>纳什均衡</strong></p>
-</li>
-<li><p><strong><strong>均衡求解方法**</strong></strong>是多智能体强化学习的基本方法，它对于多智能体学习的问题，结合了强化学习的经典方法（如 Q-learning）和博弈论中的均衡概念，通过 RL 的方法来求解该均衡目标，从而完成多智能体的相关任务。** </p>
-<ul>
-<li><strong>**多智能体问题的求解——多智能体强化学习算法</strong></li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><strong>independent Q-learning</strong></li>
-</ul>
-<pre><code>* **每个智能体把其他智能体都当做环境中的因素，仍然按照单智能体学习的方式、通过与环境的交互来更新策略**
-* **简单易实现**
-* **忽略了其他智能体也具备决策的能力、所有个体的动作共同影响环境的状态** 
-* **很难稳定地学习并达到良好的效果。**
-</code></pre><ul>
-<li><p><strong>智能体之间是完全竞争关系（零和随机博弈</strong></p>
-<ul>
-<li><strong>minimax Q-learning 算法</strong></li>
-</ul>
-</li>
-</ul>
-<pre><code>  *  **对于智能体 i，它需要考虑在其他智能体（i-）采取的动作（a-）令自己（i）回报最差（min）的情况下，能够获得的最大（max）期望回报**
-</code></pre><ul>
-<li><p><strong>智能体之间是半合作半竞争（混合）关系</strong></p>
-<ul>
-<li><p><strong>Nash Q-learning 方法</strong></p>
-<ul>
-<li><strong>当每个智能体采用普通的 Q 学习方法，并且都采取贪心的方式、即最大化各自的 Q 值时，这样的方法容易收敛到纳什均衡策略</strong></li>
-<li><strong>Nash Q-learning 方法可用于处理以纳什均衡为解的多智能体学习问题。</strong></li>
-<li><strong>它的目标是通过寻找每一个状态的纳什均衡点，从而在学习过程中基于纳什均衡策略来更新 Q 值。</strong></li>
-<li><strong>对于单个智能体 i，在使用 Nash Q 值进行更新时，它除了需要知道全局状态 s 和其他智能体的动作 a 以外，还需要知道其他所有智能体在下一状态对应的纳什均衡策略π。进一步地，当前智能体就需要知道其他智能体的 Q(s’)值，这通常是根据观察到的其他智能体的奖励和动作来猜想和计算。所以，Nash Q-learning 方法对智能体能够获取的其他智能体的信息（包括动作、奖励等）具有较强的假设，在复杂的真实问题中一般不满足这样严格的条件，方法的适用范围受限。</strong></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>智能体之间是完全合作关系</strong></p>
-<ul>
-<li><p><strong><strong>智能体通过协作获得最优回报时，不需要协调机制</strong></strong></p>
-<ul>
-<li><p><strong>假设对于环境中的所有智能体 {A,B} 存在不只一个最优联合动作，即有 {πA,πB} 和{hA,hB}，那么 A 和 B 之间就需要协商机制，决定是同时取π，还是同时取 h；因为如果其中一个取π、另一个取 h，得到的联合动作就不一定是最优的了。</strong></p>
-</li>
-<li><p><strong>Team Q-learning 是一种适用于不需要协作机制的问题的学习方法，它提出对于单个智能体 i，可以通过下面这个式子来求出它的最优动作 hi：</strong><br><img src="https://pic3.zhimg.com/80/v2-8904fe3a6f84d280ed2ba3cef5ce1b26_720w.jpg" alt="img"></p>
-</li>
-<li><strong>Distributed Q-learning 也是一种适用于不需要协作机制的问题的学习方法，不同于 Team Q-learning 在选取个体最优动作的时候需要知道其他智能体的动作，在该方法中智能体维护的是只依据自身动作所对应的 Q 值，从而得到个体最优动作。</strong></li>
-</ul>
-</li>
-<li><p><strong><strong>隐式的协调机制</strong></strong><br><strong>在智能体之间需要相互协商、从而达成最优的联合动作的问题中，<em>**</em></strong>个体之间的相互建模<strong>**</strong>，能够为智能体的决策提供潜在的协调机制**</p>
-<ul>
-<li><p><strong>联合动作学习（joint action learner，JAL）方法</strong></p>
-</li>
-<li><p><strong>智能体 i 会基于观察到的其他智能体 j 的历史动作、对其他智能体 j 的策略进行建模</strong></p>
-</li>
-<li><p><strong>频率最大 Q 值（frequency maximum Q-value, FMQ）方法</strong></p>
-</li>
-<li><p><strong>在个体 Q 值的定义中引入了个体动作所在的联合动作取得最优回报的频率，从而在学习过程中引导智能体选择能够取得最优回报的联合动作中的自身动作，那么所有智能体的最优动作组合被选择的概率也会更高。</strong></p>
-</li>
-<li><p><strong>基于平均场理论的多智能体强化学习（Mean Field MARL, MFMARL）方法</strong></p>
-</li>
-<li><p><strong>针对大规模群体问题</strong></p>
-</li>
-<li><p><strong>将传统强化学习方法（Q-learning）和平均场理论（mean field theory）相结合。平均场理论适用于对复杂的大规模系统建模，它使用了一种简化的建模思想：对于其中的某个个体，所有其他个体产生的联合作用可以用一个 “平均量” 来定义和衡量</strong></p>
-</li>
-</ul>
-</li>
-<li><p><strong>显式的协作机制</strong></p>
-</li>
-</ul>
-</li>
-</ul>
-<pre><code>  * **主要是人机之间的交互，考虑现存的一些约束条件 / 先验规则等**
-</code></pre><ul>
-<li><p><strong>多智能体深度强化学习</strong></p>
-<ul>
-<li><strong>中心化的控制器（centralized controller）并不一定可行，或者说不一定是比较理想的决策方式。而如果采用完全分布式的方式，每个智能体独自学习自己的值函数网络以及策略网络、不考虑其他智能体对自己的影响，无法很好处理环境的不稳定问题。利用强化学习中 actor-critic 框架的特点，能够在这两种极端方式中找到协调的办法。</strong></li>
-<li><strong><strong>policy-based 的方法</strong></strong></li>
-</ul>
-</li>
-</ul>
-<pre><code>* ****MADDPG******（Multi-Agent Deep Deterministic Policy Gradient**
-
-  *  **这种方法是在深度确定策略梯度（Deep Deterministic Policy Gradient，DDPG）方法的基础上、对其中涉及到的 actor-critic 框架进行改进，使用集中式训练、分布式执行的机制（centralized training and decentralized execution），为解决多智能体问题提供了一种比较通用的思路。**
-  *  **MADDPG 为每个智能体都建立了一个中心化的 critic，它能够获取全局信息（包括全局状态和所有智能体的动作）并给出对应的值函数 Qi(x,a1,...,an)，这在一定程度上能够缓解多智能体系统环境不稳定的问题。另一方面，每个智能体的 actor 则只需要根据局部的观测信息作出决策，这能够实现对多智能体的分布式控制。**
-    **在基于 actor-critic 框架的学习过程中，critic 和 actor 的更新方式和 DDPG 类似。对于 critic，它的优化目标为：**
-    ![img](https://pic3.zhimg.com/80/v2-1af4b831552fa91e51e36c59c537594a_720w.jpg)
-    **对于 actor，考虑确定性策略μi(ai|oi)，策略更新时的梯度计算可以表示为：**
-    ![img](https://pic3.zhimg.com/80/v2-1af4b831552fa91e51e36c59c537594a_720w.jpg)
-  *  **MADDPG 进一步提出了可以通过维护策略逼近函数 来估计其他智能体的策略，******通过对其他智能体的行为建模******使得维护中心化的 Q 值、考虑联合动作效应对单个个体来说是可行的。**
-
-  *  **MADDPG 在处理环境不稳定问题方面还使用了******策略集成（policies ensemble）******的技巧。由于环境中的每个智能体的策略都在迭代更新，因此很容易出现单个智能体的策略对其他智能体的策略过拟合，即当其他智能体的策略发生改变时，当前得到的最优策略不一定能很好的适应其他智能体的策略。为了缓和过拟合问题，MADDPG 提出了策略集成的思想，即对于单个智能体 i，它的策略μi 是由多个子策略μi^k 构成的集合。在一个 episode 中，只使用一种从集合中采样得到的子策略进行决策和完成交互。在学习过程中最大化的目标是所有子策略的期望回报 **
-
-  *  **总结：MADDPG 的核心是在 DDPG 算法的基础上，对每个智能体使用全局的 Q 值来更新局部的策略，该方法在完全合作、完全竞争和混合关系的问题中都能取得较好效果。 **
-
-*  **COMA（略**
-</code></pre><ul>
-<li><p><strong><strong>value-based 的方法</strong></strong></p>
-<ul>
-<li><strong>policy-based 方法中，中心化的值函数是直接使用全局信息进行建模，没有考虑个体的特点。在多智能体系统是由大规模的多个个体构成时，这样的值函数是难以学习或者是训练到收敛的，很难推导出理想的策略。并且仅依靠局部观测值，无法判断当前奖励是由于自身的行为还是环境中其他队友的行为而获得的。</strong></li>
-<li><strong>值分解网络（value decomposition networks, VDN）（略</strong></li>
-</ul>
-</li>
-</ul>
-<pre><code>  * **将全局的 Q(s,a)值分解为各个局部 Qi(si,ai)的加权和，每个智能体拥有各自的局部值函数。**
-</code></pre>]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>路径规划</title>
-    <url>/MARL/MADRL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/</url>
-    <content><![CDATA[<p><strong>路径规划</strong></p>
-<ul>
-<li><p>多智能体强化学习路径规划**](<a href="https://zhuanlan.zhihu.com/p/100813774">https://zhuanlan.zhihu.com/p/100813774</a>)</p>
-</li>
-<li><p>基于以上分析，移动机器人智能路径规划方法研究虽然取得了重要成果，但仍存在局限性，如遗传算法、蚁群算法容易陷入局部最优，神经网络算法需要大量样本。目前的改进算法以多种算法相结合、分层优化等方式为主，虽弥补了缺点，但存在诸多发展瓶颈，如算法复杂度增加，收敛速度慢。</p>
-<p>较于其他算法，强化学习，学习能力强，适应复杂未知环境，但目前强化学习的试错学习、状态泛化，需要耗费大量资源。</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>避障</title>
-    <url>/MARL/MADRL/%E9%81%BF%E9%9A%9C/</url>
-    <content><![CDATA[<h3 id="避障"><a href="#避障" class="headerlink" title="避障"></a><strong>避障</strong></h3><ul>
-<li><p>集群协同避障汇总**](<a href="https://blog.csdn.net/qq_16775293/article/details/88556986">https://blog.csdn.net/qq_16775293/article/details/88556986</a>)</p>
-</li>
-<li><p>奖惩函数 与 避障的关系</p>
-</li>
-<li><p>人工势场法</p>
-<ul>
-<li>人工势场路径规划技术的基本思想是将机器人在环境中的运动视为一种机器人，在虚拟的人工受力场中的运动。障碍物对机器人产生斥力，目标点对机器人产生引力，引力和斥力的合力作为机器人的控制力，从而控制机器人避开障碍物而到达目标位置。</li>
-<li>对于动态路径规划问题来说，与机器人避障相关的主要是机器人与障碍物之间的<strong>相对位置和相对速度</strong>，而非绝对位置和速度。将机器人与目标物的相对位置与相对速度引入吸引势函数，将机器人与障碍的相对位置与相对速度引入排斥势函数，提出动态环境下的机器人路径规划算法。 </li>
-<li>人工势场路径规划技术<em>原理简单，便于底层的实时控制，在机器人的实时避障和平滑轨迹控制等方面得到了广泛研究</em>。但人工势场路径规划方法通常<strong>存在局部极小点</strong>，尽管也有不少针对局部极小的改进方法，但到目前为止，仍未找到完全满意的答案。另外,在引力和斥力场设计时<strong>存在人为不确定因素</strong>，<strong>在障碍物较多时还存在计算量过大等问题</strong>，这些因素的存在限制了人工势场路径规划方法的广泛应用。应用中的<strong>难点是动态环境中引力场与斥力场的设计、局部极小问题的解决</strong>。</li>
-</ul>
-</li>
-<li><p>无人机群 在运动过程中 需要（通过传感器）感知到动态障碍物的运动状态方可避障</p>
-</li>
-<li><p>无人机基于当前环境信息的局部路径规划算法，将对环境的建模与搜索避障融为一体，能对规划结果进行实时反馈和校正，动态性高，但是由于缺乏全局环境信息，规划结果往往不是全局最优，甚至可能找不到正确路径或完整路径</p>
-</li>
-<li><h3 id="移动机器人路径规划算法存在的问题"><a href="#移动机器人路径规划算法存在的问题" class="headerlink" title="移动机器人路径规划算法存在的问题"></a>移动机器人路径规划算法存在的问题</h3></li>
-</ul>
-<ul>
-<li><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103725.png" alt="image-20210710162533883" style="zoom: 67%;" /><ul>
-<li>要解决的问题是 未知环境下的动态障碍物路径规划 基于传感器信息的局部路径规划</li>
-<li>环境是啥？</li>
-<li><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103730.png" alt="image-20210710182339529"></li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>英文单词</title>
-    <url>/MARL/code_notes/%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E8%8B%B1%E6%96%87/</url>
-    <content><![CDATA[<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>reg  寄存器</p>
-<p>mean 平均值</p>
-<p>clip  裁剪</p>
-<p>fluid ?流动的</p>
-<p>spawn 产卵</p>
-<p>denom 分母</p>
-<p>dim 维度</p>
-<p>utils 工具</p>
-<p>lemma 引理</p>
-<p>priority 优先权</p>
-<p>Dueling 决斗 竞争</p>
-<p>minibatch 小批量</p>
-<p>algo 算法（简写</p>
-<p>built-in 内置</p>
-<p>renderer 渲染器</p>
-<p>gridworld 网格</p>
-<p>Placeholder  占位符</p>
-<p>render 渲染 刷新</p>
-<p>enumerate 枚举</p>
-<p>Norm  常态 定额 标准</p>
-<p>pred  预测</p>
-<p>session 一节，一段时间</p>
-<p>eval 评估</p>
-<p>adversaries 对手</p>
-<p>benchmark 基准</p>
-<p>scenario 设想 方案，预测/场景</p>
-<p>parser 解析器</p>
-<p>script 脚本</p>
-<p>optimizer 优化器</p>
-<p>discount factor 折扣因子通常表示为 <em>γ</em>，是一个乘以未来预期奖励的因子，在[0，1]的范围内变化。它控制着未来奖励相对于眼前奖励的重要性。折扣因子越低，未来的奖励就越不重要，代理将倾向专注于只产生即时奖励的动作。</p>
-<p>MLP 多层感知器</p>
-<p>preset 预设</p>
-<p>discrete 离散的</p>
-<p>landmark 特征<del>地标</del></p>
-<p>round 回合</p>
-<p>properties 属性</p>
-<p>diagnostic 诊断的</p>
-<p>metrics 指标</p>
-<p>deception 欺骗</p>
-<p>interval 间隔</p>
-<p>deceive 欺骗</p>
-<p>Covert 隐蔽</p>
-<p>crypto 秘密(支持者)</p>
-<p>encrypt 加密</p>
-<p>policy  策略</p>
-<p>跑完整个训练数据集，叫做一个epoch。一个epoch包含多个episode。一个episode完成一次模型验证，保存最优模型，简单来说就是多少个step进行一次模型验证。</p>
-<p>假设整个训练数据集有n=10,000个样本，batch_size=10，那么一个epoch就包含10,000/10=1,000个step（或iteration）。假设episodes=100，即一个episode包含100个step，那么一个epoch就包含1,000/100=10个episode。每一个episode完成后，进行一次模型验证，并保存模型（一般模型性能没有提升，则不保存）</p>
-<p>agent根据某个策略执行一系列action到结束就是一个episode。</p>
-<p>episode就是每次游戏达到结束后所有action的集合，就是每局完整游戏的策略</p>
-<ul>
-<li><strong>Episode</strong>：介于初始状态和最终状态之间的所有状态；例如一局象棋。代理的目标是在一个情景（Episode）内获得最大的总奖励。在没有终态的情况下，考虑无限的情景。重要的是，不同的情景是完全相互独立的。</li>
-<li><strong>Episodic Tasks</strong>：由不同情景组成的强化学习任务，意味着，每个情景都有最终状态。</li>
-<li><strong>Expected Return</strong>：有时称为总体奖励（overall reward），有时称为G，是整个情景的预期奖励。</li>
-<li><strong>Experience Replay</strong>：由于强化学习任务没有预先生成的可以学习的训练集，代理必须记录它遇到的所有状态转换，以便以后可以从中学习。用于存储这些内容的内存缓冲区（memory-buffer）通常被称为 Experience Replay。这些内存缓冲区有几种类型和架构，最常见的是 <a href="https://en.wikipedia.org/wiki/Circular_buffer">循环内存缓冲区（cyclic memory buffer）</a>，确保代理保持对其新行为的训练，而不是对可能不再相关的事情的训练；另一种是 <a href="https://en.wikipedia.org/wiki/Reservoir_sampling">基于存储区采样的内存缓冲区（reservoir-sampling-based memory）</a>，确保记录的每个状态转换都有均匀的概率插入缓冲区。</li>
-<li><strong>Exploitation &amp; Exploration</strong>：强化学习任务没有预先生成的训练集，他们可以从中学习——他们创建自己的经验并“动态”学习。为了做到这一点，代理需要在许多不同的状态下尝试许多不同的动作，以便尝试和学习所有可用的可能性，并找到使其整体奖励最大化的路径，这被称为探索（Exploitation），因为代理探索环境。另一方面，如果代理所做的只是探索，它将永远不会最大化整体奖励——它还必须使用它学到的信息来这样做，这被称为开发（Exploration），因为代理人利用其知识来最大化其获得的回报。两者之间的权衡是强化学习问题的最大挑战之一，因为两者必须平衡，以便代理既能充分探索环境，又能利用它所学的知识，并重复它发现的最有价值的路径。</li>
-<li><strong>Greedy Policy, \</strong>ε ε*ε**<em>-Greedy Policy*</em>：贪婪策略意味着代理不断执行被认为能产生最高预期回报的操作。显然，这样的策略根本不允许代理进行探索。为了仍然允许一些探索，通常使用ε-贪婪策略：选择[0，1]范围内的数字(称为ε)，并且在选择动作之前，选择[0，1]范围内的随机数。如果该数字大于ε，则选择贪婪操作；但如果该数字小于ε，则选择随机操作。注意，如果ε=0，则策略成为贪婪策略，如果ε=1，则始终探索。</li>
-<li><strong>k-Armed Bandits: See Bandits</strong>。</li>
-<li><strong>Markov Decision Process (MDP)</strong>：马尔可夫属性意味着每个状态只依赖于它的前一个状态、从该状态采取的选定动作以及在该动作执行后立即获得的奖励。数学表示为：s ′ = s ′ ( s , a , r ) s’ = s’(s, a, r)<em>s</em>′=<em>s</em>′(<em>s</em>,<em>a</em>,<em>r</em>)，其中 s ′ s’<em>s</em>′ 是未来状态，s s<em>s</em> 是它的前一个状态，a a<em>a</em> 和 r r<em>r</em> 是动作和奖励。不需要事先知道 s s<em>s</em> 之前发生了什么——马尔可夫属性假设 s s<em>s</em> 包含了所有相关信息。马尔可夫决策过程是基于这些假设的决策过程。</li>
-<li><strong>Model-Based &amp; Model-Free</strong>：基于模型和无模型是代理在试图优化其策略时可以选择的两种不同方法。最好用一个例子来解释：假设你正在学习如何玩21点（Blackjack）。你可以通过两种方式做到这一点：第一种选择是提前计算，在游戏开始之前，所有状态的获胜概率，以及给定所有可能动作的所有状态转移概率（state-transition probabilities），然后简单地按照你的计算动作。第二种选择是在没有任何先验知识的情况下简单地执行，利用 试错法（trial-and-error）获取信息。注意，使用第一种方法，是在建模环境，而第二种方法不需要关于环境的信息。这正是基于模型和无模型的区别；第一种方法是基于模型的，而后者是无模型的。</li>
-<li><strong>Monte Carlo (MC)</strong>：蒙特卡罗方法是使用重复随机抽样（repeated random sampling）来获得结果的算法。它们在强化学习算法中经常被用来获得期望值（expected values）；例如，通过一次又一次地返回到相同的状态来计算状态值函数（state Value function），并对每次收到的实际累积奖励进行平均。</li>
-<li><strong>On-Policy &amp; Off-Policy</strong>：每个强化学习算法都必须遵循一些策略，以便决定在每个状态下执行哪些操作。然而，算法的学习过程在学习时不必考虑该策略。关注产生过去状态动作决策的策略的算法被称为策略（on-policy）算法，而忽略它的算法被称为无策略（off-policy）算法。一个众所周知的无策略算法是 <em>Q</em>−<em>L<strong>e</strong>a<strong>r</strong>n<strong>i</strong>n**g</em>，因为它的更新规则使用将产生最高 Q-Value 的动作，而实际使用的策略可能会限制该动作或选择另一个动作。Q<em>−</em>L<strong>e</strong>a<strong>r</strong>n<strong>i</strong>n<strong>g<em> 的策略变体称为 </em>S</strong>a<strong>r</strong>s<em>*a</em>，其中更新规则使用遵循的策略选择的操作。</li>
-<li><strong>Q-Learning</strong>：Q-Learning 是一种无策略强化学习算法，被认为是最基本的算法之一。在其最简化的形式中，它使用一个表来存储所有可能的状态-动作对（ state-action pairs）的所有Q-Values。它使用贝尔曼方程（Bellman equation）更新这个表，而动作选择通常是用 ε-贪婪策略 进行的。最简单的形式（状态转换和预期回报中没有不确定性）的 Q-Learning 的更新规则是：<em>Q</em>(<em>s</em>,<em>a</em>)=<em>r</em>(<em>s</em>,<em>a</em>)+<em>γ</em> <em>m<strong>a</strong>x**a</em> <em>Q</em>(<em>s</em>′,<em>a</em>)</li>
-</ul>
-<p>它的一个更复杂的版本 Deep Q-Network variant 更受欢迎，有时简称为 Deep Q-Learning 或 Q-Learning。这种变体用神经网络代替了状态-动作表（state-action table），以便处理大规模任务，其中可能的状态-动作对的数量可能是巨大的。可以在<a href="https://medium.com/@shakedzy/qrash-course-deep-q-networks-from-the-ground-up-1bbda41d3677">这里</a>找到这个算法的教程。</p>
-<ul>
-<li><strong>Q Value (Q Function)</strong>：通常记为 Q ( s , a ) Q(s, a)<em>Q</em>(<em>s</em>,<em>a</em>)，有时带 π π<em>π</em> 下标，有时在Deep RL中表示为 Q ( s , a ; θ ) Q(s, a; θ)<em>Q</em>(<em>s</em>,<em>a</em>;<em>θ</em>)，Q Value是对总体预期回报的度量，假设代理处于状态 s s<em>s</em> 并执行动作 a a<em>a</em>，然后按照某些策略 π π<em>π</em> 继续执行，直到情景结束。Q 是 Quality 一词的缩写，数学上定义为：<br>Q ( s , a ) = E [ ∑ n = 0 N γ n r n ] Q(s,a) = E[\sum^N_{n=0}\gamma^n r_n]<em>Q</em>(<em>s</em>,<em>a</em>)=<em>E</em>[<em>n</em>=0∑<em>N</em>​<em>γ<strong>n</strong>r**n</em>​]<br>其中 N N<em>N</em> 是从状态 s s<em>s</em> 到结束状态的状态数，γ γ<em>γ</em> 是折扣因子，r 0 r^0<em>r</em>0 是在状态 s s<em>s</em> 中执行动作 a a<em>a</em> 后立即获得的奖励。</li>
-<li><strong>REINFORCE Algorithms</strong>：强化算法是一类强化学习算法，它们根据策略相对于<a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">策略参数</a>的梯度来更新策略参数。该名称通常只用大写字母书写，因为它最初是原始算法组设计的首字母缩写：REward Increment = <a href="https://link.springer.com/content/pdf/10.1007/BF00992696.pdf">Nonnegative Factor x Offset Reinforcement x Characteristic Eligibility</a></li>
-<li><strong>Reinforcement Learning (RL)</strong>：与监督学习和无监督学习一样，强化学习是机器学习和人工智能的主要领域之一。它与一个任意存在的学习过程有关，这个任意存在被称为代理（Agent），它周围的世界被称为环境（Environment）。代理寻求从环境中获得最大的回报，并执行不同的动作，以了解环境如何响应并获得更多的回报。RL任务的最大挑战之一是将动作与延迟奖励相关联，延迟奖励是代理在产生奖励的动作完成后很久才收到的奖励。因此，它被大量用于解决不同类型的游戏，从井字棋、象棋、Atari 2600到围棋和星际争霸。</li>
-<li><strong>Reward</strong>：代理从环境中接收的数值，作为对代理操作的直接响应。代理的目标是最大化它在一个情景内获得的整体奖励，因此奖励是代理采取所需行为的动机。所有的动作都会产生奖励，奖励可以大致分为三种：强调期望行为的积极奖励；强调代理应该偏离的行为的消极奖励；以及零奖励，这意味着代理没有做任何特殊或独特的事情。</li>
-<li><strong>Sarsa</strong>：Sarsa 算法基本上是Q-Learning算法，为了使它成为一个在线算法，做了一些修改。Q-Learning 更新规则基于最佳Q-Value 的贝尔曼方程（Bellman equation），因此在状态转换和预期回报没有不确定性的情况下，Q-Learning 更新规则是：<br>Q ( s , a ) = r ( s , a ) + γ  m a x a  Q ( s ′ , a ) Q(s,a) = r(s,a) + \gamma\ max_a\ Q(s’, a)<em>Q</em>(<em>s</em>,<em>a</em>)=<em>r</em>(<em>s</em>,<em>a</em>)+<em>γ</em> <em>m<strong>a</strong>x**a</em>​ <em>Q</em>(<em>s</em>′,<em>a</em>)<br>为了将其转换为基于策略的算法，修改了最后一项：<br>Q ( s , a ) = r ( s , a ) + γ  Q ( s ′ , a ) Q(s,a) = r(s,a) + \gamma\ Q(s’, a)<em>Q</em>(<em>s</em>,<em>a</em>)=<em>r</em>(<em>s</em>,<em>a</em>)+<em>γ</em> <em>Q</em>(<em>s</em>′,<em>a</em>)<br>这里，动作 a a<em>a</em> 和 a ’ a’<em>a</em>’ 由相同的策略选择。算法的名称源自其更新规则，该规则基于 ( s , a , r , s ’ , a ’ ) (s,a,r,s’,a’)(<em>s</em>,<em>a</em>,<em>r</em>,<em>s</em>’,<em>a</em>’)，所有这些都来自同一个策略。</li>
-<li><strong>State</strong>：代理在环境中遇到的每个场景都被正式称为状态。代理通过执行操作在不同状态之间转换。还值得一提的是标志着一集结束的终端状态。在达到终端状态后，没有可能的状态，新的一集开始了。通常，终端状态被表示为一种特殊状态，在这种状态下，所有动作都转换到相同的终端状态，奖励为0。</li>
-<li><strong>State-Value Function</strong>：See Value Function。</li>
-<li><strong>Temporal-Difference (TD)</strong>：时间差分是一种结合动态规划和蒙特卡罗原理的学习方法；它像蒙特卡洛一样“在飞行中”学习，但是像动态规划一样更新它的估计。最简单的时域差分算法之一，称为一步时域或时域(0)。它根据以下更新规则更新值函数（Value Function）：<br>V ( s t ) = V ( s t ) + α [ r t + 1 + γ V ( s t + 1 ) − V ( s t ) V(s_t) = V(s_t) + \alpha [r_{t+1} + \gamma V(s_{t+1}) - V(s_t)<em>V</em>(<em>s**t</em>​)=<em>V</em>(<em>s**t</em>​)+<em>α</em>[<em>r**t</em>+1​+<em>γ**V</em>(<em>s**t</em>+1​)−<em>V</em>(<em>s**t</em>​)<br>其中 V V<em>V</em> 是值函数，s s<em>s</em> 是状态，r r<em>r</em> 是奖励，γ γ<em>γ</em> 是折扣因子，α α<em>α</em> 是学习率，t t<em>t</em> 是时间步长，<strong>等号用作更新运算符，而不是等式</strong>。方括号中的术语被称为 <strong>时间差异误差（temporal difference error）</strong>。</li>
-<li><strong>Terminal State</strong>：See State。</li>
-<li><strong>Upper Confident Bound (UCB)</strong>：UCB是一种探索方法，它试图确保每个动作都得到很好的探索。考虑一个完全随机的探索策略——也就是说，每个可能的动作都有相同的被选择的机会。有些动作很有可能会比其他动作被探索得更多。选择的动作越少，代理对其预期奖励的信心就越低，其开发阶段就可能受到损害。UCB的探索考虑了每一个动作被选择的次数，并给那些不太被探索的动作额外的权重。从数学上对此进行形式化，所选择的动作是通过：<br>a c t i o n = a r g m a x a  [ R ( a ) + c l n t N ( a ) ] action = argmax_a\ [R(a) + c\sqrt{\frac{lnt}{N(a)}}]<em>a<strong>c</strong>t<strong>i</strong>o**n</em>=<em>a<strong>r</strong>g<strong>m</strong>a<strong>x</strong>a</em>​ [<em>R</em>(<em>a</em>)+<em>c**N</em>(<em>a</em>)<em>l<strong>n</strong>t</em>​​]<br>其中，R ( a ) R(a)<em>R</em>(<em>a</em>) 是动作 a a<em>a</em> 的预期总回报，t t<em>t</em> 是采取的步骤数（总共选择了多少个动作），N ( a ) N(a)<em>N</em>(<em>a</em>) 是选择动作 a a<em>a</em> 的次数，c c<em>c</em> 是可配置的超参数。这种方法有时也被称为 乐观探索（exploration through optimism），因为它给不太被探索的行为一个更高的价值，鼓励模型选择它们。</li>
-<li><strong>Value Function</strong>：价值函数通常表示为<em>V</em>(<em>s</em>)，有时带有 π 下标，它是对总体预期奖励的一种度量，假设代理处于状态<em>s</em>，然后按照某个策略<em>π</em> 继续执行，直到情景结束。它在数学上定义为：<em>V</em>(<em>s</em>)=<em>E</em>[<em>n</em>=0∑<em>N</em>​<em>γ<strong>n</strong>r**n</em>​]<br>虽然它看起来确实类似于 Q-Value 的定义，但是有一个隐含的，重要的区别：对于n<em>=0，V</em>(<em>s</em>) 的 <em>r</em>0 的奖励是在任何动作被执行之前处于状态<em>s</em> 的预期奖励，而在Q-Value中，<em>r</em>0 是在某个动作被执行之后的预期奖励。这种差异也产生了优势函数（Advantage function）。</li>
-</ul>
-<p>env  环境</p>
-<p>obs  观察</p>
-<p>arg 参量</p>
-<p>arglist 参量表</p>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python函数参数的传递机制</title>
-    <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/Python%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E7%9A%84%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<h1 id="Python函数参数的传递机制"><a href="#Python函数参数的传递机制" class="headerlink" title="Python函数参数的传递机制"></a>Python函数参数的传递机制</h1><h2 id="不可变对象是值传递"><a href="#不可变对象是值传递" class="headerlink" title="不可变对象是值传递"></a>不可变对象是值传递</h2><p><strong>python中不可变对象，函数实际参数(实参)传递给形式参数(形参)的过程，实际上是把实际参数值的副本(复制品)传入函数，参数本身不会收到任何影响。</strong></p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">def func(a, b):
-    a, b &#x3D; b, a
-    # 函数内 a:2 b:1
-    print(&#39;函数内 a:&#123;&#125; b:&#123;&#125;&#39;.format(a, b))
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    a &#x3D; 1
-    b &#x3D; 2
-    # 可以理解为是将a, b的值复制一份传入
-    func(a, b)
-    # 函数外 a:1 b:2
-    print(&#39;函数外 a:&#123;&#125; b:&#123;&#125;&#39;.format(a, b))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="可变对象是引用传递-地址传递"><a href="#可变对象是引用传递-地址传递" class="headerlink" title="可变对象是引用传递(地址传递)"></a>可变对象是引用传递(地址传递)</h2><p>对于可变对象如字典，列表等，参数传递的方式是引用传递，也就是将可变对象的引用(内存地址)传递给函数，参数会受到影响。</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">def func(a):
-    a.append(4)
-    a.append(5)
-    # 函数内 a:[1, 2, 3, 4, 5]
-    print(&#39;函数内 a:&#123;&#125;&#39;.format(a))
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    a &#x3D; [1, 2, 3]
-    func(a)
-    # 函数内 a:[1, 2, 3, 4, 5]
-    print(&#39;函数外 a:&#123;&#125;&#39;.format(a))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>碎碎念</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>FIRST</title>
-    <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/example/</url>
-    <content><![CDATA[<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>大家好，这是第一篇博客</p>
-]]></content>
-      <categories>
-        <category>碎碎念</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>保护变量的访问与设置</title>
-    <url>/python/others/%E4%BF%9D%E6%8A%A4%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE%E4%B8%8E%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<h1 id="保护变量的访问与设置"><a href="#保护变量的访问与设置" class="headerlink" title="保护变量的访问与设置"></a>保护变量的访问与设置</h1><p>对于私有变量（双下划线）或者保护变量（单下划线），不允许外部直接访问，类似于Java的private，可以通过对外提供get，set接口来访问和修改这类变量，便于控制。</p>
-<ul>
-<li>@property装饰器会将方法转换为相同名称的只读属性，相当于实现get方法</li>
-<li>@xxx.setter装饰器使得可以直接通过 对象.xxx来修改保护变量的值，相当于实现set方法</li>
-</ul>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">class Student(object):
-    def __init__(self, name):
-        self.name &#x3D; name
-        self._score &#x3D; None
-
-    @property
-    def score(self):
-        return self._score
-
-    @score.setter
-    def score(self, value):
-        self._score &#x3D; value
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    s &#x3D; Student(&#39;王大锤&#39;)
-    s.score &#x3D; 100  # 设置保护变量的值
-    print(s.score)  # 访问保护变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>猴子补丁</title>
-    <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/%E7%8C%B4%E5%AD%90%E8%A1%A5%E4%B8%81/</url>
-    <content><![CDATA[<h1 id="猴子补丁"><a href="#猴子补丁" class="headerlink" title="猴子补丁"></a>猴子补丁</h1><p><strong>monkey patch允许在运行期间动态修改一个类或模块</strong></p>
-<ul>
-<li>在运行时替换方法、属性等</li>
-<li>在不修改第三方代码的情况下增加原来不支持的功能</li>
-<li>在运行时为内存中的对象增加patch而不是在磁盘的源代码中增加</li>
-</ul>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">class A:
-    def func(self):
-        print(&#39;这是A类下的func方法&#39;)
-
-# arg 这个参数是没有用到的，因为func有一个参数，如果这个函数没有参数的话不能这样直接赋值
-def monkey_func(arg):
-    print(&#39;这是猴子补丁方法&#39;)
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    a &#x3D; A()
-    # 运行原类下的方法
-    a.func()  # 这是A类下的func方法
-
-    # 在不改变原类代码的情况下，动态修改原类的方法，打补丁
-    A.func &#x3D; monkey_func
-
-    # 运行替换后的方法
-    a.func()  # 这是猴子补丁方法<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p>gevent通过打补丁的方式，利用自己的socket替换了python的标准socket模块，利用gevent协程处理高并发的情况</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">from gevent import monkey
-monkey.patch_all()
-import gevent
-from socket import *
-
-
-def talk(conn):
-    while 1:  # 循环通讯
-        try:
-            from_client_msg &#x3D; conn.recv(1024)
-            if not from_client_msg:break
-            print(&quot;来自客户端的消息:%s&quot; %(from_client_msg))
-            conn.send(from_client_msg.upper())
-        except:
-            break
-    conn.close()
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    server &#x3D; socket()
-    ip_port &#x3D; (&quot;127.0.0.1&quot;, 8001)
-    server.bind(ip_port)
-    server.listen(5)
-    while 1:  # 循环连接
-        conn, addr &#x3D; server.accept()
-        gevent.spawn(talk, conn)  # 开启一个协程
-    server.close()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>碎碎念</category>
-      </categories>
   </entry>
 </search>
