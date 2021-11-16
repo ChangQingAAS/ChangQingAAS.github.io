@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic%7CRoboto+Slab:300,300italic,400,400italic,700,700italic%7CPT+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"changqingaas.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"valine","storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="GAMES101:现代计算机图形学入门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GAMES101">
+<meta property="og:url" content="https://changqingaas.github.io/CG/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/GAMES101/index.html">
+<meta property="og:site_name" content="常青的小屋">
+<meta property="og:description" content="GAMES101:现代计算机图形学入门">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231736.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231823.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231937.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231938.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231939.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231940.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231941.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231942.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914135044.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914124142.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914134639.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914135553.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914142248.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914203113.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914220209.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914224154.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914223830.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914225726.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914230822.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915120758.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914230840.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122816.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122907.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122956.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123123.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123140.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123415.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123500.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123625.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123651.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123710.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005190732.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005190927.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191523.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191557.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191718.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191941.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005192820.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005192920.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005193137.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005193213.png">
+<meta property="article:published_time" content="2021-09-13T11:50:19.000Z">
+<meta property="article:modified_time" content="2021-10-05T11:35:16.735Z">
+<meta property="article:author" content="常青">
+<meta property="article:tag" content="CG">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231736.png">
+
+
+<link rel="canonical" href="https://changqingaas.github.io/CG/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/GAMES101/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://changqingaas.github.io/CG/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/GAMES101/","path":"CG/计算机图形学/GAMES101/","title":"GAMES101"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>GAMES101 | 常青的小屋</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="常青的小屋" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+     
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">常青的小屋</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep looking, do not settle.</p>
+     
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-commonweal"><a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--个人简介-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lecture1-intro"><span class="nav-text">Lecture1:  intro</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6"><span class="nav-text">计算机图形学</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#why-study-computer-graphics"><span class="nav-text">why study computer graphics?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Course-topics"><span class="nav-text">Course topics</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text"> </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#differences-between-cg-and-cv"><span class="nav-text">differences between cg and cv</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lecture2-review-of-linear-algebra"><span class="nav-text">Lecture2:  review of linear algebra</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Graphics%E2%80%99-dependcies"><span class="nav-text">Graphics’ dependcies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vectors"><span class="nav-text">vectors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#matrices"><span class="nav-text">matrices</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lecture-3-Transformation"><span class="nav-text">Lecture 3: Transformation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#why-study-transformation"><span class="nav-text">why study transformation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2D-transformations"><span class="nav-text">2D transformations:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Homogeneous-coordinates-%E9%BD%90%E6%AC%A1%E5%9D%90%E6%A0%87"><span class="nav-text">Homogeneous coordinates 齐次坐标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#composing-transforms"><span class="nav-text">composing transforms</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lecture-4%EF%BC%9A-Transformation-Cont"><span class="nav-text">Lecture 4： Transformation Cont</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3D-transformations"><span class="nav-text">3D transformations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Viewing-%E8%A7%82%E6%B5%8B-transformation"><span class="nav-text">Viewing (观测) transformation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lecture05-Rasterization-1-Triangles"><span class="nav-text">Lecture05: Rasterization 1(Triangles)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Finishing-up-Viewing"><span class="nav-text">Finishing up Viewing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rasterization%EF%BC%88%E5%85%89%E6%A0%85%E5%8C%96%EF%BC%8C%E5%8D%B3%E6%8A%8A%E4%B8%9C%E8%A5%BF%E8%8A%B1%E5%9C%A8%E5%B1%8F%E5%B9%95%E4%B8%8A"><span class="nav-text">Rasterization（光栅化，即把东西花在屏幕上</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%8F%E5%B9%95"><span class="nav-text">屏幕</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rasterizing-a-triangle"><span class="nav-text">Rasterizing  a triangle</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-words"><span class="nav-text">some words</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+      <!--/个人简介-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="常青"
+      src="/images/1.jpeg">
+  <p class="site-author-name" itemprop="name">常青</p>
+  <div class="site-description" itemprop="description">Do Not Crush</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ChangQingAAS" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ChangQingAAS" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wanghongyang@tju.edu.cn" title="E-Mail → mailto:wanghongyang@tju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title">
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://aidn.jp/mikutap/" title="https:&#x2F;&#x2F;aidn.jp&#x2F;mikutap&#x2F;" rel="noopener" target="_blank">解压玩具</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://thispersondoesnotexist.com/" title="https:&#x2F;&#x2F;thispersondoesnotexist.com&#x2F;" rel="noopener" target="_blank">他者凝视</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://thisartworkdoesnotexist.com/" title="https:&#x2F;&#x2F;thisartworkdoesnotexist.com&#x2F;" rel="noopener" target="_blank">网络抽象</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://jiuge.thunlp.org/index.html" title="http:&#x2F;&#x2F;jiuge.thunlp.org&#x2F;index.html" rel="noopener" target="_blank">读诗远足</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=410710596&height=66&autostart="false"></iframe>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://changqingaas.github.io/CG/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/GAMES101/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpeg">
+      <meta itemprop="name" content="常青">
+      <meta itemprop="description" content="Do Not Crush">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="常青的小屋">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GAMES101
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-09-13 19:50:19" itemprop="dateCreated datePublished" datetime="2021-09-13T19:50:19+08:00">2021-09-13</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-10-05 19:35:16" itemprop="dateModified" datetime="2021-10-05T19:35:16+08:00">2021-10-05</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CG/" itemprop="url" rel="index"><span itemprop="name">CG</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">GAMES101:现代计算机图形学入门</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="Lecture1-intro"><a href="#Lecture1-intro" class="headerlink" title="Lecture1:  intro"></a>Lecture1:  intro</h2><h3 id="计算机图形学"><a href="#计算机图形学" class="headerlink" title="计算机图形学"></a>计算机图形学</h3><p>使用计算机synthesize(合成)  manipulate（操作) 可视化信息</p>
+<h3 id="why-study-computer-graphics"><a href="#why-study-computer-graphics" class="headerlink" title="why study computer graphics?"></a>why study computer graphics?</h3><ul>
+<li>Application<ul>
+<li>video games 电子游戏</li>
+<li>animations 动画</li>
+<li>visualization 可视化</li>
+<li>virtual reality</li>
+<li>augmented reality 增强现实</li>
+<li>digital illustration 数码插画</li>
+<li>simulation 模拟</li>
+<li>graphical user interfaces 图形用户界面</li>
+<li>typography  排版</li>
+</ul>
+</li>
+<li>technical chanllenges </li>
+</ul>
+<h3 id="Course-topics"><a href="#Course-topics" class="headerlink" title="Course topics"></a>Course topics</h3><ul>
+<li><p>Rasterization  光栅化</p>
+<ul>
+<li><p>project geometry primitives (3D triangles / polygons) onto the screen</p>
+<p>将几何图形（3D三角形 / 多边形）投射到屏幕上</p>
+</li>
+<li><p>break projected primitives into fragments (pixels)</p>
+<p>将投影图元分解到片段(像素)</p>
+</li>
+<li><p>gold standard in video games (real-time applications)</p>
+</li>
+</ul>
+</li>
+<li><p>curves and meshes 曲线和栅格</p>
+<ul>
+<li>怎样represent geometry in CG</li>
+</ul>
+</li>
+<li><p>ray tracing 光线追踪</p>
+<ul>
+<li>shoot rays from camera though each pixel<ul>
+<li>calculate intersection and shading 交叉点和阴影</li>
+<li>continue to bounce the rays till they hit light sources</li>
+</ul>
+</li>
+<li>gold standard in animations / movies (offline离线 application)</li>
+</ul>
+</li>
+<li><p>animation simulation</p>
+<ul>
+<li>key frame animation 关键帧动画</li>
+<li>mass-spring system 弹簧振子系统</li>
+</ul>
+</li>
+</ul>
+<h3 id=""><a href="#" class="headerlink" title=" "></a> </h3><h3 id="differences-between-cg-and-cv"><a href="#differences-between-cg-and-cv" class="headerlink" title="differences between cg and cv"></a>differences between cg and cv</h3><p>No clear boundaries</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231736.png" alt="image-20210913210044004"></p>
+<h2 id="Lecture2-review-of-linear-algebra"><a href="#Lecture2-review-of-linear-algebra" class="headerlink" title="Lecture2:  review of linear algebra"></a>Lecture2:  review of linear algebra</h2><h3 id="Graphics’-dependcies"><a href="#Graphics’-dependcies" class="headerlink" title="Graphics’ dependcies"></a>Graphics’ dependcies</h3><ul>
+<li>basic mathematics<ul>
+<li>Linear algebra 线性代数<ul>
+<li>mostly dependent on linear algebra</li>
+<li>vectors（dot products点乘,cross products叉乘<ul>
+<li>An operation like translating or rotating objects  can be matrix-vector multiplication</li>
+</ul>
+</li>
+<li>matrices 矩阵（复数</li>
+</ul>
+</li>
+<li>calculus 微积分</li>
+<li>statistics 统计</li>
+</ul>
+</li>
+<li>basic physics <ul>
+<li>Optics, 光学的</li>
+<li>Mechanics  机械的</li>
+</ul>
+</li>
+<li>misc 杂项<ul>
+<li>Numerical analysis  数值分析</li>
+<li>signal processing 信号处理</li>
+<li>aesthetics 审美</li>
+</ul>
+</li>
+</ul>
+<h3 id="vectors"><a href="#vectors" class="headerlink" title="vectors"></a>vectors</h3><p>noting: 只记了part</p>
+<ul>
+<li><p>unit vector </p>
+<ul>
+<li>单位向量，</li>
+<li>用来代表方向</li>
+</ul>
+</li>
+<li><p>dot  product in graphics</p>
+<ul>
+<li><p>$\vec{a}\cdot\vec{b} = |\vec{a}|\cdot|\vec{b}|cos\theta$ </p>
+</li>
+<li><p>Find angle between two vectors  (e.g. cosine of angle between light source 光源 and surface表面)</p>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231823.png" alt="image-20210913215253056"></p>
+</li>
+<li><p>Finding <strong>projection</strong> of one vector on another</p>
+<ul>
+<li><p>measure how close two directions are</p>
+</li>
+<li><p>decompose分解 a vector </p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231937.png" alt="image-20210913215715680" style="zoom:50%;" /></p>
+</li>
+<li><p>determine forward or backward</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231938.png" alt="image-20210913215758162" style="zoom: 50%;" /></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>cross product in graphics</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231939.png" alt="image-20210913220439863" style="zoom: 50%;" /></p>
+<ul>
+<li>Direction determined by right-hand rule</li>
+</ul>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231940.png" alt="image-20210913220739158"></p>
+<ul>
+<li>Useful in constructing coordinate systems (later)</li>
+<li>Determine left / right</li>
+<li>Determine inside / outside</li>
+</ul>
+</li>
+<li>Orthonormal bases and coordinate frames  正交基底和坐标系<ul>
+<li>Critical issue is transforming between these systems/ bases</li>
+</ul>
+</li>
+</ul>
+<h3 id="matrices"><a href="#matrices" class="headerlink" title="matrices"></a>matrices</h3><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231941.png" alt="image-20210913223344462" style="zoom:50%;" /></p>
+<ul>
+<li>$(AB)^{T} = B^{T}A^{T}$</li>
+<li>$AA^{-1} = A^{-1}A = I$</li>
+<li>$(AB)^{-1} = B^{-1}A^{-1}$</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210913231942.png" alt="image-20210913223854494" style="zoom: 50%;" /></p>
+<p>In Graphics, pervasively used to represent transformations</p>
+<ul>
+<li>translation, rotation,shear剪切,scale缩放</li>
+</ul>
+<h2 id="Lecture-3-Transformation"><a href="#Lecture-3-Transformation" class="headerlink" title="Lecture 3: Transformation"></a>Lecture 3: Transformation</h2><h3 id="why-study-transformation"><a href="#why-study-transformation" class="headerlink" title="why study transformation"></a>why study transformation</h3><ul>
+<li>modeling<ul>
+<li>translation</li>
+<li>rotation</li>
+<li>scaling</li>
+</ul>
+</li>
+<li>viewing<ul>
+<li>3D (projection)</li>
+<li>2D (projection)</li>
+</ul>
+</li>
+</ul>
+<h3 id="2D-transformations"><a href="#2D-transformations" class="headerlink" title="2D transformations:"></a>2D transformations:</h3><ul>
+<li><p>representing transformations using matrices</p>
+</li>
+<li><p>rotation</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914135044.png" alt="image-20210914135044036" style="zoom:50%;" /></p>
+<ul>
+<li>$R_{\theta} = \begin{bmatrix} cos\theta &amp; -sin\theta \\ sin\theta &amp; cos\theta \end{bmatrix} $</li>
+<li>$R_{-\theta} = \begin{bmatrix} cos\theta &amp; sin\theta \\ -sin\theta &amp; cos\theta \end{bmatrix} = R_{\theta}^{T} = R_{\theta}^{-1}(by \quad definition) $</li>
+<li>正交矩阵： A·A^T^ = E</li>
+<li>默认绕原点旋转</li>
+<li>默认逆时针旋转</li>
+</ul>
+</li>
+<li><p>scale matrix</p>
+<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} s_{x} &amp; 0 \\ 0 &amp; s_{y} \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</p>
+</li>
+<li><p>reflection matrix 反射（镜像）矩阵</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914124142.png" alt="image-20210914124142211" style="zoom: 50%;" /></p>
+<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} -1 &amp; 0 \\ 0 &amp; 1\end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</p>
+</li>
+<li><p>shear matrix</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914134639.png" alt="image-20210914134632720" style="zoom: 50%;" /></p>
+<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} -1 &amp; a \\ 0 &amp; 1\end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</p>
+<ul>
+<li>Hints:<ul>
+<li>horizontal shift is 0 at y = 0</li>
+<li>horizontal shift is a at y = 1</li>
+<li>vertical shift is always</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Linear transforms </p>
+<ul>
+<li>线性变换：可以用一个矩阵表示的变换</li>
+<li>x’ = ax + by</li>
+<li>y’ = cx + dy</li>
+<li>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} a &amp; b \\ c &amp; d \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}$</li>
+</ul>
+</li>
+</ul>
+<h3 id="Homogeneous-coordinates-齐次坐标"><a href="#Homogeneous-coordinates-齐次坐标" class="headerlink" title="Homogeneous coordinates 齐次坐标"></a>Homogeneous coordinates 齐次坐标</h3><ul>
+<li><p>Why homogeneous coordinates  </p>
+<p>for example:  translation</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914135553.png" alt="image-20210914135548707" style="zoom:50%;" /></p>
+<p>$\begin{bmatrix} x^{‘} \\ y^{‘} \end{bmatrix} = \begin{bmatrix} a &amp; b \\ c &amp; d \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} + \begin{bmatrix} t_{x} \\ t_{y} \end{bmatrix} $</p>
+<ul>
+<li><p>so, translation is not linear transform!</p>
+</li>
+<li><p>因为平移变换不能直接用一个矩阵表示，必须加一个向量；  </p>
+</li>
+<li><p>add a third coordinates</p>
+<p>引入齐次坐标可以解决问题，让平移也能只用一个矩阵表示</p>
+</li>
+<li><p>2D point = (x,y,1)^T^</p>
+</li>
+<li><p>2D vector = (x,y,0)^T^</p>
+</li>
+<li><p>向量 + 向量，结果齐次项是0，还是向量</p>
+</li>
+<li><p>点 - 点，得到的是一个向量，齐次项也变成0 </p>
+</li>
+<li><p>点 + 向量，表示一个点的移动，结果 还是点 ！</p>
+</li>
+<li><p>点 + 点是什么呢？齐次项变成2。将所有项除以2，齐次项又变为1 。所以点 + 点结果实际上是两个点的中点。</p>
+</li>
+</ul>
+</li>
+<li><p>Affine  transformation 仿射变换</p>
+<ul>
+<li><p>仿射变换：先线性变换再加上一次平移</p>
+</li>
+<li><p>$\begin{bmatrix} x^{‘} \\ y^{‘} \\ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; t_{x}\\ c &amp; d  &amp; t_{y}  \\ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} x \\  y \\ 1 \end{bmatrix} $</p>
+</li>
+<li><p>scale </p>
+<p>$ S(s_{x}, s_{y}) = \begin{bmatrix} s_{x} &amp; 0 &amp; 0 \\ 0 &amp; s_{y}  &amp; 0  \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+</li>
+<li><p>rotation </p>
+<p>$ R(\alpha) = \begin{bmatrix} cos\alpha &amp; -sin\alpha &amp; 0 \\ sin\alpha &amp; cos\alpha  &amp; 0  \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+</li>
+<li><p>translation</p>
+<p>$ T(t_{x}, t_{y}) = \begin{bmatrix} 1 &amp; 0 &amp; t_{x} \\ 0 &amp; 1  &amp; t_{y} \\ 0 &amp; 0 &amp; 1 \end{bmatrix}$</p>
+</li>
+</ul>
+</li>
+<li><p>transform ordering matters</p>
+<ul>
+<li>matrix multiplication is not commutative 可交换的</li>
+</ul>
+</li>
+</ul>
+<h3 id="composing-transforms"><a href="#composing-transforms" class="headerlink" title="composing transforms"></a>composing transforms</h3><ul>
+<li><p>decomposing complex transforms</p>
+<ul>
+<li>translate center to origin</li>
+<li>rotate</li>
+<li>translate back</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914142248.png" alt="image-20210914142248083"></p>
+<p>which means $T(c) · R(\alpha) · T(-c)$</p>
+<ul>
+<li><p>分解：变换可以分解，注意先后顺序是从右到左</p>
+</li>
+<li><p>2D变换矩阵（缩放，旋转，平移变换）</p>
+</li>
+</ul>
+</li>
+<li></li>
+</ul>
+<h2 id="Lecture-4：-Transformation-Cont"><a href="#Lecture-4：-Transformation-Cont" class="headerlink" title="Lecture 4： Transformation Cont"></a>Lecture 4： Transformation Cont</h2><h3 id="3D-transformations"><a href="#3D-transformations" class="headerlink" title="3D transformations"></a>3D transformations</h3><ul>
+<li><p>3D point = (x,y,z,1)^T^</p>
+</li>
+<li><p>3D vector = (x,y,z,0)^T^</p>
+</li>
+<li><p>$\begin{bmatrix} x^{‘} \\ y^{‘} \\ z_{‘} \\ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; c &amp; t_{x}\\ d &amp; e &amp; f &amp; t_{y}\\g &amp; h &amp; i &amp; t_{z}  \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} x \\ y \\z \\ 1 \end{bmatrix} $</p>
+</li>
+<li><p>三维空间中的齐次变换，最后一行和二维变换类似，是0 0 0 1，平移还是在矩阵最后一列</p>
+</li>
+<li><p>对于仿射变换，是先应用线性变换，再加上平移</p>
+</li>
+<li><p>what is order?</p>
+<ul>
+<li><p>linear transform first or translation first?</p>
+</li>
+<li><p>scale </p>
+<p> $S(s_{x}, s_{y},s_{z}) = \begin{bmatrix} s_{x} &amp; 0 &amp; 0 &amp; 0\\ 0 &amp;  s_{y} &amp; 0 &amp; 0\\0 &amp; 0 &amp;  s_{z} &amp; 0  \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}  $</p>
+</li>
+<li><p>translation</p>
+<p> $T(t_{x}, t_{y}, t_{z}) = \begin{bmatrix} 1 &amp; 0 &amp; 0 &amp; t_{x}\\ 0 &amp;  1 &amp; 0 &amp; t_{y} \\0 &amp; 0 &amp;  1 &amp; t_{z}  \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}  $</p>
+</li>
+<li><p>rolation</p>
+<ul>
+<li>rolation around x-, y-,or  z-axis</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914203113.png" alt="image-20210914203043532" style="zoom:50%;" /></p>
+<ul>
+<li>绕哪个轴旋转，哪个坐标就不变</li>
+<li><p>不过𝑅𝑦矩阵稍微不同，其他两个都是右上角𝑠𝑖𝑛是负的，只有他是左下角𝑠𝑖𝑛是负的 因为𝑥叉乘𝑦得到𝑧，𝑧叉乘𝑦得到𝑥，但是𝑧叉乘𝑥得到𝑦（而不是𝑥叉乘𝑧），所以是反的</p>
+</li>
+<li><p>$R_{xyz}(\alpha, \beta, \gamma) = R_{x}(\alpha)R_{y}(\beta)R_{z}(\gamma)$</p>
+</li>
+</ul>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914220209.png" alt="image-20210914220208915"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Viewing-观测-transformation"><a href="#Viewing-观测-transformation" class="headerlink" title="Viewing (观测) transformation"></a>Viewing (观测) transformation</h3><ul>
+<li><p>View (视图) / Camera transformation  </p>
+<ul>
+<li>Think about how to take a photo <ul>
+<li>Find a good place and arrange people (model transformation) </li>
+<li>Find a good “angle” to put the camera (view transformation)</li>
+<li>Cheese! (projection transformation)<ul>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914224154.png" alt="image-20210914224154439"></li>
+<li>定义相机</li>
+<li>位置</li>
+<li>往哪看</li>
+<li>向上方向</li>
+<li>现实中是移动相机，变换景物</li>
+<li>图形学中，相机不动，永远在原点</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914223830.png" alt="image-20210914223829896" style="zoom:50%;" /></li>
+<li>经过变换，把相机的位置移动到原点，同时保持看到的景物不变</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914225726.png" alt="image-20210914225726865"></p>
+</li>
+<li><p>这个从“歪”的坐标轴旋转回正的坐标轴，不太好写。 但是这个变换的逆过程，即：从正的坐标轴旋转到“歪”的坐标轴，是好写的， 于是我们先写从“正”坐标轴变换到“歪”坐标轴的变换矩阵，再求其逆矩阵，就可以得到待求的变换矩阵。 又因为旋转矩阵是正交矩阵，所以他的逆矩阵就只需要转置一下就可以得到了！ 注意，不但相机要做这个变换，其他物体也要做这个变换，因为我们想让相机看到的景物相对不变。 （以上部分个人认为非常巧妙和关键！）</p>
+</li>
+<li><p>Projection (投影) transformation</p>
+<ul>
+<li><p>3D to 2D</p>
+</li>
+<li><p>Orthographic (正交) projection  </p>
+<p> <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914230822.png" alt="image-20210914230821994"></p>
+<ul>
+<li><em>没有近大远小</em></li>
+<li>平行投影<ul>
+<li>首先定义空间中一个立方体，将其translate，使其中心在原点，再scale成标准立方体（边长为2</li>
+</ul>
+</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915120758.png" alt="image-20210915120758604"></li>
+<li>再次提醒，注意𝑧轴是近大远小 OpenGL等API是反过来的</li>
+</ul>
+</li>
+<li><p>Perspective (透视) projection</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210914230840.png" alt="image-20210914230840011"></p>
+<ul>
+<li><p>更像人眼看到的场景</p>
+</li>
+<li><p>Most common in Computer Graphics, art, visual system </p>
+</li>
+<li><p>Further objects are smaller </p>
+</li>
+<li><p>Parallel lines not parallel; converge to single point</p>
+</li>
+<li>Recall: property of homogeneous coordinates<ul>
+<li>(x, y, z, 1), (kx, ky, kz, k != 0), (xz, yz, z2, z != 0) all represent  the same point (x, y, z) in 3D </li>
+<li>e.g. (1, 0, 0, 1) and (2, 0, 0, 2) both represent (1, 0, 0)</li>
+</ul>
+</li>
+<li>how to do perspective projection<ul>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122816.png" alt="image-20210915122816233"></li>
+<li>先将frustum远平面，挤压成和近平面一样大（从左图变成右图）</li>
+<li>再做正交投影，投影到近平面</li>
+<li>上述操作过程中几点假设：<ul>
+<li>1）近平面保持不变 </li>
+<li>2）z值保持不变，只是向内收缩</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122907.png" alt="image-20210915122907760"></li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915122956.png" alt="image-20210915122956833"></li>
+<li>挤压这一步怎么做？ 上图是从侧面观察frustum 用相似三角形知识可以得到新坐标的表达式，但是第三个分量目前还不知道（这里利用之前讲的那个性质： 齐次坐标，如果我们对点的坐标所有分量同时乘以k，他表示的还是原来那个点！  </li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123123.png" alt="image-20210915123123207"></li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123140.png" alt="image-20210915123140120"></li>
+<li>如何求解第三行<ul>
+<li>任何近平面上的点不会改变（也就是对于任意的(𝑥, 𝑦, 𝑛, 1)，经过这个矩阵变换后，点的位置仍然不变）</li>
+<li>任何远平面上的点，𝑧值不会改变</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123415.png" alt="image-20210915123415483"></li>
+<li>点(𝑥, 𝑦, 𝑧, 1)是可以通过矩阵变换得到(𝑛𝑥, 𝑛𝑦, 𝑢𝑛𝑘𝑛𝑤𝑜𝑛, 𝑧)向量的。 根据上文提到的性质（1），经过这个变换，点实际没有改变 而同时，(𝑥, 𝑦, 𝑧, 1)本身可以写成(𝑥, 𝑦, 𝑛, 1)（为什么把𝑧替换成𝑛？因为近平面的𝑧坐标就是都是𝑛，所以可以做这个替换。）然后同时乘以𝑛， 变成(𝑛𝑥, 𝑛𝑦, 𝑛 ଶ , 𝑛) 经过上面两个推导，可以看出，第三行前两个数一定是0 因为𝑛 ଶ这个分量和𝑥和𝑦都毫无关系，因此前两个数必定是0 这样，我们就解出了第三行前两个数，都是0 接下来求A和B</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123500.png" alt="image-20210915123459854"></li>
+<li>远平面上有一个特殊点，(0, 0, 𝑓)经过变换挤压仍然不变 所以(0, 0, 𝑓)经过变换仍然是(0, 0, 𝑓) 根据近平面我们得到$An + B = n^{2}$,根据远平面的中心点我们得到$Af + B = f^{2}</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123625.png" alt="image-20210915123625508"></li>
+<li>这样我们就能解出A和B了， 这样终于把从透视投影挤压成正交投影的矩阵，解出来了</li>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123651.png" alt="image-20210915123651566"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>思考题</p>
+<ul>
+<li><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/image/20210915123710.png" alt="image-20210915123709902"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Lecture05-Rasterization-1-Triangles"><a href="#Lecture05-Rasterization-1-Triangles" class="headerlink" title="Lecture05: Rasterization 1(Triangles)"></a>Lecture05: Rasterization 1(Triangles)</h2><h3 id="Finishing-up-Viewing"><a href="#Finishing-up-Viewing" class="headerlink" title="Finishing up Viewing"></a>Finishing up Viewing</h3><ul>
+<li>Viewport(视口) transformation</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005190732.png" alt="image-20211005190731847" style="zoom: 50%;" /></p>
+<p>上节课把透视投影转化成正交投影 这里引入另外一个概念 Field of View，表示你能看到的角度的范围 注意看上图中红色线的夹角，就是垂直可视角度，他越大，可视角度越大 同理还有水平可视角度</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005190927.png" alt="image-20211005190926969"></p>
+<p>MVP这三个变换之后，所有东西都会停留在一个1，1，1的位于原点的标准立方体中 下一步就要把这立方体画在屏幕上</p>
+<h3 id="Rasterization（光栅化，即把东西花在屏幕上"><a href="#Rasterization（光栅化，即把东西花在屏幕上" class="headerlink" title="Rasterization（光栅化，即把东西花在屏幕上"></a>Rasterization（光栅化，即把东西花在屏幕上</h3><h4 id="屏幕"><a href="#屏幕" class="headerlink" title="屏幕"></a>屏幕</h4><ul>
+<li><p>像素是最小的屏幕单位</p>
+</li>
+<li><p>每个像素有不同的颜色</p>
+</li>
+<li><p>屏幕空间：就是给屏幕定义一个坐标系 比如，可以定义左下角是原点。 </p>
+</li>
+<li><p>实际上像素的中心是(𝑥 + 0.5, 𝑦 + 0.5)</p>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191523.png" alt="image-20211005191523440"></p>
+</li>
+<li><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191557.png" alt="image-20211005191556944"></p>
+<p>我们要做的就是把标准立方体空间映射到屏幕这个二维世界中去 𝑧暂时不管 其他两个坐标是[−1, 1] ଶ转换到 [0, 𝑤𝑖𝑑𝑡ℎ] ∗ [0, ℎ𝑒𝑖𝑔ℎ𝑡] 使用上面这个矩阵做变换</p>
+</li>
+</ul>
+<h4 id="Rasterizing-a-triangle"><a href="#Rasterizing-a-triangle" class="headerlink" title="Rasterizing  a triangle"></a>Rasterizing  a triangle</h4><ul>
+<li><p>三角形可以拼接在三维空间中的面，或者二维空间中复杂的图形 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191718.png" alt="image-20211005191718242"></p>
+</li>
+<li><p>三角形内部一定是平面的 </p>
+</li>
+<li>给三角形顶点定义不同属性，可以在三角形内部进行插值</li>
+<li>通过采样的方式，来画出三角形<ul>
+<li>采样就是把函数离散化的过程</li>
+<li>可以对时间，面积，方向，体积… 进行采样</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005191941.png" alt="image-20211005191941468"></p>
+<p>定义二值函数：</p>
+<script type="math/tex; mode=display">
+inside(tri, x,y) = \left\{\begin{array}{rcl}
+1  &      & {Point(x,y) \ in  \ triangle \ t}\\
+0  &      & {otherwise}\\
+\end{array}\right.</script><ul>
+<li><p>这里我们要做的就是给定一个三角形，判断像素中心是否在三角形内部。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005192820.png" alt="image-20211005192820679"></p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005192920.png" alt="image-20211005192920137"></p>
+<p>那么，如何判断一个点是否在三角形内？用叉乘！！ 比如对上图，判断Q是否在三角形内部 首先$𝑃1𝑃2 \  X \ 𝑃1𝑄 $，将会得到一个z为正数的向量，也就是结果向量朝向屏幕外的，利 用右手定则，可以得知𝑄在𝑃1𝑃2的左侧（因为如果在右侧，那么结果将会是向量𝑧为负 数，那么结果向量就朝向屏幕内部） 类似的𝑃2𝑃0 𝑋 𝑃2𝑄，得到𝑄在右侧，不对劲！ 𝑃0𝑃1 𝑋 𝑃0𝑄，得到𝑄在左侧</p>
+<p>注意，向量按照一定的顺序去判断，比如我们上面是按照P1, P2, P0去判断的</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005193137.png" alt="image-20211005193137111"></p>
+<p>检查屏幕所有的像素太花时间！ 可以只检查蓝色的包围盒（Bounding box）部分</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005193213.png" alt="image-20211005193213667"></p>
+<p>也可以每一行设置一个包围盒，进一步减小包围盒 很适用于那种三角形很小，但是包围盒很大的（窄长三角形</p>
+<h2 id="some-words"><a href="#some-words" class="headerlink" title="some words"></a>some words</h2><p>syllabus  教学大纲</p>
+<p>cube  立方体</p>
+<p>canonical 标准的</p>
+<p>aspect ratio 横纵比</p>
+<p>requirements 要求</p>
+<p>submission 提交</p>
+<p>slides 幻灯片</p>
+<p>Bulletin Board System BBS</p>
+<p>Semantic Segmentation 语义切割</p>
+<p>code skeletons 代码框架</p>
+<p>IDE: Integrated Development Environment</p>
+<p>parse 解析</p>
+<p>Academic integrity 学术诚信</p>
+<p>Valentine’s Day 情人节</p>
+<p>brutal 粗暴的</p>
+<p>coordinates 坐标</p>
+<p> Parallelogram law 平行四边形法则</p>
+<p>Triangle law 三角法则</p>
+<p>orthogonal 正交的</p>
+<p> scalar 标量</p>
+<p>decompose 分解</p>
+<p>haunt 出没</p>
+<p>pervasively 普遍地</p>
+<p>multiplication 乘法</p>
+<p>trivial 琐碎的</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="常青 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>常青
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://changqingaas.github.io/CG/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/GAMES101/" title="GAMES101">https://changqingaas.github.io/CG/计算机图形学/GAMES101/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/CG/" rel="tag"># CG</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/MARL/MADRL/%E5%A2%A8%E5%AD%90%E5%B9%B3%E5%8F%B0%E8%AE%AD%E7%BB%83%E6%95%99%E7%A8%8B/" rel="prev" title="墨子平台训练教程">
+                  <i class="fa fa-chevron-left"></i> 墨子平台训练教程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/MARL/MADRL/%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B/" rel="next" title="马尔可夫决策过程">
+                  马尔可夫决策过程 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">常青</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">89k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:21</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+</div>
+
+<!--
+-->
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    该博客访客共<span id="busuanzi_value_site_uv"></span>人
+</span>
+</div>
+
+
+  <script>
+      var now = new Date(); 
+      function createtime() { 
+          var grt= new Date("03/12/2019 12:00:00");//此处修改你的建站时间或者网站上线时间 
+          now.setTime(now.getTime()+250); 
+          days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+          if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+          mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+          snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+          document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+          document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+      } 
+  setInterval("createtime()",250);
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdn.jsdelivr.net/npm/pdfobject@2.2.5/pdfobject.min.js","integrity":"sha256-YuNlP9i6s/WH7EaU2kErloo9Vc85C3WVqhoMDgsEVpY="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+
+  <script class="next-config" data-name="nprogress" type="application/json">{"enable":true,"spinner":true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","cdn":"//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- 樱花特效 -->
+  
+      <script async src="/js/src/fairyDustCursor.js"></script>
+  

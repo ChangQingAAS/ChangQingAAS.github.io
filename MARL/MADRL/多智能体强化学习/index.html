@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic%7CRoboto+Slab:300,300italic,400,400italic,700,700italic%7CPT+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"changqingaas.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"valine","storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="一些关于多智能体强化学习的notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多智能体强化学习">
+<meta property="og:url" content="https://changqingaas.github.io/MARL/MADRL/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="常青的小屋">
+<meta property="og:description" content="一些关于多智能体强化学习的notes">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-8904fe3a6f84d280ed2ba3cef5ce1b26_720w.jpg">
+<meta property="article:published_time" content="2021-07-20T14:00:33.000Z">
+<meta property="article:modified_time" content="2021-08-27T06:52:06.650Z">
+<meta property="article:author" content="常青">
+<meta property="article:tag" content="MARL">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic3.zhimg.com/80/v2-8904fe3a6f84d280ed2ba3cef5ce1b26_720w.jpg">
+
+
+<link rel="canonical" href="https://changqingaas.github.io/MARL/MADRL/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://changqingaas.github.io/MARL/MADRL/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/","path":"MARL/MADRL/多智能体强化学习/","title":"多智能体强化学习"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>多智能体强化学习 | 常青的小屋</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="常青的小屋" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+     
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">常青的小屋</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep looking, do not settle.</p>
+     
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-commonweal"><a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--个人简介-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-text">多智能体强化学习</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+      <!--/个人简介-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="常青"
+      src="/images/1.jpeg">
+  <p class="site-author-name" itemprop="name">常青</p>
+  <div class="site-description" itemprop="description">Do Not Crush</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ChangQingAAS" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ChangQingAAS" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wanghongyang@tju.edu.cn" title="E-Mail → mailto:wanghongyang@tju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title">
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://aidn.jp/mikutap/" title="https:&#x2F;&#x2F;aidn.jp&#x2F;mikutap&#x2F;" rel="noopener" target="_blank">解压玩具</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://thispersondoesnotexist.com/" title="https:&#x2F;&#x2F;thispersondoesnotexist.com&#x2F;" rel="noopener" target="_blank">他者凝视</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://thisartworkdoesnotexist.com/" title="https:&#x2F;&#x2F;thisartworkdoesnotexist.com&#x2F;" rel="noopener" target="_blank">网络抽象</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://jiuge.thunlp.org/index.html" title="http:&#x2F;&#x2F;jiuge.thunlp.org&#x2F;index.html" rel="noopener" target="_blank">读诗远足</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=410710596&height=66&autostart="false"></iframe>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://changqingaas.github.io/MARL/MADRL/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpeg">
+      <meta itemprop="name" content="常青">
+      <meta itemprop="description" content="Do Not Crush">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="常青的小屋">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          多智能体强化学习
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-20 22:00:33" itemprop="dateCreated datePublished" datetime="2021-07-20T22:00:33+08:00">2021-07-20</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-08-27 14:52:06" itemprop="dateModified" datetime="2021-08-27T14:52:06+08:00">2021-08-27</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MARL/" itemprop="url" rel="index"><span itemprop="name">MARL</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">一些关于多智能体强化学习的notes</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="多智能体强化学习"><a href="#多智能体强化学习" class="headerlink" title="多智能体强化学习"></a>多智能体强化学习</h3><ul>
+<li>强化学习的核心思想是“试错”（trial-and-error）：智能体通过与环境的交互，根据获得的反馈信息迭代地优化** </li>
+<li><strong><strong>多智能体问题的建模——博弈论基础</strong></strong></li>
+</ul>
+<ul>
+<li><p><strong>马尔科夫博弈</strong></p>
+</li>
+<li><p><strong>纳什均衡</strong></p>
+</li>
+<li><p><strong><strong>均衡求解方法**</strong></strong>是多智能体强化学习的基本方法，它对于多智能体学习的问题，结合了强化学习的经典方法（如 Q-learning）和博弈论中的均衡概念，通过 RL 的方法来求解该均衡目标，从而完成多智能体的相关任务。** </p>
+<ul>
+<li><strong>**多智能体问题的求解——多智能体强化学习算法</strong></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>independent Q-learning</strong></li>
+</ul>
+<pre><code>* **每个智能体把其他智能体都当做环境中的因素，仍然按照单智能体学习的方式、通过与环境的交互来更新策略**
+* **简单易实现**
+* **忽略了其他智能体也具备决策的能力、所有个体的动作共同影响环境的状态** 
+* **很难稳定地学习并达到良好的效果。**
+</code></pre><ul>
+<li><p><strong>智能体之间是完全竞争关系（零和随机博弈</strong></p>
+<ul>
+<li><strong>minimax Q-learning 算法</strong></li>
+</ul>
+</li>
+</ul>
+<pre><code>  *  **对于智能体 i，它需要考虑在其他智能体（i-）采取的动作（a-）令自己（i）回报最差（min）的情况下，能够获得的最大（max）期望回报**
+</code></pre><ul>
+<li><p><strong>智能体之间是半合作半竞争（混合）关系</strong></p>
+<ul>
+<li><p><strong>Nash Q-learning 方法</strong></p>
+<ul>
+<li><strong>当每个智能体采用普通的 Q 学习方法，并且都采取贪心的方式、即最大化各自的 Q 值时，这样的方法容易收敛到纳什均衡策略</strong></li>
+<li><strong>Nash Q-learning 方法可用于处理以纳什均衡为解的多智能体学习问题。</strong></li>
+<li><strong>它的目标是通过寻找每一个状态的纳什均衡点，从而在学习过程中基于纳什均衡策略来更新 Q 值。</strong></li>
+<li><strong>对于单个智能体 i，在使用 Nash Q 值进行更新时，它除了需要知道全局状态 s 和其他智能体的动作 a 以外，还需要知道其他所有智能体在下一状态对应的纳什均衡策略π。进一步地，当前智能体就需要知道其他智能体的 Q(s’)值，这通常是根据观察到的其他智能体的奖励和动作来猜想和计算。所以，Nash Q-learning 方法对智能体能够获取的其他智能体的信息（包括动作、奖励等）具有较强的假设，在复杂的真实问题中一般不满足这样严格的条件，方法的适用范围受限。</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>智能体之间是完全合作关系</strong></p>
+<ul>
+<li><p><strong><strong>智能体通过协作获得最优回报时，不需要协调机制</strong></strong></p>
+<ul>
+<li><p><strong>假设对于环境中的所有智能体 {A,B} 存在不只一个最优联合动作，即有 {πA,πB} 和{hA,hB}，那么 A 和 B 之间就需要协商机制，决定是同时取π，还是同时取 h；因为如果其中一个取π、另一个取 h，得到的联合动作就不一定是最优的了。</strong></p>
+</li>
+<li><p><strong>Team Q-learning 是一种适用于不需要协作机制的问题的学习方法，它提出对于单个智能体 i，可以通过下面这个式子来求出它的最优动作 hi：</strong><br><img src="https://pic3.zhimg.com/80/v2-8904fe3a6f84d280ed2ba3cef5ce1b26_720w.jpg" alt="img"></p>
+</li>
+<li><strong>Distributed Q-learning 也是一种适用于不需要协作机制的问题的学习方法，不同于 Team Q-learning 在选取个体最优动作的时候需要知道其他智能体的动作，在该方法中智能体维护的是只依据自身动作所对应的 Q 值，从而得到个体最优动作。</strong></li>
+</ul>
+</li>
+<li><p><strong><strong>隐式的协调机制</strong></strong><br><strong>在智能体之间需要相互协商、从而达成最优的联合动作的问题中，<em>**</em></strong>个体之间的相互建模<strong>**</strong>，能够为智能体的决策提供潜在的协调机制**</p>
+<ul>
+<li><p><strong>联合动作学习（joint action learner，JAL）方法</strong></p>
+</li>
+<li><p><strong>智能体 i 会基于观察到的其他智能体 j 的历史动作、对其他智能体 j 的策略进行建模</strong></p>
+</li>
+<li><p><strong>频率最大 Q 值（frequency maximum Q-value, FMQ）方法</strong></p>
+</li>
+<li><p><strong>在个体 Q 值的定义中引入了个体动作所在的联合动作取得最优回报的频率，从而在学习过程中引导智能体选择能够取得最优回报的联合动作中的自身动作，那么所有智能体的最优动作组合被选择的概率也会更高。</strong></p>
+</li>
+<li><p><strong>基于平均场理论的多智能体强化学习（Mean Field MARL, MFMARL）方法</strong></p>
+</li>
+<li><p><strong>针对大规模群体问题</strong></p>
+</li>
+<li><p><strong>将传统强化学习方法（Q-learning）和平均场理论（mean field theory）相结合。平均场理论适用于对复杂的大规模系统建模，它使用了一种简化的建模思想：对于其中的某个个体，所有其他个体产生的联合作用可以用一个 “平均量” 来定义和衡量</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>显式的协作机制</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>  * **主要是人机之间的交互，考虑现存的一些约束条件 / 先验规则等**
+</code></pre><ul>
+<li><p><strong>多智能体深度强化学习</strong></p>
+<ul>
+<li><strong>中心化的控制器（centralized controller）并不一定可行，或者说不一定是比较理想的决策方式。而如果采用完全分布式的方式，每个智能体独自学习自己的值函数网络以及策略网络、不考虑其他智能体对自己的影响，无法很好处理环境的不稳定问题。利用强化学习中 actor-critic 框架的特点，能够在这两种极端方式中找到协调的办法。</strong></li>
+<li><strong><strong>policy-based 的方法</strong></strong></li>
+</ul>
+</li>
+</ul>
+<pre><code>* ****MADDPG******（Multi-Agent Deep Deterministic Policy Gradient**
+
+  *  **这种方法是在深度确定策略梯度（Deep Deterministic Policy Gradient，DDPG）方法的基础上、对其中涉及到的 actor-critic 框架进行改进，使用集中式训练、分布式执行的机制（centralized training and decentralized execution），为解决多智能体问题提供了一种比较通用的思路。**
+  *  **MADDPG 为每个智能体都建立了一个中心化的 critic，它能够获取全局信息（包括全局状态和所有智能体的动作）并给出对应的值函数 Qi(x,a1,...,an)，这在一定程度上能够缓解多智能体系统环境不稳定的问题。另一方面，每个智能体的 actor 则只需要根据局部的观测信息作出决策，这能够实现对多智能体的分布式控制。**
+    **在基于 actor-critic 框架的学习过程中，critic 和 actor 的更新方式和 DDPG 类似。对于 critic，它的优化目标为：**
+    ![img](https://pic3.zhimg.com/80/v2-1af4b831552fa91e51e36c59c537594a_720w.jpg)
+    **对于 actor，考虑确定性策略μi(ai|oi)，策略更新时的梯度计算可以表示为：**
+    ![img](https://pic3.zhimg.com/80/v2-1af4b831552fa91e51e36c59c537594a_720w.jpg)
+  *  **MADDPG 进一步提出了可以通过维护策略逼近函数 来估计其他智能体的策略，******通过对其他智能体的行为建模******使得维护中心化的 Q 值、考虑联合动作效应对单个个体来说是可行的。**
+
+  *  **MADDPG 在处理环境不稳定问题方面还使用了******策略集成（policies ensemble）******的技巧。由于环境中的每个智能体的策略都在迭代更新，因此很容易出现单个智能体的策略对其他智能体的策略过拟合，即当其他智能体的策略发生改变时，当前得到的最优策略不一定能很好的适应其他智能体的策略。为了缓和过拟合问题，MADDPG 提出了策略集成的思想，即对于单个智能体 i，它的策略μi 是由多个子策略μi^k 构成的集合。在一个 episode 中，只使用一种从集合中采样得到的子策略进行决策和完成交互。在学习过程中最大化的目标是所有子策略的期望回报 **
+
+  *  **总结：MADDPG 的核心是在 DDPG 算法的基础上，对每个智能体使用全局的 Q 值来更新局部的策略，该方法在完全合作、完全竞争和混合关系的问题中都能取得较好效果。 **
+
+*  **COMA（略**
+</code></pre><ul>
+<li><p><strong><strong>value-based 的方法</strong></strong></p>
+<ul>
+<li><strong>policy-based 方法中，中心化的值函数是直接使用全局信息进行建模，没有考虑个体的特点。在多智能体系统是由大规模的多个个体构成时，这样的值函数是难以学习或者是训练到收敛的，很难推导出理想的策略。并且仅依靠局部观测值，无法判断当前奖励是由于自身的行为还是环境中其他队友的行为而获得的。</strong></li>
+<li><strong>值分解网络（value decomposition networks, VDN）（略</strong></li>
+</ul>
+</li>
+</ul>
+<pre><code>  * **将全局的 Q(s,a)值分解为各个局部 Qi(si,ai)的加权和，每个智能体拥有各自的局部值函数。**
+</code></pre>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="常青 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>常青
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://changqingaas.github.io/MARL/MADRL/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" title="多智能体强化学习">https://changqingaas.github.io/MARL/MADRL/多智能体强化学习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/MARL/" rel="tag"># MARL</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/MARL/MADRL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/" rel="prev" title="路径规划">
+                  <i class="fa fa-chevron-left"></i> 路径规划
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/MARL/MADRL/%E4%BA%BA%E5%B7%A5%E8%9C%82%E7%BE%A4%E7%AE%97%E6%B3%95/" rel="next" title="人工蜂群算法">
+                  人工蜂群算法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">常青</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">89k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:21</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+</div>
+
+<!--
+-->
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    该博客访客共<span id="busuanzi_value_site_uv"></span>人
+</span>
+</div>
+
+
+  <script>
+      var now = new Date(); 
+      function createtime() { 
+          var grt= new Date("03/12/2019 12:00:00");//此处修改你的建站时间或者网站上线时间 
+          now.setTime(now.getTime()+250); 
+          days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+          if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+          mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+          snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+          document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+          document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+      } 
+  setInterval("createtime()",250);
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdn.jsdelivr.net/npm/pdfobject@2.2.5/pdfobject.min.js","integrity":"sha256-YuNlP9i6s/WH7EaU2kErloo9Vc85C3WVqhoMDgsEVpY="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+
+  <script class="next-config" data-name="nprogress" type="application/json">{"enable":true,"spinner":true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","cdn":"//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- 樱花特效 -->
+  
+      <script async src="/js/src/fairyDustCursor.js"></script>
+  
