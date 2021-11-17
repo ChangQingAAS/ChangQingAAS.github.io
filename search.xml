@@ -221,6 +221,172 @@ D=\{<s_1, v_1^{\pi}>, <s_2, v_2^{\pi}>, ..., <s_T, v_T^{\pi}>\}</script><p>Repea
       </tags>
   </entry>
   <entry>
+    <title>Model-Free Control</title>
+    <url>/MARL/MADRL/Model-Free%20Control/</url>
+    <content><![CDATA[<p>上篇总结了 Model-Free Predict 问题及方法，本文内容介绍 Model-Free Control 方法，即 “Optimise the value function of an unknown MDP”。</p>
+<p>在这里说明下，Model-Free Predict/Control 不仅适用于 Model-Free 的情况，其同样适用于 MDP 已知的问题：</p>
+<ul>
+<li>MDP model is unknown, but experience can be sampled.</li>
+<li>MDP model is known, but is too big to use, except by samples.</li>
+</ul>
+<p>在正式介绍 Model-Free Control 方法之前，我们先介绍下 On-policy Learning 及 Off-policy Learning。</p>
+<h2 id="On-policy-Learning-vs-Off-policy-Learning"><a href="#On-policy-Learning-vs-Off-policy-Learning" class="headerlink" title="On-policy Learning vs. Off-policy Learning"></a>On-policy Learning vs. Off-policy Learning</h2><p>On-policy Learning：</p>
+<ul>
+<li>“Learn on the job”</li>
+<li>Learn about policy π from experience sampled from π（即采样的策略与学习的策略一致）</li>
+</ul>
+<p>Off-policy Learning：</p>
+<ul>
+<li>“Look over someone’s shoulder”</li>
+<li>Learn about policy π from experience sampled from μ（即采样的策略与学习的策略不一致）</li>
+</ul>
+<h2 id="On-Policy-Monte-Carlo-Learning"><a href="#On-Policy-Monte-Carlo-Learning" class="headerlink" title="On-Policy Monte-Carlo Learning"></a>On-Policy Monte-Carlo Learning</h2><h3 id="Generalized-Policy-Iteration"><a href="#Generalized-Policy-Iteration" class="headerlink" title="Generalized Policy Iteration"></a>Generalized Policy Iteration</h3><p>具体的 Control 方法，在《动态规划》一文中我们提到了 Model-based 下的广义策略迭代 GPI 框架，那在 Model-Free 情况下是否同样适用呢？<br>如下图为 Model-based 下的广义策略迭代 GPI 框架，主要分两部分：策略评估及基于 Greedy 策略的策略提升。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006105433.png" alt=""></p>
+<h4 id="Model-Free-策略评估"><a href="#Model-Free-策略评估" class="headerlink" title="Model-Free 策略评估"></a>Model-Free 策略评估</h4><p>在《Model-Free Predict》中我们分别介绍了两种 Model-Free 的策略评估方法：MC 和 TD。我们先讨论使用 MC 情况下的 Model-Free 策略评估。<br>如上图GPI框架所示：</p>
+<ul>
+<li>基于 V(s) 的贪婪策略提升需要 MDP 已知：</li>
+</ul>
+<script type="math/tex; mode=display">
+\pi'(s) = \arg\max_{a\in A}\Bigl(R_{s}^{a}+P_{ss'}^{a}V(s')\Bigr)</script><ul>
+<li>基于 Q(s,a) 的贪婪策略提升不需要 MDP 已知，即 Model-Free：</li>
+</ul>
+<script type="math/tex; mode=display">
+\pi'(s) = \arg\max_{a\in A}Q(s, a)</script><p>因此 Model-Free 下需要对 Q(s,a) 策略评估，整个GPI策略迭代也要基于 Q(s,a) </p>
+<h4 id="Model-Free-策略提升"><a href="#Model-Free-策略提升" class="headerlink" title="Model-Free 策略提升"></a>Model-Free 策略提升</h4><p>确定了策略评估的对象，那接下来要考虑的就是如何基于策略评估的结果 Q(s,a) 进行策略提升。<br>由于 Model-Free 的策略评估基于对经验的 samples（即评估的 q(s,a)  存在 bias），因此我们在这里不采用纯粹的 greedy 策略，防止因为策略评估的偏差导致整个策略迭代进入局部最优，而是采用具有 explore 功能的  ϵ-greedy 算法：</p>
+<script type="math/tex; mode=display">
+\pi(a|s) = 
+\begin{cases}
+&\frac{\epsilon}{m} + 1 - \epsilon, &\text{if } a^*=\arg\max_{a\in A}Q(s, a)\\
+&\frac{\epsilon}{m}, &\text{otherwise}
+\end{cases}</script><p>因此，我们确定了 Model-Free 下的 Monto-Carlo Control：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006105953.png" alt=""></p>
+<h3 id="GLIE"><a href="#GLIE" class="headerlink" title="GLIE"></a>GLIE</h3><p>先直接贴下David的课件，GLIE 介绍如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110036.png" alt=""></p>
+<p>对于 ϵ-greedy 算法而言，如果 ϵ 随着迭代次数逐步减为0，那么  ϵ-greedy 是 GLIE，即：</p>
+<script type="math/tex; mode=display">
+\epsilon_{k} = \frac{1}{k}</script><h4 id="GLIE-Monto-Carlo-Control"><a href="#GLIE-Monto-Carlo-Control" class="headerlink" title="GLIE Monto-Carlo Control"></a>GLIE Monto-Carlo Control</h4><ul>
+<li>对于 episode 中的每个状态 S~t~  和动作 A~t~</li>
+</ul>
+<script type="math/tex; mode=display">
+N(S_t, A_t) ← N(S_t, A_t) + 1 \\
+Q(S_t, A_t) ← Q(S_t, A_t) + \frac{1}{N(S_t, A_t)}(G_t - Q(S_t, A_t))</script><ul>
+<li>基于新的动作价值函数提升策略：</li>
+</ul>
+<script type="math/tex; mode=display">
+\epsilon ← \frac{1}{k}\\
+\pi ← \epsilon\text{-greedy}(Q)</script><p>定理：GLIE Monto-Carlo Control 收敛到最优的动作价值函数，即：</p>
+<script type="math/tex; mode=display">
+Q(s, a) → q_*(s, a)</script><h2 id="On-Policy-Temporal-Difference-Learning"><a href="#On-Policy-Temporal-Difference-Learning" class="headerlink" title="On-Policy Temporal-Difference Learning"></a>On-Policy Temporal-Difference Learning</h2><h3 id="Sarsa"><a href="#Sarsa" class="headerlink" title="Sarsa"></a>Sarsa</h3><p>我们之前总结过 TD 相对 MC 的优势：</p>
+<ul>
+<li>低方差</li>
+<li>Online</li>
+<li>非完整序列</li>
+</ul>
+<p>那么一个很自然的想法就是在整个控制闭环中用 TD 代替 MC：</p>
+<ul>
+<li>使用 TD 来计算 Q(S,A) </li>
+<li>仍然使用  ϵ-greedy 策略提升</li>
+<li>每一个 step 进行更新</li>
+</ul>
+<p>通过上述改变就使得 On-Policy 的蒙特卡洛方法变成了著名的 Sarsa。</p>
+<ul>
+<li>更新动作价值函数</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110844.png" alt=""></p>
+<ul>
+<li>Control</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110937.png" alt=""></p>
+<p>Sarsa算法的伪代码如下：<br><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006111038.png" alt="img"></p>
+<h3 id="Sarsa-λ"><a href="#Sarsa-λ" class="headerlink" title="Sarsa(λ)"></a>Sarsa(λ)</h3><p>n-step Sarsa returns 可以表示如下：<br>n=1 时：$q_{t}^{(1)} = R_{t+1} + \gamma Q(S_{t+1})$<br>n=2 时：$q_{t}^{(2)} = R_{t+1} + \gamma R_{t+2} + \gamma^2 Q(S_{t+2})$<br>…<br>n=∞ 时：$q_{t}^{\infty} = R_{t+1} + \gamma R_{t+2} + … + \gamma^{T-1} R_T)$<br>因此，n-step return $q_{t}^{(n)} = R_{t+1} + \gamma R_{t+2} + … + \gamma^{n}Q(S_{t+n})$</p>
+<p>n-step Sarse 更新公式：</p>
+<p>$Q(S_t,A_t) ← Q(S_t,A_t) + \alpha (q_t^{(n)} - Q(S_t,A_t))$</p>
+<p> 具体的 Sarsa(λ) 算法伪代码如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006111817.png" alt="img"></p>
+<p>其中 E(s,a)   为资格迹。</p>
+<p>下图为 Sarsa(λ) 用于 Gridworld 例子的示意图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006112106.png" alt=""></p>
+<h2 id="Off-Policy-Learning"><a href="#Off-Policy-Learning" class="headerlink" title="Off-Policy Learning"></a>Off-Policy Learning</h2><p>Off-Policy Learning 的特点是评估目标策略 π(a|s) 来计算 v~π~(s) 或者 q~π~(s,a) 但是跟随行为策略 {S~1~,A~1~,R~2~,…,S~T~}∼μ(a|s) </p>
+<p>Off-Policy Learning 有什么意义？</p>
+<ul>
+<li>Learn from observing humans or other agents</li>
+<li>Re-use experience generated from old policies π~1~,π~2~,…,π~t−1~ </li>
+<li>Learn about optimal policy while following exploratory policy</li>
+<li>Learn about multiple policies while following one policy</li>
+</ul>
+<h3 id="重要性采样"><a href="#重要性采样" class="headerlink" title="重要性采样"></a>重要性采样</h3><p>重要性采样的目的是：Estimate the expectation of a different distribution。</p>
+<script type="math/tex; mode=display">
+\begin{align}
+E_{X\sim P}[f(X)]
+&= \sum P(X)f(X)\\
+&= \sum Q(X)\frac{P(X)}{Q(X)}f(X)\\
+&= E_{X\sim Q}[\frac{P(X)}{Q(X)}f(X)]
+\end{align}</script><h4 id="Off-Policy-MC-重要性采样"><a href="#Off-Policy-MC-重要性采样" class="headerlink" title="Off-Policy MC 重要性采样"></a>Off-Policy MC 重要性采样</h4><p>使用策略 π  产生的 return 来评估 μ ：</p>
+<script type="math/tex; mode=display">
+G_t^{\pi/\mu} = \frac{\pi(A_t|S_t)}{\mu(A_t|S_t)} \frac{\pi(A_{t+1}|S_{t+1})}{\mu(A_{t+1}|S_{t+1})}...\frac{\pi(A_T|S_T)}{\mu(A_T|S_T)}G_t</script><p>朝着正确的 return 方向去更新价值：</p>
+<script type="math/tex; mode=display">
+V(S_t) ← V(S_t) + \alpha\Bigl(\textcolor{Red}{G_t^{\pi/\mu}}-V(S_t)\Bigr)</script><p>需要注意两点：</p>
+<ul>
+<li>Cannot use if μ  is zero when π  is non-zero</li>
+<li>重要性采样会显著性地提升方差</li>
+</ul>
+<h4 id="Off-Policy-TD-重要性采样"><a href="#Off-Policy-TD-重要性采样" class="headerlink" title="Off-Policy TD 重要性采样"></a>Off-Policy TD 重要性采样</h4><p>TD 是单步的，所以使用策略 π  产生的 TD targets 来评估 μ ：</p>
+<script type="math/tex; mode=display">
+V(S_t) ← V(S_t) + \alpha\Bigl(\frac{\pi(A_t|S_t)}{\mu(A_t|S_t)}(R_{t+1}+\gamma V(S_{t+1}))-V(S_t)\Bigr)</script><ul>
+<li>方差比MC版本的重要性采样低很多</li>
+</ul>
+<h3 id="Q-Learning"><a href="#Q-Learning" class="headerlink" title="Q-Learning"></a>Q-Learning</h3><p>前面分别介绍了对价值函数 V(s)  进行 off-policy 学习，现在我们讨论如何对动作价值函数 Q(s,a)  进行 off-policy 学习：</p>
+<ul>
+<li><p>不需要重要性采样</p>
+</li>
+<li><p>使用行为策略选出下一步的动作：$A_{t+1}\sim\mu(·|S_t)$</p>
+</li>
+<li><p>但是仍需要考虑另一个后继动作：$A’\sim\pi(·|S_t)$</p>
+</li>
+<li><p>朝着另一个后继动作的价值更新 $Q(S_t, A_t)$</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+Q(S_t, A_t) ← Q(S_t, A_t) + \alpha\Bigl(R_{t+1}+\gamma Q(S_{t+1}, A')-Q(S_t, A_t)\Bigr)</script><p>讨论完对动作价值函数的学习，我们接着看如何通过 Q-Learning 进行 Control：</p>
+<ul>
+<li>行为策略和目标策略均改进</li>
+<li>目标策略 π  以greedy方式改进：</li>
+</ul>
+<script type="math/tex; mode=display">
+\pi(S_t) = \arg\max_{a'}Q(S_{t+1}, a')</script><ul>
+<li>行为策略 μ  以  ϵ-greedy 方式改进</li>
+<li>Q-Learning target：</li>
+</ul>
+<script type="math/tex; mode=display">
+\begin{align}
+&R_{t+1}+\gamma Q(S_{t+1}, A')\\
+=&R_{t+1}+\gamma Q\Bigl(S_{t+1}, \arg\max_{a'}Q(S_{t+1}, a')\Bigr)\\
+=&R_{t+1}+\max_{a'}\gamma Q(S_{t+1}, a')
+\end{align}</script><p>Q-Learning 的 backup tree 如下所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114145.png" alt=""></p>
+<p>关于 Q-Learning 的结论：</p>
+<blockquote>
+<p>Q-learning control converges to the optimal action-value function, Q(s,a)→q~∗~(s,a) </p>
+</blockquote>
+<p>Q-Learning 算法具体的伪代码如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114205.png" alt=""></p>
+<p>对比 Sarsa 与 Q-Learning 可以发现两个最重要的区别：</p>
+<ul>
+<li>TD target 公式不同</li>
+<li>Q-Learning 中下一步的动作从行为策略中选出，而不是目标策略</li>
+</ul>
+<h2 id="DP-vs-TD"><a href="#DP-vs-TD" class="headerlink" title="DP vs. TD"></a>DP vs. TD</h2><p>两者的区别见下表：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114507.png" alt="">  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114532.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Model-Free Prediction</title>
     <url>/MARL/MADRL/Model-Free%20Prediction/</url>
     <content><![CDATA[<p>上篇文章介绍了 Model-based 的通用方法——动态规划，本文内容介绍 Model-Free 情况下 Prediction 问题，即 “Estimate the value function of an unknown MDP”。</p>
@@ -397,172 +563,6 @@ V(S_t) ← V(S_t) + \alpha (\textcolor{Red}{R_{t+1} + \gamma V(S_{t+1})} - V(S_t
 </ul>
 <p>下图从宏观的视角显示了 RL 的几种基本方法的区别：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005231530.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Model-Free Control</title>
-    <url>/MARL/MADRL/Model-Free%20Control/</url>
-    <content><![CDATA[<p>上篇总结了 Model-Free Predict 问题及方法，本文内容介绍 Model-Free Control 方法，即 “Optimise the value function of an unknown MDP”。</p>
-<p>在这里说明下，Model-Free Predict/Control 不仅适用于 Model-Free 的情况，其同样适用于 MDP 已知的问题：</p>
-<ul>
-<li>MDP model is unknown, but experience can be sampled.</li>
-<li>MDP model is known, but is too big to use, except by samples.</li>
-</ul>
-<p>在正式介绍 Model-Free Control 方法之前，我们先介绍下 On-policy Learning 及 Off-policy Learning。</p>
-<h2 id="On-policy-Learning-vs-Off-policy-Learning"><a href="#On-policy-Learning-vs-Off-policy-Learning" class="headerlink" title="On-policy Learning vs. Off-policy Learning"></a>On-policy Learning vs. Off-policy Learning</h2><p>On-policy Learning：</p>
-<ul>
-<li>“Learn on the job”</li>
-<li>Learn about policy π from experience sampled from π（即采样的策略与学习的策略一致）</li>
-</ul>
-<p>Off-policy Learning：</p>
-<ul>
-<li>“Look over someone’s shoulder”</li>
-<li>Learn about policy π from experience sampled from μ（即采样的策略与学习的策略不一致）</li>
-</ul>
-<h2 id="On-Policy-Monte-Carlo-Learning"><a href="#On-Policy-Monte-Carlo-Learning" class="headerlink" title="On-Policy Monte-Carlo Learning"></a>On-Policy Monte-Carlo Learning</h2><h3 id="Generalized-Policy-Iteration"><a href="#Generalized-Policy-Iteration" class="headerlink" title="Generalized Policy Iteration"></a>Generalized Policy Iteration</h3><p>具体的 Control 方法，在《动态规划》一文中我们提到了 Model-based 下的广义策略迭代 GPI 框架，那在 Model-Free 情况下是否同样适用呢？<br>如下图为 Model-based 下的广义策略迭代 GPI 框架，主要分两部分：策略评估及基于 Greedy 策略的策略提升。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006105433.png" alt=""></p>
-<h4 id="Model-Free-策略评估"><a href="#Model-Free-策略评估" class="headerlink" title="Model-Free 策略评估"></a>Model-Free 策略评估</h4><p>在《Model-Free Predict》中我们分别介绍了两种 Model-Free 的策略评估方法：MC 和 TD。我们先讨论使用 MC 情况下的 Model-Free 策略评估。<br>如上图GPI框架所示：</p>
-<ul>
-<li>基于 V(s) 的贪婪策略提升需要 MDP 已知：</li>
-</ul>
-<script type="math/tex; mode=display">
-\pi'(s) = \arg\max_{a\in A}\Bigl(R_{s}^{a}+P_{ss'}^{a}V(s')\Bigr)</script><ul>
-<li>基于 Q(s,a) 的贪婪策略提升不需要 MDP 已知，即 Model-Free：</li>
-</ul>
-<script type="math/tex; mode=display">
-\pi'(s) = \arg\max_{a\in A}Q(s, a)</script><p>因此 Model-Free 下需要对 Q(s,a) 策略评估，整个GPI策略迭代也要基于 Q(s,a) </p>
-<h4 id="Model-Free-策略提升"><a href="#Model-Free-策略提升" class="headerlink" title="Model-Free 策略提升"></a>Model-Free 策略提升</h4><p>确定了策略评估的对象，那接下来要考虑的就是如何基于策略评估的结果 Q(s,a) 进行策略提升。<br>由于 Model-Free 的策略评估基于对经验的 samples（即评估的 q(s,a)  存在 bias），因此我们在这里不采用纯粹的 greedy 策略，防止因为策略评估的偏差导致整个策略迭代进入局部最优，而是采用具有 explore 功能的  ϵ-greedy 算法：</p>
-<script type="math/tex; mode=display">
-\pi(a|s) = 
-\begin{cases}
-&\frac{\epsilon}{m} + 1 - \epsilon, &\text{if } a^*=\arg\max_{a\in A}Q(s, a)\\
-&\frac{\epsilon}{m}, &\text{otherwise}
-\end{cases}</script><p>因此，我们确定了 Model-Free 下的 Monto-Carlo Control：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006105953.png" alt=""></p>
-<h3 id="GLIE"><a href="#GLIE" class="headerlink" title="GLIE"></a>GLIE</h3><p>先直接贴下David的课件，GLIE 介绍如下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110036.png" alt=""></p>
-<p>对于 ϵ-greedy 算法而言，如果 ϵ 随着迭代次数逐步减为0，那么  ϵ-greedy 是 GLIE，即：</p>
-<script type="math/tex; mode=display">
-\epsilon_{k} = \frac{1}{k}</script><h4 id="GLIE-Monto-Carlo-Control"><a href="#GLIE-Monto-Carlo-Control" class="headerlink" title="GLIE Monto-Carlo Control"></a>GLIE Monto-Carlo Control</h4><ul>
-<li>对于 episode 中的每个状态 S~t~  和动作 A~t~</li>
-</ul>
-<script type="math/tex; mode=display">
-N(S_t, A_t) ← N(S_t, A_t) + 1 \\
-Q(S_t, A_t) ← Q(S_t, A_t) + \frac{1}{N(S_t, A_t)}(G_t - Q(S_t, A_t))</script><ul>
-<li>基于新的动作价值函数提升策略：</li>
-</ul>
-<script type="math/tex; mode=display">
-\epsilon ← \frac{1}{k}\\
-\pi ← \epsilon\text{-greedy}(Q)</script><p>定理：GLIE Monto-Carlo Control 收敛到最优的动作价值函数，即：</p>
-<script type="math/tex; mode=display">
-Q(s, a) → q_*(s, a)</script><h2 id="On-Policy-Temporal-Difference-Learning"><a href="#On-Policy-Temporal-Difference-Learning" class="headerlink" title="On-Policy Temporal-Difference Learning"></a>On-Policy Temporal-Difference Learning</h2><h3 id="Sarsa"><a href="#Sarsa" class="headerlink" title="Sarsa"></a>Sarsa</h3><p>我们之前总结过 TD 相对 MC 的优势：</p>
-<ul>
-<li>低方差</li>
-<li>Online</li>
-<li>非完整序列</li>
-</ul>
-<p>那么一个很自然的想法就是在整个控制闭环中用 TD 代替 MC：</p>
-<ul>
-<li>使用 TD 来计算 Q(S,A) </li>
-<li>仍然使用  ϵ-greedy 策略提升</li>
-<li>每一个 step 进行更新</li>
-</ul>
-<p>通过上述改变就使得 On-Policy 的蒙特卡洛方法变成了著名的 Sarsa。</p>
-<ul>
-<li>更新动作价值函数</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110844.png" alt=""></p>
-<ul>
-<li>Control</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110937.png" alt=""></p>
-<p>Sarsa算法的伪代码如下：<br><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006111038.png" alt="img"></p>
-<h3 id="Sarsa-λ"><a href="#Sarsa-λ" class="headerlink" title="Sarsa(λ)"></a>Sarsa(λ)</h3><p>n-step Sarsa returns 可以表示如下：<br>n=1 时：$q_{t}^{(1)} = R_{t+1} + \gamma Q(S_{t+1})$<br>n=2 时：$q_{t}^{(2)} = R_{t+1} + \gamma R_{t+2} + \gamma^2 Q(S_{t+2})$<br>…<br>n=∞ 时：$q_{t}^{\infty} = R_{t+1} + \gamma R_{t+2} + … + \gamma^{T-1} R_T)$<br>因此，n-step return $q_{t}^{(n)} = R_{t+1} + \gamma R_{t+2} + … + \gamma^{n}Q(S_{t+n})$</p>
-<p>n-step Sarse 更新公式：</p>
-<p>$Q(S_t,A_t) ← Q(S_t,A_t) + \alpha (q_t^{(n)} - Q(S_t,A_t))$</p>
-<p> 具体的 Sarsa(λ) 算法伪代码如下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006111817.png" alt="img"></p>
-<p>其中 E(s,a)   为资格迹。</p>
-<p>下图为 Sarsa(λ) 用于 Gridworld 例子的示意图：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006112106.png" alt=""></p>
-<h2 id="Off-Policy-Learning"><a href="#Off-Policy-Learning" class="headerlink" title="Off-Policy Learning"></a>Off-Policy Learning</h2><p>Off-Policy Learning 的特点是评估目标策略 π(a|s) 来计算 v~π~(s) 或者 q~π~(s,a) 但是跟随行为策略 {S~1~,A~1~,R~2~,…,S~T~}∼μ(a|s) </p>
-<p>Off-Policy Learning 有什么意义？</p>
-<ul>
-<li>Learn from observing humans or other agents</li>
-<li>Re-use experience generated from old policies π~1~,π~2~,…,π~t−1~ </li>
-<li>Learn about optimal policy while following exploratory policy</li>
-<li>Learn about multiple policies while following one policy</li>
-</ul>
-<h3 id="重要性采样"><a href="#重要性采样" class="headerlink" title="重要性采样"></a>重要性采样</h3><p>重要性采样的目的是：Estimate the expectation of a different distribution。</p>
-<script type="math/tex; mode=display">
-\begin{align}
-E_{X\sim P}[f(X)]
-&= \sum P(X)f(X)\\
-&= \sum Q(X)\frac{P(X)}{Q(X)}f(X)\\
-&= E_{X\sim Q}[\frac{P(X)}{Q(X)}f(X)]
-\end{align}</script><h4 id="Off-Policy-MC-重要性采样"><a href="#Off-Policy-MC-重要性采样" class="headerlink" title="Off-Policy MC 重要性采样"></a>Off-Policy MC 重要性采样</h4><p>使用策略 π  产生的 return 来评估 μ ：</p>
-<script type="math/tex; mode=display">
-G_t^{\pi/\mu} = \frac{\pi(A_t|S_t)}{\mu(A_t|S_t)} \frac{\pi(A_{t+1}|S_{t+1})}{\mu(A_{t+1}|S_{t+1})}...\frac{\pi(A_T|S_T)}{\mu(A_T|S_T)}G_t</script><p>朝着正确的 return 方向去更新价值：</p>
-<script type="math/tex; mode=display">
-V(S_t) ← V(S_t) + \alpha\Bigl(\textcolor{Red}{G_t^{\pi/\mu}}-V(S_t)\Bigr)</script><p>需要注意两点：</p>
-<ul>
-<li>Cannot use if μ  is zero when π  is non-zero</li>
-<li>重要性采样会显著性地提升方差</li>
-</ul>
-<h4 id="Off-Policy-TD-重要性采样"><a href="#Off-Policy-TD-重要性采样" class="headerlink" title="Off-Policy TD 重要性采样"></a>Off-Policy TD 重要性采样</h4><p>TD 是单步的，所以使用策略 π  产生的 TD targets 来评估 μ ：</p>
-<script type="math/tex; mode=display">
-V(S_t) ← V(S_t) + \alpha\Bigl(\frac{\pi(A_t|S_t)}{\mu(A_t|S_t)}(R_{t+1}+\gamma V(S_{t+1}))-V(S_t)\Bigr)</script><ul>
-<li>方差比MC版本的重要性采样低很多</li>
-</ul>
-<h3 id="Q-Learning"><a href="#Q-Learning" class="headerlink" title="Q-Learning"></a>Q-Learning</h3><p>前面分别介绍了对价值函数 V(s)  进行 off-policy 学习，现在我们讨论如何对动作价值函数 Q(s,a)  进行 off-policy 学习：</p>
-<ul>
-<li><p>不需要重要性采样</p>
-</li>
-<li><p>使用行为策略选出下一步的动作：$A_{t+1}\sim\mu(·|S_t)$</p>
-</li>
-<li><p>但是仍需要考虑另一个后继动作：$A’\sim\pi(·|S_t)$</p>
-</li>
-<li><p>朝着另一个后继动作的价值更新 $Q(S_t, A_t)$</p>
-</li>
-</ul>
-<script type="math/tex; mode=display">
-Q(S_t, A_t) ← Q(S_t, A_t) + \alpha\Bigl(R_{t+1}+\gamma Q(S_{t+1}, A')-Q(S_t, A_t)\Bigr)</script><p>讨论完对动作价值函数的学习，我们接着看如何通过 Q-Learning 进行 Control：</p>
-<ul>
-<li>行为策略和目标策略均改进</li>
-<li>目标策略 π  以greedy方式改进：</li>
-</ul>
-<script type="math/tex; mode=display">
-\pi(S_t) = \arg\max_{a'}Q(S_{t+1}, a')</script><ul>
-<li>行为策略 μ  以  ϵ-greedy 方式改进</li>
-<li>Q-Learning target：</li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{align}
-&R_{t+1}+\gamma Q(S_{t+1}, A')\\
-=&R_{t+1}+\gamma Q\Bigl(S_{t+1}, \arg\max_{a'}Q(S_{t+1}, a')\Bigr)\\
-=&R_{t+1}+\max_{a'}\gamma Q(S_{t+1}, a')
-\end{align}</script><p>Q-Learning 的 backup tree 如下所示：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114145.png" alt=""></p>
-<p>关于 Q-Learning 的结论：</p>
-<blockquote>
-<p>Q-learning control converges to the optimal action-value function, Q(s,a)→q~∗~(s,a) </p>
-</blockquote>
-<p>Q-Learning 算法具体的伪代码如下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114205.png" alt=""></p>
-<p>对比 Sarsa 与 Q-Learning 可以发现两个最重要的区别：</p>
-<ul>
-<li>TD target 公式不同</li>
-<li>Q-Learning 中下一步的动作从行为策略中选出，而不是目标策略</li>
-</ul>
-<h2 id="DP-vs-TD"><a href="#DP-vs-TD" class="headerlink" title="DP vs. TD"></a>DP vs. TD</h2><p>两者的区别见下表：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114507.png" alt="">  </p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114532.png" alt=""></p>
 ]]></content>
       <categories>
         <category>MARL</category>
@@ -1779,6 +1779,222 @@ Hello World!<span aria-hidden="true" class="line-numbers-rows"><span></span><spa
       </tags>
   </entry>
   <entry>
+    <title>Python爬虫之selenium自动化</title>
+    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8Bselenium%E8%87%AA%E5%8A%A8%E5%8C%96/</url>
+    <content><![CDATA[<h2 id="1-基础操作"><a href="#1-基础操作" class="headerlink" title="1.基础操作"></a>1.基础操作</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">from selenium import webdriver
+import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    # 谷歌浏览器驱动
+    chromedriver_path &#x3D; &#39;chromedriver72.exe&#39;
+    options &#x3D; webdriver.ChromeOptions()
+    # 躲避部分网站selenium检测
+    options.add_experimental_option(&#39;excludeSwitches&#39;, [&#39;enable-automation&#39;])
+    options.add_experimental_option(&quot;useAutomationExtension&quot;, False)
+
+    driver &#x3D; webdriver.Chrome(executable_path&#x3D;chromedriver_path, options&#x3D;options)
+
+    # 躲避部分网站selenium检测
+    script &#x3D; &quot;Object.defineProperty(navigator, &#39;webdriver&#39;, &#123;get: () &#x3D;&gt; undefined&#125;);&quot;
+    driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;&quot;source&quot;: script&#125;)
+
+    # 浏览器最大化
+    driver.maximize_window()
+
+    url &#x3D; &#39;https:&#x2F;&#x2F;www.python.org&#x2F;&#39;
+    driver.get(url)
+    # 显式等待
+    wait &#x3D; WebDriverWait(driver, 20, 1)
+
+    # 在主页输入框搜索requests，并点击搜索
+    input_ &#x3D; wait.until(EC.presence_of_element_located((By.ID, &#39;id-search-field&#39;)))
+    input_.send_keys(&#39;requests&#39;)
+    time.sleep(1)
+    btn &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;button[@title&#x3D;&quot;Submit this Search&quot;]&#39;)
+    btn.click()
+    time.sleep(10)
+    driver.close()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2-元素定位"><a href="#2-元素定位" class="headerlink" title="2.元素定位"></a>2.元素定位</h2><h4 id="查找单个元素"><a href="#查找单个元素" class="headerlink" title="查找单个元素"></a>查找单个元素</h4><p>最常用的定位元素的两个方法是通过Xpath和id来定位。</p>
+<ul>
+<li>find_element_by_id</li>
+<li>find_element_by_xpath</li>
+</ul>
+<h4 id="查找多个元素"><a href="#查找多个元素" class="headerlink" title="查找多个元素"></a>查找多个元素</h4><ul>
+<li>find_elements_by_xpath</li>
+<li>find_elements_by_name</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"># 通过xpath查找元素
+driver.find_element_by_xpath(&#39;&#x2F;&#x2F;button[@title&#x3D;&quot;Submit this Search&quot;]&#39;)
+# 通过id查找元素
+driver.find_element_by_id(&#39;id-search-field&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="获取元素内部内容"><a href="#获取元素内部内容" class="headerlink" title="获取元素内部内容"></a>获取元素内部内容</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;*[@id&#x3D;&quot;ISDCaptcha&quot;]&#x2F;div[2]&#x2F;div&#39;).get_attribute(&#39;innerHTML&#39;)
+if &#39;请绘制图中手势&#39; in text:
+    print(&#39;出现行为认证&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h4 id="获取元素指定属性的属性值"><a href="#获取元素指定属性的属性值" class="headerlink" title="获取元素指定属性的属性值"></a>获取元素指定属性的属性值</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">driver.find_element_by_xpath(&#39;&#x2F;&#x2F;div[@id&#x3D;&quot;find-step3-phone&quot;]&#39;).get_attribute(&#39;style&#39;)
+driver.find_element_by_xpath(&#39;&#x2F;&#x2F;*[@id&#x3D;&quot;imgVerifyCodeP&quot;]&#39;).get_attribute(&#39;src&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h4 id="切换到指定iframe"><a href="#切换到指定iframe" class="headerlink" title="切换到指定iframe"></a>切换到指定iframe</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"># 通过id或者名称
+driver.switch_to.frame(&quot;iframeLoginIfm&quot;)
+
+driver.switch_to.frame(0)
+
+frame &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;div[@id&#x3D;&quot;loginDiv&quot;]&#x2F;iframe&#39;)
+driver.switch_to.frame(frame)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="切换到指定窗口"><a href="#切换到指定窗口" class="headerlink" title="切换到指定窗口"></a>切换到指定窗口</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">driver.switch_to.window(browser.window_handles[1])<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="切换到alert弹窗"><a href="#切换到alert弹窗" class="headerlink" title="切换到alert弹窗"></a>切换到alert弹窗</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; driver.switch_to.alert.text
+if &#39;图片验证码输入错误&#39; in text:
+    print(&#39;图片验证码识别错误&#39;)
+    driver.switch_to.alert.accept()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="3-元素交互"><a href="#3-元素交互" class="headerlink" title="3.元素交互"></a>3.元素交互</h2><h4 id="按钮点击"><a href="#按钮点击" class="headerlink" title="按钮点击"></a>按钮点击</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">btn &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;div[@role&#x3D;&quot;button&quot;]&#x2F;div&#x2F;span&#x2F;span&#39;)
+btn.click()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h4 id="执行js代码"><a href="#执行js代码" class="headerlink" title="执行js代码"></a>执行js代码</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">style_ &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;*[@id&#x3D;&quot;passport-login-pop&quot;]&#39;).get_attribute(&#39;style&#39;)
+style_ &#x3D; style_.replace(&#39;display: none;&#39;, &#39;&#39;)
+if not style_:
+    style_ &#x3D; &#39;left: 259px; top: 212px; z-index: 60001;&#39;
+js &#x3D; &#39;document.getElementById(&quot;passport-login-pop&quot;).setAttribute(&quot;style&quot;,&quot;&#123;&#125;&quot;);&#39;.format(style_)
+driver.execute_script(js)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="表单输入"><a href="#表单输入" class="headerlink" title="表单输入"></a>表单输入</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">input_ &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;input[@name&#x3D;&quot;session[password]&quot; and @dir&#x3D;&quot;auto&quot;]&#39;)
+input_.send_keys(&#39;123qwe&#39;)
+
+from selenium.webdriver.common.keys import Keys
+input_.send_keys(Keys.BACK_SPACE)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="页面滚动"><a href="#页面滚动" class="headerlink" title="页面滚动"></a>页面滚动</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">driver.execute_script(&quot;&quot;&quot;
+                (function () &#123;
+                    var y &#x3D; document.body.scrollTop;
+                    var step &#x3D; 100;
+                    window.scroll(0, y);
+                    function f() &#123;
+                        if (y &lt; document.body.scrollHeight) &#123;
+                            y +&#x3D; step;
+                            window.scroll(0, y);
+                            setTimeout(f, 50);
+                        &#125;
+                        else &#123;
+                            window.scroll(0, y);
+                            document.title +&#x3D; &quot;scroll-done&quot;;
+                        &#125;
+                    &#125;
+                    setTimeout(f, 1000);
+                &#125;)();
+                &quot;&quot;&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="模拟拖动"><a href="#模拟拖动" class="headerlink" title="模拟拖动"></a>模拟拖动</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">from selenium.webdriver.common.action_chains import ActionChains
+
+def get_track(self, distance):
+    track &#x3D; []
+    current &#x3D; 0
+    mid &#x3D; distance * 3 &#x2F; 4
+    t &#x3D; 0.2
+    v &#x3D; 0
+    while current &lt; distance:
+        if current &lt; mid:
+            a &#x3D; 2
+        else:
+            a &#x3D; -3
+        v0 &#x3D; v
+        v &#x3D; v0 + a * t
+        move &#x3D; v0 * t + 1 &#x2F; 2 * a * t * t
+        current +&#x3D; move
+        track.append(round(move))
+    return track
+
+# 模拟拖动
+btn &#x3D; wait.until(EC.presence_of_element_located((By.XPATH, xpath_)))
+track &#x3D; get_track(500)
+action &#x3D; ActionChains(browser)
+action.click_and_hold(btn).perform()
+action.reset_actions()
+for i in track:
+    action.move_by_offset(xoffset&#x3D;i, yoffset&#x3D;0).perform()
+    action.reset_actions()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="4-等待"><a href="#4-等待" class="headerlink" title="4.等待"></a>4.等待</h2><h4 id="显式等待"><a href="#显式等待" class="headerlink" title="显式等待"></a>显式等待</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"># 显式等待
+wait &#x3D; WebDriverWait(driver, 20, 1)
+
+input_ &#x3D; wait.until(EC.presence_of_element_located((By.ID, &#39;id-search-field&#39;)))
+input_.send_keys(&#39;requests&#39;)
+time.sleep(1)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="隐式等待"><a href="#隐式等待" class="headerlink" title="隐式等待"></a>隐式等待</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">from selenium import webdriver
+
+driver &#x3D; webdriver.Chrome()
+# 隐式等待
+driver.implicitly_wait(10)
+driver.get(&#39;https:&#x2F;&#x2F;www.zhihu.com&#x2F;explore&#39;)
+logo &#x3D; driver.find_element_by_id(&#39;zh-top-link-logo&#39;)
+print(logo)
+driver.close()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="5-其他操作"><a href="#5-其他操作" class="headerlink" title="5.其他操作"></a>5.其他操作</h2><h4 id="解决页面加载时间过长问题"><a href="#解决页面加载时间过长问题" class="headerlink" title="解决页面加载时间过长问题"></a>解决页面加载时间过长问题</h4><p>有时候页面有些静态文件加载比较耗时，selenium可以不需要等待页面全部加载完全在去查找元素<br><pre class="line-numbers language-python" data-language="python"><code class="language-python">options &#x3D; webdriver.ChromeOptions()
+# 解决页面加载阻塞问题
+options.set_capability(&#39;pageLoadStrategy&#39;, &#39;none&#39;)
+driver &#x3D; webdriver.Chrome(executable_path&#x3D;self.chromedriver_path, options&#x3D;options)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></p>
+<h4 id="添加请求头"><a href="#添加请求头" class="headerlink" title="添加请求头"></a>添加请求头</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">options.add_argument(&quot;user-agent&#x3D;&#123;&#125;&quot;.format(&#39;Mozilla&#x2F;5.0 (Windows NT 10.0; WOW64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;80.0.3987.100 Safari&#x2F;537.36&#39;))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="添加代理"><a href="#添加代理" class="headerlink" title="添加代理"></a>添加代理</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">socks5 &#x3D; &quot;socks5:&#x2F;&#x2F;&#123;&#125;:&#123;&#125;&quot;.format(socks5_proxy_ip, socks5_proxy_port)
+options.add_argument(&quot;--proxy-server&#x3D;&#123;&#125;&quot;.format(socks5))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h4 id="捕捉F12控制台中所有请求记录"><a href="#捕捉F12控制台中所有请求记录" class="headerlink" title="捕捉F12控制台中所有请求记录"></a>捕捉F12控制台中所有请求记录</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+d &#x3D; DesiredCapabilities.CHROME
+d[&#39;loggingPrefs&#39;] &#x3D; &#123;&#39;performance&#39;: &#39;ALL&#39;&#125;
+d[&#39;goog:chromeOptions&#39;] &#x3D; &#123;
+    &#39;perfLoggingPrefs&#39;: &#123;
+        &#39;enableNetwork&#39;: True,
+    &#125;,
+    &#39;w3c&#39;: False,
+&#125;
+options.add_experimental_option(&#39;perfLoggingPrefs&#39;, &#123;&#39;enableNetwork&#39;: True&#125;)
+options.add_experimental_option(&#39;w3c&#39;, False)
+driver &#x3D; webdriver.Chrome(executable_path&#x3D;self.chromedriver_path, options&#x3D;options, desired_capabilities&#x3D;d)
+
+# 保存log
+log_list &#x3D; []
+for entry in driver.get_log(&#39;performance&#39;):
+    log_list.append(entry)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="屏幕截图-可以截取图片验证码加以识别"><a href="#屏幕截图-可以截取图片验证码加以识别" class="headerlink" title="屏幕截图,可以截取图片验证码加以识别"></a>屏幕截图,可以截取图片验证码加以识别</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">import win32con
+import win32gui
+import win32print
+from win32api import GetSystemMetrics
+from PIL import Image
+
+def get_real_resolution():
+    &quot;&quot;&quot;获取真实的分辨率&quot;&quot;&quot;
+    hDC &#x3D; win32gui.GetDC(0)
+    # 横向分辨率
+    w &#x3D; win32print.GetDeviceCaps(hDC, win32con.DESKTOPHORZRES)
+    # 纵向分辨率
+    h &#x3D; win32print.GetDeviceCaps(hDC, win32con.DESKTOPVERTRES)
+    return w, h
+
+def get_screen_size():
+    &quot;&quot;&quot;获取缩放后的分辨率&quot;&quot;&quot;
+    w &#x3D; GetSystemMetrics(0)
+    h &#x3D; GetSystemMetrics(1)
+    return w, h
+
+real_resolution &#x3D; get_real_resolution()
+screen_size &#x3D; get_screen_size()
+screen_scale_rate &#x3D; round(real_resolution[0] &#x2F; screen_size[0], 2)
+
+pic_name &#x3D; &#39;***.png&#39;
+driver.save_screenshot(pic_name)
+# 找到图片验证码元素
+element &#x3D; driver.find_element_by_xpath(xpath_)
+left &#x3D; element.location[&#39;x&#39;] * screen_scale_rate
+top &#x3D; element.location[&#39;y&#39;] * screen_scale_rate
+right &#x3D; (element.location[&#39;x&#39;] + element.size[&#39;width&#39;]) * screen_scale_rate
+bottom &#x3D; (element.location[&#39;y&#39;] + element.size[&#39;height&#39;]) * screen_scale_rate
+im &#x3D; Image.open(pic_name)
+# 裁剪图片
+im &#x3D; im.crop((left, top, right, bottom))
+im.save(pic_name)
+# 把图片转成base64,利用打码平台接口识别
+with open(pic_name, &#39;rb&#39;) as f:
+    code_img_base64 &#x3D; base64.b64encode(f.read()).decode()
+os.remove(pic_name)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Python爬虫之Xpath解析</title>
     <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%ABxpath%E8%A7%A3%E6%9E%90/</url>
     <content><![CDATA[<h2 id="xpath解析"><a href="#xpath解析" class="headerlink" title="xpath解析"></a>xpath解析</h2><ul>
@@ -1835,75 +2051,6 @@ res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[contains(text(), &quot;XML&quot;)]&
 
 # 运算符
 res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;) and @name&#x3D;&quot;cc&quot;]&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Python爬虫之BeautifulSoup</title>
-    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8BBeautifulSoup/</url>
-    <content><![CDATA[<h4 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">html_doc &#x3D; &quot;&quot;&quot;
-&lt;html&gt;&lt;head&gt;&lt;title&gt;The Dormouse&#39;s story&lt;&#x2F;title&gt;&lt;&#x2F;head&gt;
-&lt;body&gt;
-&lt;p class&#x3D;&quot;title&quot;&gt;&lt;b&gt;The Dormouse&#39;s story&lt;&#x2F;b&gt;&lt;&#x2F;p&gt;
-
-&lt;p class&#x3D;&quot;story&quot;&gt;Once upon a time there were three little sisters; and their names were
-&lt;a href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;elsie&quot; class&#x3D;&quot;sister&quot; id&#x3D;&quot;link1&quot;&gt;Elsie&lt;&#x2F;a&gt;,
-&lt;a href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;lacie&quot; class&#x3D;&quot;sister&quot; id&#x3D;&quot;link2&quot;&gt;Lacie&lt;&#x2F;a&gt; and
-&lt;a href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;tillie&quot; class&#x3D;&quot;sister bro&quot; id&#x3D;&quot;link3&quot;&gt;Tillie&lt;&#x2F;a&gt;;
-and they lived at the bottom of a well.&lt;&#x2F;p&gt;
-
-&lt;p class&#x3D;&quot;story&quot;&gt;...&lt;&#x2F;p&gt;
-&quot;&quot;&quot;
-soup &#x3D; BeautifulSoup(html_doc, &#39;html.parser&#39;)
-print(soup.prettify())<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="find-all-name-attrs-recursive-string-kwargs"><a href="#find-all-name-attrs-recursive-string-kwargs" class="headerlink" title="find_all(name , attrs , recursive , string , **kwargs)"></a>find_all(name , attrs , recursive , string , **kwargs)</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"># 查找所有的a标签
-res &#x3D; soup.find_all(&#39;a&#39;)
-# # 查找所有的a标签和p标签
-res &#x3D; soup.find_all([&#39;a&#39;, &#39;p&#39;])
-
-# 查找class&#x3D;title的p标签
-res &#x3D; soup.find_all(&#39;p&#39;, &#39;title&#39;)
-
-# 指定属性查找  可支持字符串，正则表达式，或者函数
-# 指定id查找元素
-res &#x3D; soup.find_all(id&#x3D;&quot;link1&quot;)
-# 指定href查找 [&lt;a class&#x3D;&quot;sister&quot; href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;elsie&quot; id&#x3D;&quot;link1&quot;&gt;Elsie&lt;&#x2F;a&gt;]
-res &#x3D; soup.find_all(href&#x3D;re.compile(&#39;elsie&#39;))
-# 指定多个属性查找
-res &#x3D; soup.find_all(id&#x3D;&#39;link1&#39;, href&#x3D;re.compile(&#39;elsie&#39;))
-# 指定多个属性查找 attrs参数
-res &#x3D; soup.find_all(attrs&#x3D;&#123;&#39;id&#39;: &#39;link1&#39;, &#39;href&#39;: re.compile(&#39;elsie&#39;)&#125;)
-
-# 通过css搜索
-res &#x3D; soup.find_all(class_&#x3D;&quot;sister bro&quot;)
-# 通过函数过滤,查找类名长度大于6的元素
-res &#x3D; soup.find_all(class_&#x3D;lambda x: x is not None and len(x) &gt; 6)
-
-# recursive参数，如果只想搜索直接子节点  recursive&#x3D;False
-res &#x3D; soup.find_all(&#39;title&#39;, recursive&#x3D;False)
-
-# find_all() 方法的返回结果是值包含一个元素的列表
-# 而find()方法直接返回第一个结果，没有则返回None.
-res &#x3D; soup.find(&#39;a&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"># 类查找
-res &#x3D; soup.select(&#39;.sister&#39;)
-# ID查找
-res &#x3D; soup.select(&#39;#link1&#39;)
-res &#x3D; soup.select(&#39;a#link1&#39;)
-# 通过是否存在某个属性查找
-res &#x3D; soup.select(&#39;a[href]&#39;)
-# 指定属性值查找
-res &#x3D; soup.select(&#39;a[href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;tillie&quot;]&#39;)
-
-# 查找返回第一个元素
-res &#x3D; soup.select_one(&#39;a[href]&#39;)
-
-# 获取元素的属性值
-res &#x3D; soup.select_one(&#39;a[href]&#39;).get(&#39;href&#39;)
-# 获取元素的文本
-res &#x3D; soup.select_one(&#39;a[href]&#39;).text<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 ]]></content>
       <categories>
         <category>爬虫</category>
@@ -2029,6 +2176,75 @@ prepped &#x3D; s.prepare_request(req)
 res &#x3D; s.send(prepped)
 print(res.text)
 print(type(prepped))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python爬虫之BeautifulSoup</title>
+    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8BBeautifulSoup/</url>
+    <content><![CDATA[<h4 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">html_doc &#x3D; &quot;&quot;&quot;
+&lt;html&gt;&lt;head&gt;&lt;title&gt;The Dormouse&#39;s story&lt;&#x2F;title&gt;&lt;&#x2F;head&gt;
+&lt;body&gt;
+&lt;p class&#x3D;&quot;title&quot;&gt;&lt;b&gt;The Dormouse&#39;s story&lt;&#x2F;b&gt;&lt;&#x2F;p&gt;
+
+&lt;p class&#x3D;&quot;story&quot;&gt;Once upon a time there were three little sisters; and their names were
+&lt;a href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;elsie&quot; class&#x3D;&quot;sister&quot; id&#x3D;&quot;link1&quot;&gt;Elsie&lt;&#x2F;a&gt;,
+&lt;a href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;lacie&quot; class&#x3D;&quot;sister&quot; id&#x3D;&quot;link2&quot;&gt;Lacie&lt;&#x2F;a&gt; and
+&lt;a href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;tillie&quot; class&#x3D;&quot;sister bro&quot; id&#x3D;&quot;link3&quot;&gt;Tillie&lt;&#x2F;a&gt;;
+and they lived at the bottom of a well.&lt;&#x2F;p&gt;
+
+&lt;p class&#x3D;&quot;story&quot;&gt;...&lt;&#x2F;p&gt;
+&quot;&quot;&quot;
+soup &#x3D; BeautifulSoup(html_doc, &#39;html.parser&#39;)
+print(soup.prettify())<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="find-all-name-attrs-recursive-string-kwargs"><a href="#find-all-name-attrs-recursive-string-kwargs" class="headerlink" title="find_all(name , attrs , recursive , string , **kwargs)"></a>find_all(name , attrs , recursive , string , **kwargs)</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"># 查找所有的a标签
+res &#x3D; soup.find_all(&#39;a&#39;)
+# # 查找所有的a标签和p标签
+res &#x3D; soup.find_all([&#39;a&#39;, &#39;p&#39;])
+
+# 查找class&#x3D;title的p标签
+res &#x3D; soup.find_all(&#39;p&#39;, &#39;title&#39;)
+
+# 指定属性查找  可支持字符串，正则表达式，或者函数
+# 指定id查找元素
+res &#x3D; soup.find_all(id&#x3D;&quot;link1&quot;)
+# 指定href查找 [&lt;a class&#x3D;&quot;sister&quot; href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;elsie&quot; id&#x3D;&quot;link1&quot;&gt;Elsie&lt;&#x2F;a&gt;]
+res &#x3D; soup.find_all(href&#x3D;re.compile(&#39;elsie&#39;))
+# 指定多个属性查找
+res &#x3D; soup.find_all(id&#x3D;&#39;link1&#39;, href&#x3D;re.compile(&#39;elsie&#39;))
+# 指定多个属性查找 attrs参数
+res &#x3D; soup.find_all(attrs&#x3D;&#123;&#39;id&#39;: &#39;link1&#39;, &#39;href&#39;: re.compile(&#39;elsie&#39;)&#125;)
+
+# 通过css搜索
+res &#x3D; soup.find_all(class_&#x3D;&quot;sister bro&quot;)
+# 通过函数过滤,查找类名长度大于6的元素
+res &#x3D; soup.find_all(class_&#x3D;lambda x: x is not None and len(x) &gt; 6)
+
+# recursive参数，如果只想搜索直接子节点  recursive&#x3D;False
+res &#x3D; soup.find_all(&#39;title&#39;, recursive&#x3D;False)
+
+# find_all() 方法的返回结果是值包含一个元素的列表
+# 而find()方法直接返回第一个结果，没有则返回None.
+res &#x3D; soup.find(&#39;a&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"># 类查找
+res &#x3D; soup.select(&#39;.sister&#39;)
+# ID查找
+res &#x3D; soup.select(&#39;#link1&#39;)
+res &#x3D; soup.select(&#39;a#link1&#39;)
+# 通过是否存在某个属性查找
+res &#x3D; soup.select(&#39;a[href]&#39;)
+# 指定属性值查找
+res &#x3D; soup.select(&#39;a[href&#x3D;&quot;http:&#x2F;&#x2F;example.com&#x2F;tillie&quot;]&#39;)
+
+# 查找返回第一个元素
+res &#x3D; soup.select_one(&#39;a[href]&#39;)
+
+# 获取元素的属性值
+res &#x3D; soup.select_one(&#39;a[href]&#39;).get(&#39;href&#39;)
+# 获取元素的文本
+res &#x3D; soup.select_one(&#39;a[href]&#39;).text<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 ]]></content>
       <categories>
         <category>爬虫</category>
@@ -2256,222 +2472,6 @@ driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;
 <h4 id="8-请求参数加密"><a href="#8-请求参数加密" class="headerlink" title="8.请求参数加密"></a>8.请求参数加密</h4><p>网易云音乐的post请求的请求体就是前端经过js加密后计算得到的，需要逆向js代码</p>
 <h4 id="9-返回数据加密"><a href="#9-返回数据加密" class="headerlink" title="9.返回数据加密"></a>9.返回数据加密</h4><p>需要逆向js代码，分析如何解密。还有一种像大众点评的评论，需要通过定位去找到文本。</p>
 <h4 id="10-动态更新cookies"><a href="#10-动态更新cookies" class="headerlink" title="10.动态更新cookies"></a>10.动态更新cookies</h4><p>华为手机云服务，每次请求接口都会重新设置cookies，并且请求头参数也需要跟着cookies一起变化</p>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Python爬虫之selenium自动化</title>
-    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8Bselenium%E8%87%AA%E5%8A%A8%E5%8C%96/</url>
-    <content><![CDATA[<h2 id="1-基础操作"><a href="#1-基础操作" class="headerlink" title="1.基础操作"></a>1.基础操作</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">from selenium import webdriver
-import time
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    # 谷歌浏览器驱动
-    chromedriver_path &#x3D; &#39;chromedriver72.exe&#39;
-    options &#x3D; webdriver.ChromeOptions()
-    # 躲避部分网站selenium检测
-    options.add_experimental_option(&#39;excludeSwitches&#39;, [&#39;enable-automation&#39;])
-    options.add_experimental_option(&quot;useAutomationExtension&quot;, False)
-
-    driver &#x3D; webdriver.Chrome(executable_path&#x3D;chromedriver_path, options&#x3D;options)
-
-    # 躲避部分网站selenium检测
-    script &#x3D; &quot;Object.defineProperty(navigator, &#39;webdriver&#39;, &#123;get: () &#x3D;&gt; undefined&#125;);&quot;
-    driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;&quot;source&quot;: script&#125;)
-
-    # 浏览器最大化
-    driver.maximize_window()
-
-    url &#x3D; &#39;https:&#x2F;&#x2F;www.python.org&#x2F;&#39;
-    driver.get(url)
-    # 显式等待
-    wait &#x3D; WebDriverWait(driver, 20, 1)
-
-    # 在主页输入框搜索requests，并点击搜索
-    input_ &#x3D; wait.until(EC.presence_of_element_located((By.ID, &#39;id-search-field&#39;)))
-    input_.send_keys(&#39;requests&#39;)
-    time.sleep(1)
-    btn &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;button[@title&#x3D;&quot;Submit this Search&quot;]&#39;)
-    btn.click()
-    time.sleep(10)
-    driver.close()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="2-元素定位"><a href="#2-元素定位" class="headerlink" title="2.元素定位"></a>2.元素定位</h2><h4 id="查找单个元素"><a href="#查找单个元素" class="headerlink" title="查找单个元素"></a>查找单个元素</h4><p>最常用的定位元素的两个方法是通过Xpath和id来定位。</p>
-<ul>
-<li>find_element_by_id</li>
-<li>find_element_by_xpath</li>
-</ul>
-<h4 id="查找多个元素"><a href="#查找多个元素" class="headerlink" title="查找多个元素"></a>查找多个元素</h4><ul>
-<li>find_elements_by_xpath</li>
-<li>find_elements_by_name</li>
-</ul>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"># 通过xpath查找元素
-driver.find_element_by_xpath(&#39;&#x2F;&#x2F;button[@title&#x3D;&quot;Submit this Search&quot;]&#39;)
-# 通过id查找元素
-driver.find_element_by_id(&#39;id-search-field&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="获取元素内部内容"><a href="#获取元素内部内容" class="headerlink" title="获取元素内部内容"></a>获取元素内部内容</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;*[@id&#x3D;&quot;ISDCaptcha&quot;]&#x2F;div[2]&#x2F;div&#39;).get_attribute(&#39;innerHTML&#39;)
-if &#39;请绘制图中手势&#39; in text:
-    print(&#39;出现行为认证&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h4 id="获取元素指定属性的属性值"><a href="#获取元素指定属性的属性值" class="headerlink" title="获取元素指定属性的属性值"></a>获取元素指定属性的属性值</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">driver.find_element_by_xpath(&#39;&#x2F;&#x2F;div[@id&#x3D;&quot;find-step3-phone&quot;]&#39;).get_attribute(&#39;style&#39;)
-driver.find_element_by_xpath(&#39;&#x2F;&#x2F;*[@id&#x3D;&quot;imgVerifyCodeP&quot;]&#39;).get_attribute(&#39;src&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h4 id="切换到指定iframe"><a href="#切换到指定iframe" class="headerlink" title="切换到指定iframe"></a>切换到指定iframe</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"># 通过id或者名称
-driver.switch_to.frame(&quot;iframeLoginIfm&quot;)
-
-driver.switch_to.frame(0)
-
-frame &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;div[@id&#x3D;&quot;loginDiv&quot;]&#x2F;iframe&#39;)
-driver.switch_to.frame(frame)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="切换到指定窗口"><a href="#切换到指定窗口" class="headerlink" title="切换到指定窗口"></a>切换到指定窗口</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">driver.switch_to.window(browser.window_handles[1])<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h4 id="切换到alert弹窗"><a href="#切换到alert弹窗" class="headerlink" title="切换到alert弹窗"></a>切换到alert弹窗</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; driver.switch_to.alert.text
-if &#39;图片验证码输入错误&#39; in text:
-    print(&#39;图片验证码识别错误&#39;)
-    driver.switch_to.alert.accept()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="3-元素交互"><a href="#3-元素交互" class="headerlink" title="3.元素交互"></a>3.元素交互</h2><h4 id="按钮点击"><a href="#按钮点击" class="headerlink" title="按钮点击"></a>按钮点击</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">btn &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;div[@role&#x3D;&quot;button&quot;]&#x2F;div&#x2F;span&#x2F;span&#39;)
-btn.click()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h4 id="执行js代码"><a href="#执行js代码" class="headerlink" title="执行js代码"></a>执行js代码</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">style_ &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;*[@id&#x3D;&quot;passport-login-pop&quot;]&#39;).get_attribute(&#39;style&#39;)
-style_ &#x3D; style_.replace(&#39;display: none;&#39;, &#39;&#39;)
-if not style_:
-    style_ &#x3D; &#39;left: 259px; top: 212px; z-index: 60001;&#39;
-js &#x3D; &#39;document.getElementById(&quot;passport-login-pop&quot;).setAttribute(&quot;style&quot;,&quot;&#123;&#125;&quot;);&#39;.format(style_)
-driver.execute_script(js)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="表单输入"><a href="#表单输入" class="headerlink" title="表单输入"></a>表单输入</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">input_ &#x3D; driver.find_element_by_xpath(&#39;&#x2F;&#x2F;input[@name&#x3D;&quot;session[password]&quot; and @dir&#x3D;&quot;auto&quot;]&#39;)
-input_.send_keys(&#39;123qwe&#39;)
-
-from selenium.webdriver.common.keys import Keys
-input_.send_keys(Keys.BACK_SPACE)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="页面滚动"><a href="#页面滚动" class="headerlink" title="页面滚动"></a>页面滚动</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">driver.execute_script(&quot;&quot;&quot;
-                (function () &#123;
-                    var y &#x3D; document.body.scrollTop;
-                    var step &#x3D; 100;
-                    window.scroll(0, y);
-                    function f() &#123;
-                        if (y &lt; document.body.scrollHeight) &#123;
-                            y +&#x3D; step;
-                            window.scroll(0, y);
-                            setTimeout(f, 50);
-                        &#125;
-                        else &#123;
-                            window.scroll(0, y);
-                            document.title +&#x3D; &quot;scroll-done&quot;;
-                        &#125;
-                    &#125;
-                    setTimeout(f, 1000);
-                &#125;)();
-                &quot;&quot;&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="模拟拖动"><a href="#模拟拖动" class="headerlink" title="模拟拖动"></a>模拟拖动</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">from selenium.webdriver.common.action_chains import ActionChains
-
-def get_track(self, distance):
-    track &#x3D; []
-    current &#x3D; 0
-    mid &#x3D; distance * 3 &#x2F; 4
-    t &#x3D; 0.2
-    v &#x3D; 0
-    while current &lt; distance:
-        if current &lt; mid:
-            a &#x3D; 2
-        else:
-            a &#x3D; -3
-        v0 &#x3D; v
-        v &#x3D; v0 + a * t
-        move &#x3D; v0 * t + 1 &#x2F; 2 * a * t * t
-        current +&#x3D; move
-        track.append(round(move))
-    return track
-
-# 模拟拖动
-btn &#x3D; wait.until(EC.presence_of_element_located((By.XPATH, xpath_)))
-track &#x3D; get_track(500)
-action &#x3D; ActionChains(browser)
-action.click_and_hold(btn).perform()
-action.reset_actions()
-for i in track:
-    action.move_by_offset(xoffset&#x3D;i, yoffset&#x3D;0).perform()
-    action.reset_actions()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="4-等待"><a href="#4-等待" class="headerlink" title="4.等待"></a>4.等待</h2><h4 id="显式等待"><a href="#显式等待" class="headerlink" title="显式等待"></a>显式等待</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"># 显式等待
-wait &#x3D; WebDriverWait(driver, 20, 1)
-
-input_ &#x3D; wait.until(EC.presence_of_element_located((By.ID, &#39;id-search-field&#39;)))
-input_.send_keys(&#39;requests&#39;)
-time.sleep(1)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="隐式等待"><a href="#隐式等待" class="headerlink" title="隐式等待"></a>隐式等待</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">from selenium import webdriver
-
-driver &#x3D; webdriver.Chrome()
-# 隐式等待
-driver.implicitly_wait(10)
-driver.get(&#39;https:&#x2F;&#x2F;www.zhihu.com&#x2F;explore&#39;)
-logo &#x3D; driver.find_element_by_id(&#39;zh-top-link-logo&#39;)
-print(logo)
-driver.close()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="5-其他操作"><a href="#5-其他操作" class="headerlink" title="5.其他操作"></a>5.其他操作</h2><h4 id="解决页面加载时间过长问题"><a href="#解决页面加载时间过长问题" class="headerlink" title="解决页面加载时间过长问题"></a>解决页面加载时间过长问题</h4><p>有时候页面有些静态文件加载比较耗时，selenium可以不需要等待页面全部加载完全在去查找元素<br><pre class="line-numbers language-python" data-language="python"><code class="language-python">options &#x3D; webdriver.ChromeOptions()
-# 解决页面加载阻塞问题
-options.set_capability(&#39;pageLoadStrategy&#39;, &#39;none&#39;)
-driver &#x3D; webdriver.Chrome(executable_path&#x3D;self.chromedriver_path, options&#x3D;options)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></p>
-<h4 id="添加请求头"><a href="#添加请求头" class="headerlink" title="添加请求头"></a>添加请求头</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">options.add_argument(&quot;user-agent&#x3D;&#123;&#125;&quot;.format(&#39;Mozilla&#x2F;5.0 (Windows NT 10.0; WOW64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;80.0.3987.100 Safari&#x2F;537.36&#39;))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h4 id="添加代理"><a href="#添加代理" class="headerlink" title="添加代理"></a>添加代理</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">socks5 &#x3D; &quot;socks5:&#x2F;&#x2F;&#123;&#125;:&#123;&#125;&quot;.format(socks5_proxy_ip, socks5_proxy_port)
-options.add_argument(&quot;--proxy-server&#x3D;&#123;&#125;&quot;.format(socks5))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h4 id="捕捉F12控制台中所有请求记录"><a href="#捕捉F12控制台中所有请求记录" class="headerlink" title="捕捉F12控制台中所有请求记录"></a>捕捉F12控制台中所有请求记录</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
-d &#x3D; DesiredCapabilities.CHROME
-d[&#39;loggingPrefs&#39;] &#x3D; &#123;&#39;performance&#39;: &#39;ALL&#39;&#125;
-d[&#39;goog:chromeOptions&#39;] &#x3D; &#123;
-    &#39;perfLoggingPrefs&#39;: &#123;
-        &#39;enableNetwork&#39;: True,
-    &#125;,
-    &#39;w3c&#39;: False,
-&#125;
-options.add_experimental_option(&#39;perfLoggingPrefs&#39;, &#123;&#39;enableNetwork&#39;: True&#125;)
-options.add_experimental_option(&#39;w3c&#39;, False)
-driver &#x3D; webdriver.Chrome(executable_path&#x3D;self.chromedriver_path, options&#x3D;options, desired_capabilities&#x3D;d)
-
-# 保存log
-log_list &#x3D; []
-for entry in driver.get_log(&#39;performance&#39;):
-    log_list.append(entry)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="屏幕截图-可以截取图片验证码加以识别"><a href="#屏幕截图-可以截取图片验证码加以识别" class="headerlink" title="屏幕截图,可以截取图片验证码加以识别"></a>屏幕截图,可以截取图片验证码加以识别</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">import win32con
-import win32gui
-import win32print
-from win32api import GetSystemMetrics
-from PIL import Image
-
-def get_real_resolution():
-    &quot;&quot;&quot;获取真实的分辨率&quot;&quot;&quot;
-    hDC &#x3D; win32gui.GetDC(0)
-    # 横向分辨率
-    w &#x3D; win32print.GetDeviceCaps(hDC, win32con.DESKTOPHORZRES)
-    # 纵向分辨率
-    h &#x3D; win32print.GetDeviceCaps(hDC, win32con.DESKTOPVERTRES)
-    return w, h
-
-def get_screen_size():
-    &quot;&quot;&quot;获取缩放后的分辨率&quot;&quot;&quot;
-    w &#x3D; GetSystemMetrics(0)
-    h &#x3D; GetSystemMetrics(1)
-    return w, h
-
-real_resolution &#x3D; get_real_resolution()
-screen_size &#x3D; get_screen_size()
-screen_scale_rate &#x3D; round(real_resolution[0] &#x2F; screen_size[0], 2)
-
-pic_name &#x3D; &#39;***.png&#39;
-driver.save_screenshot(pic_name)
-# 找到图片验证码元素
-element &#x3D; driver.find_element_by_xpath(xpath_)
-left &#x3D; element.location[&#39;x&#39;] * screen_scale_rate
-top &#x3D; element.location[&#39;y&#39;] * screen_scale_rate
-right &#x3D; (element.location[&#39;x&#39;] + element.size[&#39;width&#39;]) * screen_scale_rate
-bottom &#x3D; (element.location[&#39;y&#39;] + element.size[&#39;height&#39;]) * screen_scale_rate
-im &#x3D; Image.open(pic_name)
-# 裁剪图片
-im &#x3D; im.crop((left, top, right, bottom))
-im.save(pic_name)
-# 把图片转成base64,利用打码平台接口识别
-with open(pic_name, &#39;rb&#39;) as f:
-    code_img_base64 &#x3D; base64.b64encode(f.read()).decode()
-os.remove(pic_name)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 ]]></content>
       <categories>
         <category>爬虫</category>
@@ -3648,36 +3648,6 @@ if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
       </categories>
   </entry>
   <entry>
-    <title>保护变量的访问与设置</title>
-    <url>/python/others/%E4%BF%9D%E6%8A%A4%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE%E4%B8%8E%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<h1 id="保护变量的访问与设置"><a href="#保护变量的访问与设置" class="headerlink" title="保护变量的访问与设置"></a>保护变量的访问与设置</h1><p>对于私有变量（双下划线）或者保护变量（单下划线），不允许外部直接访问，类似于Java的private，可以通过对外提供get，set接口来访问和修改这类变量，便于控制。</p>
-<ul>
-<li>@property装饰器会将方法转换为相同名称的只读属性，相当于实现get方法</li>
-<li>@xxx.setter装饰器使得可以直接通过 对象.xxx来修改保护变量的值，相当于实现set方法</li>
-</ul>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">class Student(object):
-    def __init__(self, name):
-        self.name &#x3D; name
-        self._score &#x3D; None
-
-    @property
-    def score(self):
-        return self._score
-
-    @score.setter
-    def score(self, value):
-        self._score &#x3D; value
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    s &#x3D; Student(&#39;王大锤&#39;)
-    s.score &#x3D; 100  # 设置保护变量的值
-    print(s.score)  # 访问保护变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-  </entry>
-  <entry>
     <title>猴子补丁</title>
     <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/%E7%8C%B4%E5%AD%90%E8%A1%A5%E4%B8%81/</url>
     <content><![CDATA[<h1 id="猴子补丁"><a href="#猴子补丁" class="headerlink" title="猴子补丁"></a>猴子补丁</h1><p><strong>monkey patch允许在运行期间动态修改一个类或模块</strong></p>
@@ -3734,6 +3704,36 @@ if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
 ]]></content>
       <categories>
         <category>碎碎念</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>保护变量的访问与设置</title>
+    <url>/python/others/%E4%BF%9D%E6%8A%A4%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE%E4%B8%8E%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<h1 id="保护变量的访问与设置"><a href="#保护变量的访问与设置" class="headerlink" title="保护变量的访问与设置"></a>保护变量的访问与设置</h1><p>对于私有变量（双下划线）或者保护变量（单下划线），不允许外部直接访问，类似于Java的private，可以通过对外提供get，set接口来访问和修改这类变量，便于控制。</p>
+<ul>
+<li>@property装饰器会将方法转换为相同名称的只读属性，相当于实现get方法</li>
+<li>@xxx.setter装饰器使得可以直接通过 对象.xxx来修改保护变量的值，相当于实现set方法</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">class Student(object):
+    def __init__(self, name):
+        self.name &#x3D; name
+        self._score &#x3D; None
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        self._score &#x3D; value
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    s &#x3D; Student(&#39;王大锤&#39;)
+    s.score &#x3D; 100  # 设置保护变量的值
+    print(s.score)  # 访问保护变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>python</category>
       </categories>
   </entry>
 </search>
