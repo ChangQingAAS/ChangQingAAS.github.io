@@ -2035,6 +2035,233 @@ print(type(prepped))<span aria-hidden="true" class="line-numbers-rows"><span></s
       </categories>
   </entry>
   <entry>
+    <title>Python爬虫之构建自己的代理IP池</title>
+    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8B%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A3%E7%90%86IP%E6%B1%A0/</url>
+    <content><![CDATA[<h1 id="Python爬虫—代理池维护"><a href="#Python爬虫—代理池维护" class="headerlink" title="Python爬虫—代理池维护"></a>Python爬虫—代理池维护</h1><h2 id="大致思路"><a href="#大致思路" class="headerlink" title="大致思路"></a>大致思路</h2><ol>
+<li>去代理网站上爬取大量代理IP，并将其存储在redis数据库。</li>
+<li>定时获取redis中的所有代理IP，检测每一个代理IP是否可用。</li>
+<li>通过flask，对外提供获取代理IP的接口，如果想要使用代理池中的代理IP，只需要访问我们提供的接口即可。<br><strong>现在网上免费代理IP网站越来越少，而且免费的代理质量非常不稳定，本文只是提供构建代理IP池的一种思路，实战的话还是要想办法获取优质的代理。</strong></li>
+</ol>
+<h2 id="代理池系统具体实现思路"><a href="#代理池系统具体实现思路" class="headerlink" title="代理池系统具体实现思路"></a>代理池系统具体实现思路</h2><p><img src="../pic/spiders/proxypool.png" alt=""></p>
+<h2 id="代理池完整代码"><a href="#代理池完整代码" class="headerlink" title="代理池完整代码"></a><a href="agent_pool">代理池完整代码</a></h2><h4 id="agent-pool-py-整体流程"><a href="#agent-pool-py-整体流程" class="headerlink" title="agent_pool.py 整体流程"></a>agent_pool.py 整体流程</h4><p>存储模块：主要实现的功能是，去一些免费代理网站爬取大量的代理IP，并存储至redis数据库中。redis的Sorted Set结构是一个有序集合，我们会对每一个爬取到的代理IP<br>设置一个初始化的优先级10，Sorted Set也是通过这个优先级来进行排序的。&lt;/br&gt;</p>
+<ul>
+<li>Getter:爬取代理网站的免费代理IP，存入redis</li>
+<li>Tester:从redis中取出代理，测试代理是否可用，并调整代理IP的优先级</li>
+<li>Controller:启动Getter()与Tester()</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">from Crawler import Crawler
+from RedisClient import RedisClient
+import traceback
+import time
+import requests
+import multiprocessing
+from concurrent import futures
+
+FULL_COUNT &#x3D; 2000
+
+class Getter(object):
+    # 爬取代理网站的免费代理IP，存入redis
+    def __init__(self):
+        self.redis_client &#x3D; RedisClient()
+        self.crawler &#x3D; Crawler()
+
+    def is_full(self):
+        # 判断代理池是否满了
+        return self.redis_client.get_proxy_count() &gt;&#x3D; FULL_COUNT
+
+    def run(self):
+        # 将爬取到的代理存入redis
+        if not self.is_full():
+            proxys &#x3D; self.crawler.get_crawler_proxy()
+            for proxy in proxys:
+                self.redis_client.add(proxy)
+
+class Tester(object):
+    # 从redis中取出代理，测试代理是否可用，并调整代理IP的优先级
+    def __init__(self, test_url):
+        self.redisdb &#x3D; RedisClient()
+        # 用来测试代理是否可用的地址
+        self.test_url &#x3D; test_url
+
+    def test_proxy(self, proxy):
+        try:
+            if isinstance(proxy, bytes):
+                proxy &#x3D; proxy.decode(&#39;utf-8&#39;)
+            proxies &#x3D; &#123;
+                &#39;http&#39;: &#39;http:&#x2F;&#x2F;&#39; + proxy,
+                &#39;https&#39;: &#39;https:&#x2F;&#x2F;&#39; + proxy
+            &#125;
+            print(&#39;正在检测:&#123;&#125;&#39;.format(proxy))
+            res &#x3D; requests.get(self.test_url, proxies&#x3D;proxies, timeout&#x3D;10)
+            if res.status_code &#x3D;&#x3D; 200:
+                return True, proxy
+            else:
+                return False, proxy
+                # 代理不可用，就降低其优先级
+        except Exception as e:
+            return False, proxy
+            # print(&#39;代理检测异常:&#123;&#125;  &#123;&#125;&#39;.format(proxy, e))
+            self.redisdb.decrease(proxy)
+            print(&#39;代理不可用:&#123;&#125;&#39;.format(proxy))
+
+
+    def run(self):
+        print(&#39;启动检测模块......&#39;)
+        try:
+            # 获取redis中所有爬取到的代理
+            proxies &#x3D; self.redisdb.get_all_proxy()
+            for i in range(0, len(proxies), 50):
+                test_proxies &#x3D; proxies[i:i+50]
+                workers &#x3D; len(test_proxies)
+                with futures.ThreadPoolExecutor(workers) as executor:
+                    tasks_res &#x3D; executor.map(self.test_proxy, test_proxies)
+                    for res, proxy in tasks_res:
+                        if not res:
+                            # 代理不可用，就降低其优先级
+                            self.redisdb.decrease(proxy)
+                            print(&#39;代理不可用:&#123;&#125;&#39;.format(proxy))
+                        else:
+                            # 代理可用,将其优先级置为最大
+                            self.redisdb.max(proxy)
+                            print(&#39;代理可用:&#123;&#125;&#39;.format(proxy))
+
+        except Exception as e:
+            print(traceback.format_exc())
+            print(&#39;检测模块出错！！！&#39;)
+
+class Controller(object):
+    def control_get(self):
+        # 获取功能：爬取代理网站，将代理存储到redis
+        getter &#x3D; Getter()
+        while True:
+            try:
+                getter.run()
+            except:
+                print(traceback.format_exc())
+            time.sleep(30)
+
+    def control_test(self):
+        # 检测功能，检测redis中的代理是否可用
+        tester &#x3D; Tester(test_url&#x3D;&#39;http:&#x2F;&#x2F;www.baidu.com&#39;)
+        while True:
+            try:
+                tester.run()
+            except:
+                print(traceback.format_exc())
+            time.sleep(30)
+
+    def run(self):
+        print(&#39;代理池开始运行了......&#39;)
+        # 两个进程
+        get &#x3D; multiprocessing.Process(target&#x3D;self.control_get)
+        get.start()
+        test &#x3D; multiprocessing.Process(target&#x3D;self.control_test)
+        test.start()
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    control &#x3D; Controller()
+    control.run()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="WebAPI-to-get-proxy-py-通过flask向外提供获取代理IP的接口"><a href="#WebAPI-to-get-proxy-py-通过flask向外提供获取代理IP的接口" class="headerlink" title="WebAPI_to_get_proxy.py 通过flask向外提供获取代理IP的接口"></a>WebAPI_to_get_proxy.py 通过flask向外提供获取代理IP的接口</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">from flask import Flask, g
+import RedisClient
+
+&quot;&quot;&quot;
+    对外提供web接口，通过提供的web接口，来获取redis中的代理
+    g是上下文对象，处理请求时，用于临时存储的对象，每次请求都会重设这个变量。比如：我们可以获取一些临时请求的用户信息。
+&quot;&quot;&quot;
+
+
+app &#x3D; Flask(__name__)
+
+
+@app.route(&#39;&#x2F;&#39;)
+def index():
+    return &#39;&lt;h2&gt;欢迎来到daacheng代理池系统&lt;&#x2F;h2&gt;&#39;
+
+
+def get():
+    if not hasattr(g, &#39;redis&#39;):
+        g.redis &#x3D; RedisClient.RedisClient()
+    return g.redis
+
+
+@app.route(&#39;&#x2F;random&#39;)
+def get_random_proxy():
+    # 从代理池中返回一个代理
+    redisdb &#x3D; get()
+    return redisdb.get_proxy()
+
+
+@app.route(&#39;&#x2F;count&#39;)
+def count():
+    # 查询代理池中代理的个数
+    redisdb &#x3D; get()
+    return str(redisdb.get_proxy_count())
+
+
+@app.route(&#39;&#x2F;all&#39;)
+def get_all():
+    # 查询代理池中代理的个数
+    redisdb &#x3D; get()
+    return str(redisdb.get_all_proxy())
+
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    app.run(host&#x3D;&#39;0.0.0.0&#39;, port&#x3D;5000)
+    app.debug &#x3D; True
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>爬虫概念</title>
+    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/%E7%88%AC%E8%99%AB%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<h2 id="1-robots协议"><a href="#1-robots协议" class="headerlink" title="1.robots协议"></a>1.robots协议</h2><p>也叫robots.txt，是存放在网站根目录下的文本文件，用来告诉搜索引擎该网站哪些内容是不应该被抓取的，哪些是可以抓取的。</p>
+<p>如<a href="https://www.csdn.net/robots.txt">https://www.csdn.net/robots.txt</a></p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">User-agent: *
+Disallow: &#x2F;scripts
+Disallow: &#x2F;public
+Disallow: &#x2F;css&#x2F;
+Disallow: &#x2F;images&#x2F;
+Disallow: &#x2F;content&#x2F;
+Disallow: &#x2F;ui&#x2F;
+Disallow: &#x2F;js&#x2F;
+Disallow: &#x2F;scripts&#x2F;
+Disallow: &#x2F;article_preview.html*
+Disallow: &#x2F;tag&#x2F;
+Disallow: &#x2F;*?*
+Disallow: &#x2F;link&#x2F;
+
+Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;sitemap-aggpage-index.xml
+Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;article&#x2F;sitemap.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2-常见的反爬虫措施"><a href="#2-常见的反爬虫措施" class="headerlink" title="2.常见的反爬虫措施"></a>2.常见的反爬虫措施</h2><h4 id="1-请求头校验"><a href="#1-请求头校验" class="headerlink" title="1.请求头校验"></a>1.请求头校验</h4><p>一般网站会对请求头进行校验，比如Host，UA，Content-Type字段等，模拟请求的时候，这些常见的请求头最好是带上。</p>
+<h4 id="2-IP访问次数控制"><a href="#2-IP访问次数控制" class="headerlink" title="2.IP访问次数控制"></a>2.IP访问次数控制</h4><p>同一个IP地址短时间内大量发起请求，会引起IP限制，解决方法是用代理IP，或者构建自己的代理IP池。</p>
+<h4 id="3-接口请求频率限制"><a href="#3-接口请求频率限制" class="headerlink" title="3.接口请求频率限制"></a>3.接口请求频率限制</h4><p>有的网站会控制接口访问的频率，比如有些查询接口，控制两三秒访问一次。</p>
+<h4 id="4-接口访问次数限制"><a href="#4-接口访问次数限制" class="headerlink" title="4.接口访问次数限制"></a>4.接口访问次数限制</h4><p>每天限制某个IP或账号访问接口的次数，达到上限后出现二次验证或者直接封账号/IP.比如登录接口</p>
+<h4 id="5-行为认证"><a href="#5-行为认证" class="headerlink" title="5.行为认证"></a>5.行为认证</h4><p>请求次数过多会出现人工认证，如图片验证码，滑动认证，点击认证等，可以对接打码平台。</p>
+<h4 id="6，自动化环境检测"><a href="#6，自动化环境检测" class="headerlink" title="6，自动化环境检测"></a>6，自动化环境检测</h4><p>selenium自动化工具有的网站会检测出来，大部分可以通过下面两种方式跳过检测,下面两种方式无法处理的话，还可以尝试把页面改为移动端页面(手机模式)，最后还有一种方法就是代理服务器拦截修改js代码，把检测selenium的js修改掉。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">options &#x3D; webdriver.ChromeOptions()
+# 躲避部分网站selenium检测
+options.add_experimental_option(&#39;excludeSwitches&#39;, [&#39;enable-automation&#39;])
+options.add_experimental_option(&quot;useAutomationExtension&quot;, False)
+
+driver &#x3D; webdriver.Chrome(executable_path&#x3D;chromedriver_path, options&#x3D;options)
+
+# 躲避部分网站selenium检测
+script &#x3D; &quot;Object.defineProperty(navigator, &#39;webdriver&#39;, &#123;get: () &#x3D;&gt; undefined&#125;);&quot;
+driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;&quot;source&quot;: script&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对于移动端appium的检测，可以尝试替换为uiautomator2实现自动化</p>
+<h4 id="7-数据动态加载"><a href="#7-数据动态加载" class="headerlink" title="7.数据动态加载"></a>7.数据动态加载</h4><p>有的数据不是通过html页面的接口请求返回的，抓包分析请求，找到正确的数据接口。</p>
+<h4 id="8-请求参数加密"><a href="#8-请求参数加密" class="headerlink" title="8.请求参数加密"></a>8.请求参数加密</h4><p>网易云音乐的post请求的请求体就是前端经过js加密后计算得到的，需要逆向js代码</p>
+<h4 id="9-返回数据加密"><a href="#9-返回数据加密" class="headerlink" title="9.返回数据加密"></a>9.返回数据加密</h4><p>需要逆向js代码，分析如何解密。还有一种像大众点评的评论，需要通过定位去找到文本。</p>
+<h4 id="10-动态更新cookies"><a href="#10-动态更新cookies" class="headerlink" title="10.动态更新cookies"></a>10.动态更新cookies</h4><p>华为手机云服务，每次请求接口都会重新设置cookies，并且请求头参数也需要跟着cookies一起变化</p>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Python爬虫之selenium自动化</title>
     <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8Bselenium%E8%87%AA%E5%8A%A8%E5%8C%96/</url>
     <content><![CDATA[<h2 id="1-基础操作"><a href="#1-基础操作" class="headerlink" title="1.基础操作"></a>1.基础操作</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">from selenium import webdriver
@@ -2245,233 +2472,6 @@ im.save(pic_name)
 with open(pic_name, &#39;rb&#39;) as f:
     code_img_base64 &#x3D; base64.b64encode(f.read()).decode()
 os.remove(pic_name)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>爬虫概念</title>
-    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/%E7%88%AC%E8%99%AB%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<h2 id="1-robots协议"><a href="#1-robots协议" class="headerlink" title="1.robots协议"></a>1.robots协议</h2><p>也叫robots.txt，是存放在网站根目录下的文本文件，用来告诉搜索引擎该网站哪些内容是不应该被抓取的，哪些是可以抓取的。</p>
-<p>如<a href="https://www.csdn.net/robots.txt">https://www.csdn.net/robots.txt</a></p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">User-agent: *
-Disallow: &#x2F;scripts
-Disallow: &#x2F;public
-Disallow: &#x2F;css&#x2F;
-Disallow: &#x2F;images&#x2F;
-Disallow: &#x2F;content&#x2F;
-Disallow: &#x2F;ui&#x2F;
-Disallow: &#x2F;js&#x2F;
-Disallow: &#x2F;scripts&#x2F;
-Disallow: &#x2F;article_preview.html*
-Disallow: &#x2F;tag&#x2F;
-Disallow: &#x2F;*?*
-Disallow: &#x2F;link&#x2F;
-
-Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;sitemap-aggpage-index.xml
-Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;article&#x2F;sitemap.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="2-常见的反爬虫措施"><a href="#2-常见的反爬虫措施" class="headerlink" title="2.常见的反爬虫措施"></a>2.常见的反爬虫措施</h2><h4 id="1-请求头校验"><a href="#1-请求头校验" class="headerlink" title="1.请求头校验"></a>1.请求头校验</h4><p>一般网站会对请求头进行校验，比如Host，UA，Content-Type字段等，模拟请求的时候，这些常见的请求头最好是带上。</p>
-<h4 id="2-IP访问次数控制"><a href="#2-IP访问次数控制" class="headerlink" title="2.IP访问次数控制"></a>2.IP访问次数控制</h4><p>同一个IP地址短时间内大量发起请求，会引起IP限制，解决方法是用代理IP，或者构建自己的代理IP池。</p>
-<h4 id="3-接口请求频率限制"><a href="#3-接口请求频率限制" class="headerlink" title="3.接口请求频率限制"></a>3.接口请求频率限制</h4><p>有的网站会控制接口访问的频率，比如有些查询接口，控制两三秒访问一次。</p>
-<h4 id="4-接口访问次数限制"><a href="#4-接口访问次数限制" class="headerlink" title="4.接口访问次数限制"></a>4.接口访问次数限制</h4><p>每天限制某个IP或账号访问接口的次数，达到上限后出现二次验证或者直接封账号/IP.比如登录接口</p>
-<h4 id="5-行为认证"><a href="#5-行为认证" class="headerlink" title="5.行为认证"></a>5.行为认证</h4><p>请求次数过多会出现人工认证，如图片验证码，滑动认证，点击认证等，可以对接打码平台。</p>
-<h4 id="6，自动化环境检测"><a href="#6，自动化环境检测" class="headerlink" title="6，自动化环境检测"></a>6，自动化环境检测</h4><p>selenium自动化工具有的网站会检测出来，大部分可以通过下面两种方式跳过检测,下面两种方式无法处理的话，还可以尝试把页面改为移动端页面(手机模式)，最后还有一种方法就是代理服务器拦截修改js代码，把检测selenium的js修改掉。</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">options &#x3D; webdriver.ChromeOptions()
-# 躲避部分网站selenium检测
-options.add_experimental_option(&#39;excludeSwitches&#39;, [&#39;enable-automation&#39;])
-options.add_experimental_option(&quot;useAutomationExtension&quot;, False)
-
-driver &#x3D; webdriver.Chrome(executable_path&#x3D;chromedriver_path, options&#x3D;options)
-
-# 躲避部分网站selenium检测
-script &#x3D; &quot;Object.defineProperty(navigator, &#39;webdriver&#39;, &#123;get: () &#x3D;&gt; undefined&#125;);&quot;
-driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;&quot;source&quot;: script&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>对于移动端appium的检测，可以尝试替换为uiautomator2实现自动化</p>
-<h4 id="7-数据动态加载"><a href="#7-数据动态加载" class="headerlink" title="7.数据动态加载"></a>7.数据动态加载</h4><p>有的数据不是通过html页面的接口请求返回的，抓包分析请求，找到正确的数据接口。</p>
-<h4 id="8-请求参数加密"><a href="#8-请求参数加密" class="headerlink" title="8.请求参数加密"></a>8.请求参数加密</h4><p>网易云音乐的post请求的请求体就是前端经过js加密后计算得到的，需要逆向js代码</p>
-<h4 id="9-返回数据加密"><a href="#9-返回数据加密" class="headerlink" title="9.返回数据加密"></a>9.返回数据加密</h4><p>需要逆向js代码，分析如何解密。还有一种像大众点评的评论，需要通过定位去找到文本。</p>
-<h4 id="10-动态更新cookies"><a href="#10-动态更新cookies" class="headerlink" title="10.动态更新cookies"></a>10.动态更新cookies</h4><p>华为手机云服务，每次请求接口都会重新设置cookies，并且请求头参数也需要跟着cookies一起变化</p>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Python爬虫之构建自己的代理IP池</title>
-    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8B%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A3%E7%90%86IP%E6%B1%A0/</url>
-    <content><![CDATA[<h1 id="Python爬虫—代理池维护"><a href="#Python爬虫—代理池维护" class="headerlink" title="Python爬虫—代理池维护"></a>Python爬虫—代理池维护</h1><h2 id="大致思路"><a href="#大致思路" class="headerlink" title="大致思路"></a>大致思路</h2><ol>
-<li>去代理网站上爬取大量代理IP，并将其存储在redis数据库。</li>
-<li>定时获取redis中的所有代理IP，检测每一个代理IP是否可用。</li>
-<li>通过flask，对外提供获取代理IP的接口，如果想要使用代理池中的代理IP，只需要访问我们提供的接口即可。<br><strong>现在网上免费代理IP网站越来越少，而且免费的代理质量非常不稳定，本文只是提供构建代理IP池的一种思路，实战的话还是要想办法获取优质的代理。</strong></li>
-</ol>
-<h2 id="代理池系统具体实现思路"><a href="#代理池系统具体实现思路" class="headerlink" title="代理池系统具体实现思路"></a>代理池系统具体实现思路</h2><p><img src="../pic/spiders/proxypool.png" alt=""></p>
-<h2 id="代理池完整代码"><a href="#代理池完整代码" class="headerlink" title="代理池完整代码"></a><a href="agent_pool">代理池完整代码</a></h2><h4 id="agent-pool-py-整体流程"><a href="#agent-pool-py-整体流程" class="headerlink" title="agent_pool.py 整体流程"></a>agent_pool.py 整体流程</h4><p>存储模块：主要实现的功能是，去一些免费代理网站爬取大量的代理IP，并存储至redis数据库中。redis的Sorted Set结构是一个有序集合，我们会对每一个爬取到的代理IP<br>设置一个初始化的优先级10，Sorted Set也是通过这个优先级来进行排序的。&lt;/br&gt;</p>
-<ul>
-<li>Getter:爬取代理网站的免费代理IP，存入redis</li>
-<li>Tester:从redis中取出代理，测试代理是否可用，并调整代理IP的优先级</li>
-<li>Controller:启动Getter()与Tester()</li>
-</ul>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">from Crawler import Crawler
-from RedisClient import RedisClient
-import traceback
-import time
-import requests
-import multiprocessing
-from concurrent import futures
-
-FULL_COUNT &#x3D; 2000
-
-class Getter(object):
-    # 爬取代理网站的免费代理IP，存入redis
-    def __init__(self):
-        self.redis_client &#x3D; RedisClient()
-        self.crawler &#x3D; Crawler()
-
-    def is_full(self):
-        # 判断代理池是否满了
-        return self.redis_client.get_proxy_count() &gt;&#x3D; FULL_COUNT
-
-    def run(self):
-        # 将爬取到的代理存入redis
-        if not self.is_full():
-            proxys &#x3D; self.crawler.get_crawler_proxy()
-            for proxy in proxys:
-                self.redis_client.add(proxy)
-
-class Tester(object):
-    # 从redis中取出代理，测试代理是否可用，并调整代理IP的优先级
-    def __init__(self, test_url):
-        self.redisdb &#x3D; RedisClient()
-        # 用来测试代理是否可用的地址
-        self.test_url &#x3D; test_url
-
-    def test_proxy(self, proxy):
-        try:
-            if isinstance(proxy, bytes):
-                proxy &#x3D; proxy.decode(&#39;utf-8&#39;)
-            proxies &#x3D; &#123;
-                &#39;http&#39;: &#39;http:&#x2F;&#x2F;&#39; + proxy,
-                &#39;https&#39;: &#39;https:&#x2F;&#x2F;&#39; + proxy
-            &#125;
-            print(&#39;正在检测:&#123;&#125;&#39;.format(proxy))
-            res &#x3D; requests.get(self.test_url, proxies&#x3D;proxies, timeout&#x3D;10)
-            if res.status_code &#x3D;&#x3D; 200:
-                return True, proxy
-            else:
-                return False, proxy
-                # 代理不可用，就降低其优先级
-        except Exception as e:
-            return False, proxy
-            # print(&#39;代理检测异常:&#123;&#125;  &#123;&#125;&#39;.format(proxy, e))
-            self.redisdb.decrease(proxy)
-            print(&#39;代理不可用:&#123;&#125;&#39;.format(proxy))
-
-
-    def run(self):
-        print(&#39;启动检测模块......&#39;)
-        try:
-            # 获取redis中所有爬取到的代理
-            proxies &#x3D; self.redisdb.get_all_proxy()
-            for i in range(0, len(proxies), 50):
-                test_proxies &#x3D; proxies[i:i+50]
-                workers &#x3D; len(test_proxies)
-                with futures.ThreadPoolExecutor(workers) as executor:
-                    tasks_res &#x3D; executor.map(self.test_proxy, test_proxies)
-                    for res, proxy in tasks_res:
-                        if not res:
-                            # 代理不可用，就降低其优先级
-                            self.redisdb.decrease(proxy)
-                            print(&#39;代理不可用:&#123;&#125;&#39;.format(proxy))
-                        else:
-                            # 代理可用,将其优先级置为最大
-                            self.redisdb.max(proxy)
-                            print(&#39;代理可用:&#123;&#125;&#39;.format(proxy))
-
-        except Exception as e:
-            print(traceback.format_exc())
-            print(&#39;检测模块出错！！！&#39;)
-
-class Controller(object):
-    def control_get(self):
-        # 获取功能：爬取代理网站，将代理存储到redis
-        getter &#x3D; Getter()
-        while True:
-            try:
-                getter.run()
-            except:
-                print(traceback.format_exc())
-            time.sleep(30)
-
-    def control_test(self):
-        # 检测功能，检测redis中的代理是否可用
-        tester &#x3D; Tester(test_url&#x3D;&#39;http:&#x2F;&#x2F;www.baidu.com&#39;)
-        while True:
-            try:
-                tester.run()
-            except:
-                print(traceback.format_exc())
-            time.sleep(30)
-
-    def run(self):
-        print(&#39;代理池开始运行了......&#39;)
-        # 两个进程
-        get &#x3D; multiprocessing.Process(target&#x3D;self.control_get)
-        get.start()
-        test &#x3D; multiprocessing.Process(target&#x3D;self.control_test)
-        test.start()
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    control &#x3D; Controller()
-    control.run()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="WebAPI-to-get-proxy-py-通过flask向外提供获取代理IP的接口"><a href="#WebAPI-to-get-proxy-py-通过flask向外提供获取代理IP的接口" class="headerlink" title="WebAPI_to_get_proxy.py 通过flask向外提供获取代理IP的接口"></a>WebAPI_to_get_proxy.py 通过flask向外提供获取代理IP的接口</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">from flask import Flask, g
-import RedisClient
-
-&quot;&quot;&quot;
-    对外提供web接口，通过提供的web接口，来获取redis中的代理
-    g是上下文对象，处理请求时，用于临时存储的对象，每次请求都会重设这个变量。比如：我们可以获取一些临时请求的用户信息。
-&quot;&quot;&quot;
-
-
-app &#x3D; Flask(__name__)
-
-
-@app.route(&#39;&#x2F;&#39;)
-def index():
-    return &#39;&lt;h2&gt;欢迎来到daacheng代理池系统&lt;&#x2F;h2&gt;&#39;
-
-
-def get():
-    if not hasattr(g, &#39;redis&#39;):
-        g.redis &#x3D; RedisClient.RedisClient()
-    return g.redis
-
-
-@app.route(&#39;&#x2F;random&#39;)
-def get_random_proxy():
-    # 从代理池中返回一个代理
-    redisdb &#x3D; get()
-    return redisdb.get_proxy()
-
-
-@app.route(&#39;&#x2F;count&#39;)
-def count():
-    # 查询代理池中代理的个数
-    redisdb &#x3D; get()
-    return str(redisdb.get_proxy_count())
-
-
-@app.route(&#39;&#x2F;all&#39;)
-def get_all():
-    # 查询代理池中代理的个数
-    redisdb &#x3D; get()
-    return str(redisdb.get_all_proxy())
-
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    app.run(host&#x3D;&#39;0.0.0.0&#39;, port&#x3D;5000)
-    app.debug &#x3D; True
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 ]]></content>
       <categories>
         <category>爬虫</category>
