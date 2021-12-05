@@ -206,12 +206,163 @@ D=\{<s_1, v_1^{\pi}>, <s_2, v_2^{\pi}>, ..., <s_T, v_T^{\pi}>\}</script><p>Repea
       </tags>
   </entry>
   <entry>
-    <title>Cross-entrpy Method</title>
-    <url>/MARL/MADRL/Cross-entroy%20Method/</url>
-    <content><![CDATA[<h3 id="CEM-amp-amp-RL"><a href="#CEM-amp-amp-RL" class="headerlink" title="CEM &amp;&amp; RL"></a>CEM &amp;&amp; RL</h3><p>注：以下内容引自博文《进化策略优化算法CEM(Cross Entropy Method)》[1]。</p>
-<p>CEM也可以用来求解马尔可夫决策过程，也就是强化学习问题。我们知道，强化学习也是一种动态规划过程，在某个状态下选择某个动作就像在某个节点选择路径一样，整个过程就是一个从初始状态到末状态的路径规划问题，只不过我们希望得到一条能最大化收益的路径。在这种考虑下，就可以用CEM建模了，我们让一条完整的路径成为一个样本x=(s0,a0,s1,a1,…,sn,an)，路径获得的总收益为S(x)=∑Ni=0r(si,ai)，目标是最大化这个S(x)，那么如何采样出这些样本呢？我们可以构建一个pp矩阵：矩阵行表示状态，列表示动作，如pij表示在状态si下执行aj动作的概率，我们通过对这个pp矩阵进行多次采样就可以获得多个样本，然后选出S(x)较高的样本用来更新pp矩阵，不断迭代，最终找到最优p^矩阵。</p>
-<p>这是一种类似于策略迭代(policy iteration)的强化学习方法：通过p矩阵找到在每一步状态下各个动作的概率来形成决策策略，但参数更新并没有用到梯度。从另外一个角度，你也可以认为这是一种值迭代(value iteration)的强化学习方法，此时p矩阵就是经典Q-learning中的Q矩阵，只不过Q矩阵中第i行第j列元素表示的是状态si下动作aj的未来收益的期望，基于贝尔曼方程(Bellman equation)来更新Q值；而p矩阵表示的是概率值，通过交叉墒来更新。</p>
-<p>[1] <a href="https://blog.csdn.net/ppp8300885/article/details/80567682">进化策略优化算法CEM(Cross Entropy Method)</a></p>
+    <title>Model-Free Control</title>
+    <url>/MARL/MADRL/Model-Free%20Control/</url>
+    <content><![CDATA[<p>上篇总结了 Model-Free Predict 问题及方法，本文内容介绍 Model-Free Control 方法，即 “Optimise the value function of an unknown MDP”。</p>
+<p>在这里说明下，Model-Free Predict/Control 不仅适用于 Model-Free 的情况，其同样适用于 MDP 已知的问题：</p>
+<ul>
+<li>MDP model is unknown, but experience can be sampled.</li>
+<li>MDP model is known, but is too big to use, except by samples.</li>
+</ul>
+<p>在正式介绍 Model-Free Control 方法之前，我们先介绍下 On-policy Learning 及 Off-policy Learning。</p>
+<h2 id="On-policy-Learning-vs-Off-policy-Learning"><a href="#On-policy-Learning-vs-Off-policy-Learning" class="headerlink" title="On-policy Learning vs. Off-policy Learning"></a>On-policy Learning vs. Off-policy Learning</h2><p>On-policy Learning：</p>
+<ul>
+<li>“Learn on the job”</li>
+<li>Learn about policy π from experience sampled from π（即采样的策略与学习的策略一致）</li>
+</ul>
+<p>Off-policy Learning：</p>
+<ul>
+<li>“Look over someone’s shoulder”</li>
+<li>Learn about policy π from experience sampled from μ（即采样的策略与学习的策略不一致）</li>
+</ul>
+<h2 id="On-Policy-Monte-Carlo-Learning"><a href="#On-Policy-Monte-Carlo-Learning" class="headerlink" title="On-Policy Monte-Carlo Learning"></a>On-Policy Monte-Carlo Learning</h2><h3 id="Generalized-Policy-Iteration"><a href="#Generalized-Policy-Iteration" class="headerlink" title="Generalized Policy Iteration"></a>Generalized Policy Iteration</h3><p>具体的 Control 方法，在《动态规划》一文中我们提到了 Model-based 下的广义策略迭代 GPI 框架，那在 Model-Free 情况下是否同样适用呢？<br>如下图为 Model-based 下的广义策略迭代 GPI 框架，主要分两部分：策略评估及基于 Greedy 策略的策略提升。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006105433.png" alt=""></p>
+<h4 id="Model-Free-策略评估"><a href="#Model-Free-策略评估" class="headerlink" title="Model-Free 策略评估"></a>Model-Free 策略评估</h4><p>在《Model-Free Predict》中我们分别介绍了两种 Model-Free 的策略评估方法：MC 和 TD。我们先讨论使用 MC 情况下的 Model-Free 策略评估。<br>如上图GPI框架所示：</p>
+<ul>
+<li>基于 V(s) 的贪婪策略提升需要 MDP 已知：</li>
+</ul>
+<script type="math/tex; mode=display">
+\pi'(s) = \arg\max_{a\in A}\Bigl(R_{s}^{a}+P_{ss'}^{a}V(s')\Bigr)</script><ul>
+<li>基于 Q(s,a) 的贪婪策略提升不需要 MDP 已知，即 Model-Free：</li>
+</ul>
+<script type="math/tex; mode=display">
+\pi'(s) = \arg\max_{a\in A}Q(s, a)</script><p>因此 Model-Free 下需要对 Q(s,a) 策略评估，整个GPI策略迭代也要基于 Q(s,a) </p>
+<h4 id="Model-Free-策略提升"><a href="#Model-Free-策略提升" class="headerlink" title="Model-Free 策略提升"></a>Model-Free 策略提升</h4><p>确定了策略评估的对象，那接下来要考虑的就是如何基于策略评估的结果 Q(s,a) 进行策略提升。<br>由于 Model-Free 的策略评估基于对经验的 samples（即评估的 q(s,a)  存在 bias），因此我们在这里不采用纯粹的 greedy 策略，防止因为策略评估的偏差导致整个策略迭代进入局部最优，而是采用具有 explore 功能的  ϵ-greedy 算法：</p>
+<script type="math/tex; mode=display">
+\pi(a|s) = 
+\begin{cases}
+&\frac{\epsilon}{m} + 1 - \epsilon, &\text{if } a^*=\arg\max_{a\in A}Q(s, a)\\
+&\frac{\epsilon}{m}, &\text{otherwise}
+\end{cases}</script><p>因此，我们确定了 Model-Free 下的 Monto-Carlo Control：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006105953.png" alt=""></p>
+<h3 id="GLIE"><a href="#GLIE" class="headerlink" title="GLIE"></a>GLIE</h3><p>先直接贴下David的课件，GLIE 介绍如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110036.png" alt=""></p>
+<p>对于 ϵ-greedy 算法而言，如果 ϵ 随着迭代次数逐步减为0，那么  ϵ-greedy 是 GLIE，即：</p>
+<script type="math/tex; mode=display">
+\epsilon_{k} = \frac{1}{k}</script><h4 id="GLIE-Monto-Carlo-Control"><a href="#GLIE-Monto-Carlo-Control" class="headerlink" title="GLIE Monto-Carlo Control"></a>GLIE Monto-Carlo Control</h4><ul>
+<li>对于 episode 中的每个状态 S~t~  和动作 A~t~</li>
+</ul>
+<script type="math/tex; mode=display">
+N(S_t, A_t) ← N(S_t, A_t) + 1 \\
+Q(S_t, A_t) ← Q(S_t, A_t) + \frac{1}{N(S_t, A_t)}(G_t - Q(S_t, A_t))</script><ul>
+<li>基于新的动作价值函数提升策略：</li>
+</ul>
+<script type="math/tex; mode=display">
+\epsilon ← \frac{1}{k}\\
+\pi ← \epsilon\text{-greedy}(Q)</script><p>定理：GLIE Monto-Carlo Control 收敛到最优的动作价值函数，即：</p>
+<script type="math/tex; mode=display">
+Q(s, a) → q_*(s, a)</script><h2 id="On-Policy-Temporal-Difference-Learning"><a href="#On-Policy-Temporal-Difference-Learning" class="headerlink" title="On-Policy Temporal-Difference Learning"></a>On-Policy Temporal-Difference Learning</h2><h3 id="Sarsa"><a href="#Sarsa" class="headerlink" title="Sarsa"></a>Sarsa</h3><p>我们之前总结过 TD 相对 MC 的优势：</p>
+<ul>
+<li>低方差</li>
+<li>Online</li>
+<li>非完整序列</li>
+</ul>
+<p>那么一个很自然的想法就是在整个控制闭环中用 TD 代替 MC：</p>
+<ul>
+<li>使用 TD 来计算 Q(S,A) </li>
+<li>仍然使用  ϵ-greedy 策略提升</li>
+<li>每一个 step 进行更新</li>
+</ul>
+<p>通过上述改变就使得 On-Policy 的蒙特卡洛方法变成了著名的 Sarsa。</p>
+<ul>
+<li>更新动作价值函数</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110844.png" alt=""></p>
+<ul>
+<li>Control</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110937.png" alt=""></p>
+<p>Sarsa算法的伪代码如下：<br><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006111038.png" alt="img"></p>
+<h3 id="Sarsa-λ"><a href="#Sarsa-λ" class="headerlink" title="Sarsa(λ)"></a>Sarsa(λ)</h3><p>n-step Sarsa returns 可以表示如下：<br>n=1 时：$q_{t}^{(1)} = R_{t+1} + \gamma Q(S_{t+1})$<br>n=2 时：$q_{t}^{(2)} = R_{t+1} + \gamma R_{t+2} + \gamma^2 Q(S_{t+2})$<br>…<br>n=∞ 时：$q_{t}^{\infty} = R_{t+1} + \gamma R_{t+2} + … + \gamma^{T-1} R_T)$<br>因此，n-step return $q_{t}^{(n)} = R_{t+1} + \gamma R_{t+2} + … + \gamma^{n}Q(S_{t+n})$</p>
+<p>n-step Sarse 更新公式：</p>
+<p>$Q(S_t,A_t) ← Q(S_t,A_t) + \alpha (q_t^{(n)} - Q(S_t,A_t))$</p>
+<p> 具体的 Sarsa(λ) 算法伪代码如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006111817.png" alt="img"></p>
+<p>其中 E(s,a)   为资格迹。</p>
+<p>下图为 Sarsa(λ) 用于 Gridworld 例子的示意图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006112106.png" alt=""></p>
+<h2 id="Off-Policy-Learning"><a href="#Off-Policy-Learning" class="headerlink" title="Off-Policy Learning"></a>Off-Policy Learning</h2><p>Off-Policy Learning 的特点是评估目标策略 π(a|s) 来计算 v~π~(s) 或者 q~π~(s,a) 但是跟随行为策略 {S~1~,A~1~,R~2~,…,S~T~}∼μ(a|s) </p>
+<p>Off-Policy Learning 有什么意义？</p>
+<ul>
+<li>Learn from observing humans or other agents</li>
+<li>Re-use experience generated from old policies π~1~,π~2~,…,π~t−1~ </li>
+<li>Learn about optimal policy while following exploratory policy</li>
+<li>Learn about multiple policies while following one policy</li>
+</ul>
+<h3 id="重要性采样"><a href="#重要性采样" class="headerlink" title="重要性采样"></a>重要性采样</h3><p>重要性采样的目的是：Estimate the expectation of a different distribution。</p>
+<script type="math/tex; mode=display">
+\begin{align}
+E_{X\sim P}[f(X)]
+&= \sum P(X)f(X)\\
+&= \sum Q(X)\frac{P(X)}{Q(X)}f(X)\\
+&= E_{X\sim Q}[\frac{P(X)}{Q(X)}f(X)]
+\end{align}</script><h4 id="Off-Policy-MC-重要性采样"><a href="#Off-Policy-MC-重要性采样" class="headerlink" title="Off-Policy MC 重要性采样"></a>Off-Policy MC 重要性采样</h4><p>使用策略 π  产生的 return 来评估 μ ：</p>
+<script type="math/tex; mode=display">
+G_t^{\pi/\mu} = \frac{\pi(A_t|S_t)}{\mu(A_t|S_t)} \frac{\pi(A_{t+1}|S_{t+1})}{\mu(A_{t+1}|S_{t+1})}...\frac{\pi(A_T|S_T)}{\mu(A_T|S_T)}G_t</script><p>朝着正确的 return 方向去更新价值：</p>
+<script type="math/tex; mode=display">
+V(S_t) ← V(S_t) + \alpha\Bigl(\textcolor{Red}{G_t^{\pi/\mu}}-V(S_t)\Bigr)</script><p>需要注意两点：</p>
+<ul>
+<li>Cannot use if μ  is zero when π  is non-zero</li>
+<li>重要性采样会显著性地提升方差</li>
+</ul>
+<h4 id="Off-Policy-TD-重要性采样"><a href="#Off-Policy-TD-重要性采样" class="headerlink" title="Off-Policy TD 重要性采样"></a>Off-Policy TD 重要性采样</h4><p>TD 是单步的，所以使用策略 π  产生的 TD targets 来评估 μ ：</p>
+<script type="math/tex; mode=display">
+V(S_t) ← V(S_t) + \alpha\Bigl(\frac{\pi(A_t|S_t)}{\mu(A_t|S_t)}(R_{t+1}+\gamma V(S_{t+1}))-V(S_t)\Bigr)</script><ul>
+<li>方差比MC版本的重要性采样低很多</li>
+</ul>
+<h3 id="Q-Learning"><a href="#Q-Learning" class="headerlink" title="Q-Learning"></a>Q-Learning</h3><p>前面分别介绍了对价值函数 V(s)  进行 off-policy 学习，现在我们讨论如何对动作价值函数 Q(s,a)  进行 off-policy 学习：</p>
+<ul>
+<li><p>不需要重要性采样</p>
+</li>
+<li><p>使用行为策略选出下一步的动作：$A_{t+1}\sim\mu(·|S_t)$</p>
+</li>
+<li><p>但是仍需要考虑另一个后继动作：$A’\sim\pi(·|S_t)$</p>
+</li>
+<li><p>朝着另一个后继动作的价值更新 $Q(S_t, A_t)$</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+Q(S_t, A_t) ← Q(S_t, A_t) + \alpha\Bigl(R_{t+1}+\gamma Q(S_{t+1}, A')-Q(S_t, A_t)\Bigr)</script><p>讨论完对动作价值函数的学习，我们接着看如何通过 Q-Learning 进行 Control：</p>
+<ul>
+<li>行为策略和目标策略均改进</li>
+<li>目标策略 π  以greedy方式改进：</li>
+</ul>
+<script type="math/tex; mode=display">
+\pi(S_t) = \arg\max_{a'}Q(S_{t+1}, a')</script><ul>
+<li>行为策略 μ  以  ϵ-greedy 方式改进</li>
+<li>Q-Learning target：</li>
+</ul>
+<script type="math/tex; mode=display">
+\begin{align}
+&R_{t+1}+\gamma Q(S_{t+1}, A')\\
+=&R_{t+1}+\gamma Q\Bigl(S_{t+1}, \arg\max_{a'}Q(S_{t+1}, a')\Bigr)\\
+=&R_{t+1}+\max_{a'}\gamma Q(S_{t+1}, a')
+\end{align}</script><p>Q-Learning 的 backup tree 如下所示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114145.png" alt=""></p>
+<p>关于 Q-Learning 的结论：</p>
+<blockquote>
+<p>Q-learning control converges to the optimal action-value function, Q(s,a)→q~∗~(s,a) </p>
+</blockquote>
+<p>Q-Learning 算法具体的伪代码如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114205.png" alt=""></p>
+<p>对比 Sarsa 与 Q-Learning 可以发现两个最重要的区别：</p>
+<ul>
+<li>TD target 公式不同</li>
+<li>Q-Learning 中下一步的动作从行为策略中选出，而不是目标策略</li>
+</ul>
+<h2 id="DP-vs-TD"><a href="#DP-vs-TD" class="headerlink" title="DP vs. TD"></a>DP vs. TD</h2><p>两者的区别见下表：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114507.png" alt="">  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114532.png" alt=""></p>
 ]]></content>
       <categories>
         <category>MARL</category>
@@ -406,163 +557,12 @@ V(S_t) ← V(S_t) + \alpha (\textcolor{Red}{R_{t+1} + \gamma V(S_{t+1})} - V(S_t
       </tags>
   </entry>
   <entry>
-    <title>Model-Free Control</title>
-    <url>/MARL/MADRL/Model-Free%20Control/</url>
-    <content><![CDATA[<p>上篇总结了 Model-Free Predict 问题及方法，本文内容介绍 Model-Free Control 方法，即 “Optimise the value function of an unknown MDP”。</p>
-<p>在这里说明下，Model-Free Predict/Control 不仅适用于 Model-Free 的情况，其同样适用于 MDP 已知的问题：</p>
-<ul>
-<li>MDP model is unknown, but experience can be sampled.</li>
-<li>MDP model is known, but is too big to use, except by samples.</li>
-</ul>
-<p>在正式介绍 Model-Free Control 方法之前，我们先介绍下 On-policy Learning 及 Off-policy Learning。</p>
-<h2 id="On-policy-Learning-vs-Off-policy-Learning"><a href="#On-policy-Learning-vs-Off-policy-Learning" class="headerlink" title="On-policy Learning vs. Off-policy Learning"></a>On-policy Learning vs. Off-policy Learning</h2><p>On-policy Learning：</p>
-<ul>
-<li>“Learn on the job”</li>
-<li>Learn about policy π from experience sampled from π（即采样的策略与学习的策略一致）</li>
-</ul>
-<p>Off-policy Learning：</p>
-<ul>
-<li>“Look over someone’s shoulder”</li>
-<li>Learn about policy π from experience sampled from μ（即采样的策略与学习的策略不一致）</li>
-</ul>
-<h2 id="On-Policy-Monte-Carlo-Learning"><a href="#On-Policy-Monte-Carlo-Learning" class="headerlink" title="On-Policy Monte-Carlo Learning"></a>On-Policy Monte-Carlo Learning</h2><h3 id="Generalized-Policy-Iteration"><a href="#Generalized-Policy-Iteration" class="headerlink" title="Generalized Policy Iteration"></a>Generalized Policy Iteration</h3><p>具体的 Control 方法，在《动态规划》一文中我们提到了 Model-based 下的广义策略迭代 GPI 框架，那在 Model-Free 情况下是否同样适用呢？<br>如下图为 Model-based 下的广义策略迭代 GPI 框架，主要分两部分：策略评估及基于 Greedy 策略的策略提升。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006105433.png" alt=""></p>
-<h4 id="Model-Free-策略评估"><a href="#Model-Free-策略评估" class="headerlink" title="Model-Free 策略评估"></a>Model-Free 策略评估</h4><p>在《Model-Free Predict》中我们分别介绍了两种 Model-Free 的策略评估方法：MC 和 TD。我们先讨论使用 MC 情况下的 Model-Free 策略评估。<br>如上图GPI框架所示：</p>
-<ul>
-<li>基于 V(s) 的贪婪策略提升需要 MDP 已知：</li>
-</ul>
-<script type="math/tex; mode=display">
-\pi'(s) = \arg\max_{a\in A}\Bigl(R_{s}^{a}+P_{ss'}^{a}V(s')\Bigr)</script><ul>
-<li>基于 Q(s,a) 的贪婪策略提升不需要 MDP 已知，即 Model-Free：</li>
-</ul>
-<script type="math/tex; mode=display">
-\pi'(s) = \arg\max_{a\in A}Q(s, a)</script><p>因此 Model-Free 下需要对 Q(s,a) 策略评估，整个GPI策略迭代也要基于 Q(s,a) </p>
-<h4 id="Model-Free-策略提升"><a href="#Model-Free-策略提升" class="headerlink" title="Model-Free 策略提升"></a>Model-Free 策略提升</h4><p>确定了策略评估的对象，那接下来要考虑的就是如何基于策略评估的结果 Q(s,a) 进行策略提升。<br>由于 Model-Free 的策略评估基于对经验的 samples（即评估的 q(s,a)  存在 bias），因此我们在这里不采用纯粹的 greedy 策略，防止因为策略评估的偏差导致整个策略迭代进入局部最优，而是采用具有 explore 功能的  ϵ-greedy 算法：</p>
-<script type="math/tex; mode=display">
-\pi(a|s) = 
-\begin{cases}
-&\frac{\epsilon}{m} + 1 - \epsilon, &\text{if } a^*=\arg\max_{a\in A}Q(s, a)\\
-&\frac{\epsilon}{m}, &\text{otherwise}
-\end{cases}</script><p>因此，我们确定了 Model-Free 下的 Monto-Carlo Control：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006105953.png" alt=""></p>
-<h3 id="GLIE"><a href="#GLIE" class="headerlink" title="GLIE"></a>GLIE</h3><p>先直接贴下David的课件，GLIE 介绍如下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110036.png" alt=""></p>
-<p>对于 ϵ-greedy 算法而言，如果 ϵ 随着迭代次数逐步减为0，那么  ϵ-greedy 是 GLIE，即：</p>
-<script type="math/tex; mode=display">
-\epsilon_{k} = \frac{1}{k}</script><h4 id="GLIE-Monto-Carlo-Control"><a href="#GLIE-Monto-Carlo-Control" class="headerlink" title="GLIE Monto-Carlo Control"></a>GLIE Monto-Carlo Control</h4><ul>
-<li>对于 episode 中的每个状态 S~t~  和动作 A~t~</li>
-</ul>
-<script type="math/tex; mode=display">
-N(S_t, A_t) ← N(S_t, A_t) + 1 \\
-Q(S_t, A_t) ← Q(S_t, A_t) + \frac{1}{N(S_t, A_t)}(G_t - Q(S_t, A_t))</script><ul>
-<li>基于新的动作价值函数提升策略：</li>
-</ul>
-<script type="math/tex; mode=display">
-\epsilon ← \frac{1}{k}\\
-\pi ← \epsilon\text{-greedy}(Q)</script><p>定理：GLIE Monto-Carlo Control 收敛到最优的动作价值函数，即：</p>
-<script type="math/tex; mode=display">
-Q(s, a) → q_*(s, a)</script><h2 id="On-Policy-Temporal-Difference-Learning"><a href="#On-Policy-Temporal-Difference-Learning" class="headerlink" title="On-Policy Temporal-Difference Learning"></a>On-Policy Temporal-Difference Learning</h2><h3 id="Sarsa"><a href="#Sarsa" class="headerlink" title="Sarsa"></a>Sarsa</h3><p>我们之前总结过 TD 相对 MC 的优势：</p>
-<ul>
-<li>低方差</li>
-<li>Online</li>
-<li>非完整序列</li>
-</ul>
-<p>那么一个很自然的想法就是在整个控制闭环中用 TD 代替 MC：</p>
-<ul>
-<li>使用 TD 来计算 Q(S,A) </li>
-<li>仍然使用  ϵ-greedy 策略提升</li>
-<li>每一个 step 进行更新</li>
-</ul>
-<p>通过上述改变就使得 On-Policy 的蒙特卡洛方法变成了著名的 Sarsa。</p>
-<ul>
-<li>更新动作价值函数</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110844.png" alt=""></p>
-<ul>
-<li>Control</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006110937.png" alt=""></p>
-<p>Sarsa算法的伪代码如下：<br><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006111038.png" alt="img"></p>
-<h3 id="Sarsa-λ"><a href="#Sarsa-λ" class="headerlink" title="Sarsa(λ)"></a>Sarsa(λ)</h3><p>n-step Sarsa returns 可以表示如下：<br>n=1 时：$q_{t}^{(1)} = R_{t+1} + \gamma Q(S_{t+1})$<br>n=2 时：$q_{t}^{(2)} = R_{t+1} + \gamma R_{t+2} + \gamma^2 Q(S_{t+2})$<br>…<br>n=∞ 时：$q_{t}^{\infty} = R_{t+1} + \gamma R_{t+2} + … + \gamma^{T-1} R_T)$<br>因此，n-step return $q_{t}^{(n)} = R_{t+1} + \gamma R_{t+2} + … + \gamma^{n}Q(S_{t+n})$</p>
-<p>n-step Sarse 更新公式：</p>
-<p>$Q(S_t,A_t) ← Q(S_t,A_t) + \alpha (q_t^{(n)} - Q(S_t,A_t))$</p>
-<p> 具体的 Sarsa(λ) 算法伪代码如下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006111817.png" alt="img"></p>
-<p>其中 E(s,a)   为资格迹。</p>
-<p>下图为 Sarsa(λ) 用于 Gridworld 例子的示意图：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006112106.png" alt=""></p>
-<h2 id="Off-Policy-Learning"><a href="#Off-Policy-Learning" class="headerlink" title="Off-Policy Learning"></a>Off-Policy Learning</h2><p>Off-Policy Learning 的特点是评估目标策略 π(a|s) 来计算 v~π~(s) 或者 q~π~(s,a) 但是跟随行为策略 {S~1~,A~1~,R~2~,…,S~T~}∼μ(a|s) </p>
-<p>Off-Policy Learning 有什么意义？</p>
-<ul>
-<li>Learn from observing humans or other agents</li>
-<li>Re-use experience generated from old policies π~1~,π~2~,…,π~t−1~ </li>
-<li>Learn about optimal policy while following exploratory policy</li>
-<li>Learn about multiple policies while following one policy</li>
-</ul>
-<h3 id="重要性采样"><a href="#重要性采样" class="headerlink" title="重要性采样"></a>重要性采样</h3><p>重要性采样的目的是：Estimate the expectation of a different distribution。</p>
-<script type="math/tex; mode=display">
-\begin{align}
-E_{X\sim P}[f(X)]
-&= \sum P(X)f(X)\\
-&= \sum Q(X)\frac{P(X)}{Q(X)}f(X)\\
-&= E_{X\sim Q}[\frac{P(X)}{Q(X)}f(X)]
-\end{align}</script><h4 id="Off-Policy-MC-重要性采样"><a href="#Off-Policy-MC-重要性采样" class="headerlink" title="Off-Policy MC 重要性采样"></a>Off-Policy MC 重要性采样</h4><p>使用策略 π  产生的 return 来评估 μ ：</p>
-<script type="math/tex; mode=display">
-G_t^{\pi/\mu} = \frac{\pi(A_t|S_t)}{\mu(A_t|S_t)} \frac{\pi(A_{t+1}|S_{t+1})}{\mu(A_{t+1}|S_{t+1})}...\frac{\pi(A_T|S_T)}{\mu(A_T|S_T)}G_t</script><p>朝着正确的 return 方向去更新价值：</p>
-<script type="math/tex; mode=display">
-V(S_t) ← V(S_t) + \alpha\Bigl(\textcolor{Red}{G_t^{\pi/\mu}}-V(S_t)\Bigr)</script><p>需要注意两点：</p>
-<ul>
-<li>Cannot use if μ  is zero when π  is non-zero</li>
-<li>重要性采样会显著性地提升方差</li>
-</ul>
-<h4 id="Off-Policy-TD-重要性采样"><a href="#Off-Policy-TD-重要性采样" class="headerlink" title="Off-Policy TD 重要性采样"></a>Off-Policy TD 重要性采样</h4><p>TD 是单步的，所以使用策略 π  产生的 TD targets 来评估 μ ：</p>
-<script type="math/tex; mode=display">
-V(S_t) ← V(S_t) + \alpha\Bigl(\frac{\pi(A_t|S_t)}{\mu(A_t|S_t)}(R_{t+1}+\gamma V(S_{t+1}))-V(S_t)\Bigr)</script><ul>
-<li>方差比MC版本的重要性采样低很多</li>
-</ul>
-<h3 id="Q-Learning"><a href="#Q-Learning" class="headerlink" title="Q-Learning"></a>Q-Learning</h3><p>前面分别介绍了对价值函数 V(s)  进行 off-policy 学习，现在我们讨论如何对动作价值函数 Q(s,a)  进行 off-policy 学习：</p>
-<ul>
-<li><p>不需要重要性采样</p>
-</li>
-<li><p>使用行为策略选出下一步的动作：$A_{t+1}\sim\mu(·|S_t)$</p>
-</li>
-<li><p>但是仍需要考虑另一个后继动作：$A’\sim\pi(·|S_t)$</p>
-</li>
-<li><p>朝着另一个后继动作的价值更新 $Q(S_t, A_t)$</p>
-</li>
-</ul>
-<script type="math/tex; mode=display">
-Q(S_t, A_t) ← Q(S_t, A_t) + \alpha\Bigl(R_{t+1}+\gamma Q(S_{t+1}, A')-Q(S_t, A_t)\Bigr)</script><p>讨论完对动作价值函数的学习，我们接着看如何通过 Q-Learning 进行 Control：</p>
-<ul>
-<li>行为策略和目标策略均改进</li>
-<li>目标策略 π  以greedy方式改进：</li>
-</ul>
-<script type="math/tex; mode=display">
-\pi(S_t) = \arg\max_{a'}Q(S_{t+1}, a')</script><ul>
-<li>行为策略 μ  以  ϵ-greedy 方式改进</li>
-<li>Q-Learning target：</li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{align}
-&R_{t+1}+\gamma Q(S_{t+1}, A')\\
-=&R_{t+1}+\gamma Q\Bigl(S_{t+1}, \arg\max_{a'}Q(S_{t+1}, a')\Bigr)\\
-=&R_{t+1}+\max_{a'}\gamma Q(S_{t+1}, a')
-\end{align}</script><p>Q-Learning 的 backup tree 如下所示：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114145.png" alt=""></p>
-<p>关于 Q-Learning 的结论：</p>
-<blockquote>
-<p>Q-learning control converges to the optimal action-value function, Q(s,a)→q~∗~(s,a) </p>
-</blockquote>
-<p>Q-Learning 算法具体的伪代码如下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114205.png" alt=""></p>
-<p>对比 Sarsa 与 Q-Learning 可以发现两个最重要的区别：</p>
-<ul>
-<li>TD target 公式不同</li>
-<li>Q-Learning 中下一步的动作从行为策略中选出，而不是目标策略</li>
-</ul>
-<h2 id="DP-vs-TD"><a href="#DP-vs-TD" class="headerlink" title="DP vs. TD"></a>DP vs. TD</h2><p>两者的区别见下表：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114507.png" alt="">  </p>
-<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211006114532.png" alt=""></p>
+    <title>Cross-entrpy Method</title>
+    <url>/MARL/MADRL/Cross-entroy%20Method/</url>
+    <content><![CDATA[<h3 id="CEM-amp-amp-RL"><a href="#CEM-amp-amp-RL" class="headerlink" title="CEM &amp;&amp; RL"></a>CEM &amp;&amp; RL</h3><p>注：以下内容引自博文《进化策略优化算法CEM(Cross Entropy Method)》[1]。</p>
+<p>CEM也可以用来求解马尔可夫决策过程，也就是强化学习问题。我们知道，强化学习也是一种动态规划过程，在某个状态下选择某个动作就像在某个节点选择路径一样，整个过程就是一个从初始状态到末状态的路径规划问题，只不过我们希望得到一条能最大化收益的路径。在这种考虑下，就可以用CEM建模了，我们让一条完整的路径成为一个样本x=(s0,a0,s1,a1,…,sn,an)，路径获得的总收益为S(x)=∑Ni=0r(si,ai)，目标是最大化这个S(x)，那么如何采样出这些样本呢？我们可以构建一个pp矩阵：矩阵行表示状态，列表示动作，如pij表示在状态si下执行aj动作的概率，我们通过对这个pp矩阵进行多次采样就可以获得多个样本，然后选出S(x)较高的样本用来更新pp矩阵，不断迭代，最终找到最优p^矩阵。</p>
+<p>这是一种类似于策略迭代(policy iteration)的强化学习方法：通过p矩阵找到在每一步状态下各个动作的概率来形成决策策略，但参数更新并没有用到梯度。从另外一个角度，你也可以认为这是一种值迭代(value iteration)的强化学习方法，此时p矩阵就是经典Q-learning中的Q矩阵，只不过Q矩阵中第i行第j列元素表示的是状态si下动作aj的未来收益的期望，基于贝尔曼方程(Bellman equation)来更新Q值；而p矩阵表示的是概率值，通过交叉墒来更新。</p>
+<p>[1] <a href="https://blog.csdn.net/ppp8300885/article/details/80567682">进化策略优化算法CEM(Cross Entropy Method)</a></p>
 ]]></content>
       <categories>
         <category>MARL</category>
@@ -909,6 +909,21 @@ R_s^a + \gamma \sum_{s'\in S}P_{ss'}^a\max_{a}q_{*}(s, a) \qquad (8)</script><h3
       </categories>
       <tags>
         <tag>MARL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>WSL踩坑</title>
+    <url>/%E8%B8%A9%E5%9D%91/others/wsl%E8%B8%A9%E5%9D%91/</url>
+    <content><![CDATA[<h1 id="WSL踩坑"><a href="#WSL踩坑" class="headerlink" title="WSL踩坑"></a>WSL踩坑</h1><p>大二上学期期末，稀里糊涂装了wsl, 一直用到现在。<br>本来是打算，和OS相关，那就装到C盘把。<br>这么一大意，在大三上装东西的时候出了不少问题。（当时没仔细装，而且也不懂）<br>这次为了装temu的交叉编译环境，装了不少东西，直接把C盘干到2G了，这么下去肯定不行。（Ubuntu20。04的主要文件夹就有至少15G了）<br>于是，我就上网搜，发现别人早就整好了vhdx(一个叫虚拟硬盘的东西，我当时没有做，现在做也来不及了），<br>所以别人的限制硬盘占用的方法，转移到别的位置的办法，我都没办法用了。</p>
+<p>打算卸载重装到D盘。用这个帖子解决问题了：<a href="https://blog.csdn.net/LaughingMei/article/details/109736965">https://blog.csdn.net/LaughingMei/article/details/109736965</a> </p>
+<p>卸载完C盘有16G了。</p>
+<p>比较脑瘫，当时看到的有两种方式，第一种要vhdx，第二种不用</p>
+]]></content>
+      <categories>
+        <category>踩坑</category>
+      </categories>
+      <tags>
+        <tag>踩坑</tag>
       </tags>
   </entry>
   <entry>
@@ -2251,6 +2266,53 @@ os.remove(pic_name)<span aria-hidden="true" class="line-numbers-rows"><span></sp
       </categories>
   </entry>
   <entry>
+    <title>爬虫概念</title>
+    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/%E7%88%AC%E8%99%AB%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<h2 id="1-robots协议"><a href="#1-robots协议" class="headerlink" title="1.robots协议"></a>1.robots协议</h2><p>也叫robots.txt，是存放在网站根目录下的文本文件，用来告诉搜索引擎该网站哪些内容是不应该被抓取的，哪些是可以抓取的。</p>
+<p>如<a href="https://www.csdn.net/robots.txt">https://www.csdn.net/robots.txt</a></p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">User-agent: *
+Disallow: &#x2F;scripts
+Disallow: &#x2F;public
+Disallow: &#x2F;css&#x2F;
+Disallow: &#x2F;images&#x2F;
+Disallow: &#x2F;content&#x2F;
+Disallow: &#x2F;ui&#x2F;
+Disallow: &#x2F;js&#x2F;
+Disallow: &#x2F;scripts&#x2F;
+Disallow: &#x2F;article_preview.html*
+Disallow: &#x2F;tag&#x2F;
+Disallow: &#x2F;*?*
+Disallow: &#x2F;link&#x2F;
+
+Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;sitemap-aggpage-index.xml
+Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;article&#x2F;sitemap.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2-常见的反爬虫措施"><a href="#2-常见的反爬虫措施" class="headerlink" title="2.常见的反爬虫措施"></a>2.常见的反爬虫措施</h2><h4 id="1-请求头校验"><a href="#1-请求头校验" class="headerlink" title="1.请求头校验"></a>1.请求头校验</h4><p>一般网站会对请求头进行校验，比如Host，UA，Content-Type字段等，模拟请求的时候，这些常见的请求头最好是带上。</p>
+<h4 id="2-IP访问次数控制"><a href="#2-IP访问次数控制" class="headerlink" title="2.IP访问次数控制"></a>2.IP访问次数控制</h4><p>同一个IP地址短时间内大量发起请求，会引起IP限制，解决方法是用代理IP，或者构建自己的代理IP池。</p>
+<h4 id="3-接口请求频率限制"><a href="#3-接口请求频率限制" class="headerlink" title="3.接口请求频率限制"></a>3.接口请求频率限制</h4><p>有的网站会控制接口访问的频率，比如有些查询接口，控制两三秒访问一次。</p>
+<h4 id="4-接口访问次数限制"><a href="#4-接口访问次数限制" class="headerlink" title="4.接口访问次数限制"></a>4.接口访问次数限制</h4><p>每天限制某个IP或账号访问接口的次数，达到上限后出现二次验证或者直接封账号/IP.比如登录接口</p>
+<h4 id="5-行为认证"><a href="#5-行为认证" class="headerlink" title="5.行为认证"></a>5.行为认证</h4><p>请求次数过多会出现人工认证，如图片验证码，滑动认证，点击认证等，可以对接打码平台。</p>
+<h4 id="6，自动化环境检测"><a href="#6，自动化环境检测" class="headerlink" title="6，自动化环境检测"></a>6，自动化环境检测</h4><p>selenium自动化工具有的网站会检测出来，大部分可以通过下面两种方式跳过检测,下面两种方式无法处理的话，还可以尝试把页面改为移动端页面(手机模式)，最后还有一种方法就是代理服务器拦截修改js代码，把检测selenium的js修改掉。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">options &#x3D; webdriver.ChromeOptions()
+# 躲避部分网站selenium检测
+options.add_experimental_option(&#39;excludeSwitches&#39;, [&#39;enable-automation&#39;])
+options.add_experimental_option(&quot;useAutomationExtension&quot;, False)
+
+driver &#x3D; webdriver.Chrome(executable_path&#x3D;chromedriver_path, options&#x3D;options)
+
+# 躲避部分网站selenium检测
+script &#x3D; &quot;Object.defineProperty(navigator, &#39;webdriver&#39;, &#123;get: () &#x3D;&gt; undefined&#125;);&quot;
+driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;&quot;source&quot;: script&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对于移动端appium的检测，可以尝试替换为uiautomator2实现自动化</p>
+<h4 id="7-数据动态加载"><a href="#7-数据动态加载" class="headerlink" title="7.数据动态加载"></a>7.数据动态加载</h4><p>有的数据不是通过html页面的接口请求返回的，抓包分析请求，找到正确的数据接口。</p>
+<h4 id="8-请求参数加密"><a href="#8-请求参数加密" class="headerlink" title="8.请求参数加密"></a>8.请求参数加密</h4><p>网易云音乐的post请求的请求体就是前端经过js加密后计算得到的，需要逆向js代码</p>
+<h4 id="9-返回数据加密"><a href="#9-返回数据加密" class="headerlink" title="9.返回数据加密"></a>9.返回数据加密</h4><p>需要逆向js代码，分析如何解密。还有一种像大众点评的评论，需要通过定位去找到文本。</p>
+<h4 id="10-动态更新cookies"><a href="#10-动态更新cookies" class="headerlink" title="10.动态更新cookies"></a>10.动态更新cookies</h4><p>华为手机云服务，每次请求接口都会重新设置cookies，并且请求头参数也需要跟着cookies一起变化</p>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Python爬虫之构建自己的代理IP池</title>
     <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8B%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A3%E7%90%86IP%E6%B1%A0/</url>
     <content><![CDATA[<h1 id="Python爬虫—代理池维护"><a href="#Python爬虫—代理池维护" class="headerlink" title="Python爬虫—代理池维护"></a>Python爬虫—代理池维护</h1><h2 id="大致思路"><a href="#大致思路" class="headerlink" title="大致思路"></a>大致思路</h2><ol>
@@ -2425,53 +2487,6 @@ if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
     app.run(host&#x3D;&#39;0.0.0.0&#39;, port&#x3D;5000)
     app.debug &#x3D; True
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>爬虫概念</title>
-    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/%E7%88%AC%E8%99%AB%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<h2 id="1-robots协议"><a href="#1-robots协议" class="headerlink" title="1.robots协议"></a>1.robots协议</h2><p>也叫robots.txt，是存放在网站根目录下的文本文件，用来告诉搜索引擎该网站哪些内容是不应该被抓取的，哪些是可以抓取的。</p>
-<p>如<a href="https://www.csdn.net/robots.txt">https://www.csdn.net/robots.txt</a></p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">User-agent: *
-Disallow: &#x2F;scripts
-Disallow: &#x2F;public
-Disallow: &#x2F;css&#x2F;
-Disallow: &#x2F;images&#x2F;
-Disallow: &#x2F;content&#x2F;
-Disallow: &#x2F;ui&#x2F;
-Disallow: &#x2F;js&#x2F;
-Disallow: &#x2F;scripts&#x2F;
-Disallow: &#x2F;article_preview.html*
-Disallow: &#x2F;tag&#x2F;
-Disallow: &#x2F;*?*
-Disallow: &#x2F;link&#x2F;
-
-Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;sitemap-aggpage-index.xml
-Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;article&#x2F;sitemap.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="2-常见的反爬虫措施"><a href="#2-常见的反爬虫措施" class="headerlink" title="2.常见的反爬虫措施"></a>2.常见的反爬虫措施</h2><h4 id="1-请求头校验"><a href="#1-请求头校验" class="headerlink" title="1.请求头校验"></a>1.请求头校验</h4><p>一般网站会对请求头进行校验，比如Host，UA，Content-Type字段等，模拟请求的时候，这些常见的请求头最好是带上。</p>
-<h4 id="2-IP访问次数控制"><a href="#2-IP访问次数控制" class="headerlink" title="2.IP访问次数控制"></a>2.IP访问次数控制</h4><p>同一个IP地址短时间内大量发起请求，会引起IP限制，解决方法是用代理IP，或者构建自己的代理IP池。</p>
-<h4 id="3-接口请求频率限制"><a href="#3-接口请求频率限制" class="headerlink" title="3.接口请求频率限制"></a>3.接口请求频率限制</h4><p>有的网站会控制接口访问的频率，比如有些查询接口，控制两三秒访问一次。</p>
-<h4 id="4-接口访问次数限制"><a href="#4-接口访问次数限制" class="headerlink" title="4.接口访问次数限制"></a>4.接口访问次数限制</h4><p>每天限制某个IP或账号访问接口的次数，达到上限后出现二次验证或者直接封账号/IP.比如登录接口</p>
-<h4 id="5-行为认证"><a href="#5-行为认证" class="headerlink" title="5.行为认证"></a>5.行为认证</h4><p>请求次数过多会出现人工认证，如图片验证码，滑动认证，点击认证等，可以对接打码平台。</p>
-<h4 id="6，自动化环境检测"><a href="#6，自动化环境检测" class="headerlink" title="6，自动化环境检测"></a>6，自动化环境检测</h4><p>selenium自动化工具有的网站会检测出来，大部分可以通过下面两种方式跳过检测,下面两种方式无法处理的话，还可以尝试把页面改为移动端页面(手机模式)，最后还有一种方法就是代理服务器拦截修改js代码，把检测selenium的js修改掉。</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">options &#x3D; webdriver.ChromeOptions()
-# 躲避部分网站selenium检测
-options.add_experimental_option(&#39;excludeSwitches&#39;, [&#39;enable-automation&#39;])
-options.add_experimental_option(&quot;useAutomationExtension&quot;, False)
-
-driver &#x3D; webdriver.Chrome(executable_path&#x3D;chromedriver_path, options&#x3D;options)
-
-# 躲避部分网站selenium检测
-script &#x3D; &quot;Object.defineProperty(navigator, &#39;webdriver&#39;, &#123;get: () &#x3D;&gt; undefined&#125;);&quot;
-driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;&quot;source&quot;: script&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>对于移动端appium的检测，可以尝试替换为uiautomator2实现自动化</p>
-<h4 id="7-数据动态加载"><a href="#7-数据动态加载" class="headerlink" title="7.数据动态加载"></a>7.数据动态加载</h4><p>有的数据不是通过html页面的接口请求返回的，抓包分析请求，找到正确的数据接口。</p>
-<h4 id="8-请求参数加密"><a href="#8-请求参数加密" class="headerlink" title="8.请求参数加密"></a>8.请求参数加密</h4><p>网易云音乐的post请求的请求体就是前端经过js加密后计算得到的，需要逆向js代码</p>
-<h4 id="9-返回数据加密"><a href="#9-返回数据加密" class="headerlink" title="9.返回数据加密"></a>9.返回数据加密</h4><p>需要逆向js代码，分析如何解密。还有一种像大众点评的评论，需要通过定位去找到文本。</p>
-<h4 id="10-动态更新cookies"><a href="#10-动态更新cookies" class="headerlink" title="10.动态更新cookies"></a>10.动态更新cookies</h4><p>华为手机云服务，每次请求接口都会重新设置cookies，并且请求头参数也需要跟着cookies一起变化</p>
 ]]></content>
       <categories>
         <category>爬虫</category>
@@ -3633,15 +3648,6 @@ if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
     func(a)
     # 函数内 a:[1, 2, 3, 4, 5]
     print(&#39;函数外 a:&#123;&#125;&#39;.format(a))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>碎碎念</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>FIRST</title>
-    <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/example/</url>
-    <content><![CDATA[<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>大家好，这是第一篇博客</p>
 ]]></content>
       <categories>
         <category>碎碎念</category>
