@@ -186,8 +186,8 @@
   
   <entry>
     <title>WSL踩坑</title>
-    <link href="https://changqingaas.github.io/%E8%B8%A9%E5%9D%91/others/wsl%E8%B8%A9%E5%9D%91/"/>
-    <id>https://changqingaas.github.io/%E8%B8%A9%E5%9D%91/others/wsl%E8%B8%A9%E5%9D%91/</id>
+    <link href="https://changqingaas.github.io/%E8%B8%A9%E5%9D%91/%E8%B8%A9%E5%9D%91/wsl%E8%B8%A9%E5%9D%91/"/>
+    <id>https://changqingaas.github.io/%E8%B8%A9%E5%9D%91/%E8%B8%A9%E5%9D%91/wsl%E8%B8%A9%E5%9D%91/</id>
     <published>2021-10-03T15:30:16.000Z</published>
     <updated>2021-11-16T11:05:44.433Z</updated>
     
@@ -254,7 +254,7 @@
     <link href="https://changqingaas.github.io/MARL/MADRL/%E4%B8%80%E4%BA%9B%E6%AF%94%E8%BE%83%E5%A5%BD%E7%9A%84%E6%96%87%E7%AB%A0/"/>
     <id>https://changqingaas.github.io/MARL/MADRL/%E4%B8%80%E4%BA%9B%E6%AF%94%E8%BE%83%E5%A5%BD%E7%9A%84%E6%96%87%E7%AB%A0/</id>
     <published>2021-09-01T14:00:33.000Z</published>
-    <updated>2021-09-03T10:43:00.139Z</updated>
+    <updated>2022-01-17T01:02:03.308Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/bfa4054.html">深度学习 | 《深度学习入门之PyTorch》阅读笔记 | Justlovesmile’s BLOG</a></p><p>注： 这本书的github代码已经4年没更新了，只适合速览一下，做个overview, 并不适合手敲学习</p><p><a href="https://blog.justlovesmile.top/posts/43678.html">深度学习 | “花书”，Deep Learning笔记 | Justlovesmile’s BLOG</a></p><p> 注：偏数学</p>]]></content>
     
@@ -273,34 +273,13 @@
   </entry>
   
   <entry>
-    <title>数据库基础__笔记</title>
-    <link href="https://changqingaas.github.io/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%94%B6%E8%97%8F%E5%A4%B9/"/>
-    <id>https://changqingaas.github.io/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%94%B6%E8%97%8F%E5%A4%B9/</id>
+    <title>收藏夹</title>
+    <link href="https://changqingaas.github.io/%E7%AE%97%E6%B3%95/%E6%94%B6%E8%97%8F%E5%A4%B9/%E6%94%B6%E8%97%8F%E5%A4%B9/"/>
+    <id>https://changqingaas.github.io/%E7%AE%97%E6%B3%95/%E6%94%B6%E8%97%8F%E5%A4%B9/%E6%94%B6%E8%97%8F%E5%A4%B9/</id>
     <published>2021-09-01T14:00:33.000Z</published>
-    <updated>2021-09-03T05:50:36.607Z</updated>
+    <updated>2022-01-17T01:00:10.706Z</updated>
     
-    <content type="html"><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/41347.html">大学课程 | 数据库基础 | Justlovesmile’s BLOG</a></p>]]></content>
-    
-    
-    <summary type="html">放在本地的收藏夹不方便分享，所以就放在这里了</summary>
-    
-    
-    
-    <category term="数据库" scheme="https://changqingaas.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    
-    <category term="数据库" scheme="https://changqingaas.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>算法分析与设计__笔记</title>
-    <link href="https://changqingaas.github.io/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95/%E6%94%B6%E8%97%8F%E5%A4%B9/"/>
-    <id>https://changqingaas.github.io/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95/%E6%94%B6%E8%97%8F%E5%A4%B9/</id>
-    <published>2021-09-01T14:00:33.000Z</published>
-    <updated>2021-09-03T04:38:34.845Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/16050.html">大学课程 | 《算法分析与设计》笔记 | Justlovesmile’s BLOG</a></p>]]></content>
+    <content type="html"><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/16050.html">大学课程 | 《算法分析与设计》笔记 | Justlovesmile’s BLOG</a></p><p> <a href="https://blog.justlovesmile.top/posts/41347.html">大学课程 | 数据库基础 | Justlovesmile’s BLOG</a></p>]]></content>
     
     
     <summary type="html">放在本地的收藏夹不方便分享，所以就放在这里了</summary>
@@ -355,25 +334,6 @@
   </entry>
   
   <entry>
-    <title>Python爬虫之Xpath解析</title>
-    <link href="https://changqingaas.github.io/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%ABxpath%E8%A7%A3%E6%9E%90/"/>
-    <id>https://changqingaas.github.io/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%ABxpath%E8%A7%A3%E6%9E%90/</id>
-    <published>2021-08-27T06:25:32.000Z</published>
-    <updated>2021-08-27T09:03:13.862Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="xpath解析"><a href="#xpath解析" class="headerlink" title="xpath解析"></a>xpath解析</h2><ul><li>// :从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置。</li><li>/ : 匹配当前目录下的直接子节点。</li><li>.. : 匹配当前节点的父节点。</li><li>@：选取属性。</li><li>//* : 选取文档中所有元素</li></ul><pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; &quot;&quot;&quot;            &lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;            &lt;bookstore&gt;            &lt;book&gt;              &lt;title lang&#x3D;&quot;eng&quot;&gt;Harry Potter&lt;&#x2F;title&gt;              &lt;price&gt;29.99&lt;&#x2F;price&gt;            &lt;&#x2F;book&gt;            &lt;book&gt;              &lt;title lang&#x3D;&quot;cn&quot;&gt;Learning XML&lt;&#x2F;title&gt;              &lt;price&gt;39.95&lt;&#x2F;price&gt;              &lt;aa lang&#x3D;&quot;cn eng aa bb&quot; name&#x3D;&quot;cc&quot;&gt;Learning XML&lt;&#x2F;aa&gt;            &lt;&#x2F;book&gt;            &lt;&#x2F;bookstore&gt;&quot;&quot;&quot;from lxml import etreehtml &#x3D; etree.HTML(text)# print(etree.tostring(html).decode(&#39;utf-8&#39;))# 选取所有指定的节点res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#39;)# 获取指定节点的所有直接子节点res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#x2F;aa&#39;)# 获取指定节点的父节点res &#x3D; html.xpath(&quot;&#x2F;&#x2F;aa&#x2F;..&quot;)# 通过属性匹配选择节点res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#39;)# 获取文本值res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#x2F;text()&#39;)res &#x3D; html.xpath(&#39;&#x2F;&#x2F;price&#x2F;text()&#39;)# 获取属性值 [&#39;eng&#39;, &#39;cn&#39;]res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title&#x2F;@lang&#39;)# 属性多值匹配res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;)]&#39;)# 对于属性值有多个的节点，不用contains函数的话，匹配到的是空[]res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[@lang&#x3D;&quot;aa&quot;]&#39;)# 文本匹配res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[contains(text(), &quot;XML&quot;)]&#39;)# 运算符res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;) and @name&#x3D;&quot;cc&quot;]&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
-    
-    
-    <summary type="html">Python爬虫之Xpath解析</summary>
-    
-    
-    
-    <category term="爬虫" scheme="https://changqingaas.github.io/categories/%E7%88%AC%E8%99%AB/"/>
-    
-    
-  </entry>
-  
-  <entry>
     <title>Python爬虫之BeautifulSoup</title>
     <link href="https://changqingaas.github.io/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8BBeautifulSoup/"/>
     <id>https://changqingaas.github.io/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8BBeautifulSoup/</id>
@@ -384,6 +344,25 @@
     
     
     <summary type="html">Python爬虫之BeautifulSoup</summary>
+    
+    
+    
+    <category term="爬虫" scheme="https://changqingaas.github.io/categories/%E7%88%AC%E8%99%AB/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Python爬虫之Xpath解析</title>
+    <link href="https://changqingaas.github.io/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%ABxpath%E8%A7%A3%E6%9E%90/"/>
+    <id>https://changqingaas.github.io/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%ABxpath%E8%A7%A3%E6%9E%90/</id>
+    <published>2021-08-27T06:25:32.000Z</published>
+    <updated>2021-08-27T09:03:13.862Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="xpath解析"><a href="#xpath解析" class="headerlink" title="xpath解析"></a>xpath解析</h2><ul><li>// :从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置。</li><li>/ : 匹配当前目录下的直接子节点。</li><li>.. : 匹配当前节点的父节点。</li><li>@：选取属性。</li><li>//* : 选取文档中所有元素</li></ul><pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; &quot;&quot;&quot;            &lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;            &lt;bookstore&gt;            &lt;book&gt;              &lt;title lang&#x3D;&quot;eng&quot;&gt;Harry Potter&lt;&#x2F;title&gt;              &lt;price&gt;29.99&lt;&#x2F;price&gt;            &lt;&#x2F;book&gt;            &lt;book&gt;              &lt;title lang&#x3D;&quot;cn&quot;&gt;Learning XML&lt;&#x2F;title&gt;              &lt;price&gt;39.95&lt;&#x2F;price&gt;              &lt;aa lang&#x3D;&quot;cn eng aa bb&quot; name&#x3D;&quot;cc&quot;&gt;Learning XML&lt;&#x2F;aa&gt;            &lt;&#x2F;book&gt;            &lt;&#x2F;bookstore&gt;&quot;&quot;&quot;from lxml import etreehtml &#x3D; etree.HTML(text)# print(etree.tostring(html).decode(&#39;utf-8&#39;))# 选取所有指定的节点res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#39;)# 获取指定节点的所有直接子节点res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#x2F;aa&#39;)# 获取指定节点的父节点res &#x3D; html.xpath(&quot;&#x2F;&#x2F;aa&#x2F;..&quot;)# 通过属性匹配选择节点res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#39;)# 获取文本值res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#x2F;text()&#39;)res &#x3D; html.xpath(&#39;&#x2F;&#x2F;price&#x2F;text()&#39;)# 获取属性值 [&#39;eng&#39;, &#39;cn&#39;]res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title&#x2F;@lang&#39;)# 属性多值匹配res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;)]&#39;)# 对于属性值有多个的节点，不用contains函数的话，匹配到的是空[]res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[@lang&#x3D;&quot;aa&quot;]&#39;)# 文本匹配res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[contains(text(), &quot;XML&quot;)]&#39;)# 运算符res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;) and @name&#x3D;&quot;cc&quot;]&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
+    
+    
+    <summary type="html">Python爬虫之Xpath解析</summary>
     
     
     
@@ -422,6 +401,25 @@
     
     
     <summary type="html">Python爬虫之selenium自动化</summary>
+    
+    
+    
+    <category term="爬虫" scheme="https://changqingaas.github.io/categories/%E7%88%AC%E8%99%AB/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>爬虫概念</title>
+    <link href="https://changqingaas.github.io/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/%E7%88%AC%E8%99%AB%E6%A6%82%E5%BF%B5/"/>
+    <id>https://changqingaas.github.io/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/%E7%88%AC%E8%99%AB%E6%A6%82%E5%BF%B5/</id>
+    <published>2021-08-27T06:25:32.000Z</published>
+    <updated>2021-08-27T09:03:55.693Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-robots协议"><a href="#1-robots协议" class="headerlink" title="1.robots协议"></a>1.robots协议</h2><p>也叫robots.txt，是存放在网站根目录下的文本文件，用来告诉搜索引擎该网站哪些内容是不应该被抓取的，哪些是可以抓取的。</p><p>如<a href="https://www.csdn.net/robots.txt">https://www.csdn.net/robots.txt</a></p><pre class="line-numbers language-python" data-language="python"><code class="language-python">User-agent: *Disallow: &#x2F;scriptsDisallow: &#x2F;publicDisallow: &#x2F;css&#x2F;Disallow: &#x2F;images&#x2F;Disallow: &#x2F;content&#x2F;Disallow: &#x2F;ui&#x2F;Disallow: &#x2F;js&#x2F;Disallow: &#x2F;scripts&#x2F;Disallow: &#x2F;article_preview.html*Disallow: &#x2F;tag&#x2F;Disallow: &#x2F;*?*Disallow: &#x2F;link&#x2F;Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;sitemap-aggpage-index.xmlSitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;article&#x2F;sitemap.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h2 id="2-常见的反爬虫措施"><a href="#2-常见的反爬虫措施" class="headerlink" title="2.常见的反爬虫措施"></a>2.常见的反爬虫措施</h2><h4 id="1-请求头校验"><a href="#1-请求头校验" class="headerlink" title="1.请求头校验"></a>1.请求头校验</h4><p>一般网站会对请求头进行校验，比如Host，UA，Content-Type字段等，模拟请求的时候，这些常见的请求头最好是带上。</p><h4 id="2-IP访问次数控制"><a href="#2-IP访问次数控制" class="headerlink" title="2.IP访问次数控制"></a>2.IP访问次数控制</h4><p>同一个IP地址短时间内大量发起请求，会引起IP限制，解决方法是用代理IP，或者构建自己的代理IP池。</p><h4 id="3-接口请求频率限制"><a href="#3-接口请求频率限制" class="headerlink" title="3.接口请求频率限制"></a>3.接口请求频率限制</h4><p>有的网站会控制接口访问的频率，比如有些查询接口，控制两三秒访问一次。</p><h4 id="4-接口访问次数限制"><a href="#4-接口访问次数限制" class="headerlink" title="4.接口访问次数限制"></a>4.接口访问次数限制</h4><p>每天限制某个IP或账号访问接口的次数，达到上限后出现二次验证或者直接封账号/IP.比如登录接口</p><h4 id="5-行为认证"><a href="#5-行为认证" class="headerlink" title="5.行为认证"></a>5.行为认证</h4><p>请求次数过多会出现人工认证，如图片验证码，滑动认证，点击认证等，可以对接打码平台。</p><h4 id="6，自动化环境检测"><a href="#6，自动化环境检测" class="headerlink" title="6，自动化环境检测"></a>6，自动化环境检测</h4><p>selenium自动化工具有的网站会检测出来，大部分可以通过下面两种方式跳过检测,下面两种方式无法处理的话，还可以尝试把页面改为移动端页面(手机模式)，最后还有一种方法就是代理服务器拦截修改js代码，把检测selenium的js修改掉。</p><pre class="line-numbers language-python" data-language="python"><code class="language-python">options &#x3D; webdriver.ChromeOptions()# 躲避部分网站selenium检测options.add_experimental_option(&#39;excludeSwitches&#39;, [&#39;enable-automation&#39;])options.add_experimental_option(&quot;useAutomationExtension&quot;, False)driver &#x3D; webdriver.Chrome(executable_path&#x3D;chromedriver_path, options&#x3D;options)# 躲避部分网站selenium检测script &#x3D; &quot;Object.defineProperty(navigator, &#39;webdriver&#39;, &#123;get: () &#x3D;&gt; undefined&#125;);&quot;driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;&quot;source&quot;: script&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>对于移动端appium的检测，可以尝试替换为uiautomator2实现自动化</p><h4 id="7-数据动态加载"><a href="#7-数据动态加载" class="headerlink" title="7.数据动态加载"></a>7.数据动态加载</h4><p>有的数据不是通过html页面的接口请求返回的，抓包分析请求，找到正确的数据接口。</p><h4 id="8-请求参数加密"><a href="#8-请求参数加密" class="headerlink" title="8.请求参数加密"></a>8.请求参数加密</h4><p>网易云音乐的post请求的请求体就是前端经过js加密后计算得到的，需要逆向js代码</p><h4 id="9-返回数据加密"><a href="#9-返回数据加密" class="headerlink" title="9.返回数据加密"></a>9.返回数据加密</h4><p>需要逆向js代码，分析如何解密。还有一种像大众点评的评论，需要通过定位去找到文本。</p><h4 id="10-动态更新cookies"><a href="#10-动态更新cookies" class="headerlink" title="10.动态更新cookies"></a>10.动态更新cookies</h4><p>华为手机云服务，每次请求接口都会重新设置cookies，并且请求头参数也需要跟着cookies一起变化</p>]]></content>
+    
+    
+    <summary type="html">爬虫概念</summary>
     
     
     

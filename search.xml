@@ -913,7 +913,7 @@ R_s^a + \gamma \sum_{s'\in S}P_{ss'}^a\max_{a}q_{*}(s, a) \qquad (8)</script><h3
   </entry>
   <entry>
     <title>WSL踩坑</title>
-    <url>/%E8%B8%A9%E5%9D%91/others/wsl%E8%B8%A9%E5%9D%91/</url>
+    <url>/%E8%B8%A9%E5%9D%91/%E8%B8%A9%E5%9D%91/wsl%E8%B8%A9%E5%9D%91/</url>
     <content><![CDATA[<h1 id="WSL踩坑"><a href="#WSL踩坑" class="headerlink" title="WSL踩坑"></a>WSL踩坑</h1><p>大二上学期期末，稀里糊涂装了wsl, 一直用到现在。<br>本来是打算，和OS相关，那就装到C盘把。<br>这么一大意，在大三上装东西的时候出了不少问题。（当时没仔细装，而且也不懂）<br>这次为了装temu的交叉编译环境，装了不少东西，直接把C盘干到2G了，这么下去肯定不行。（Ubuntu20。04的主要文件夹就有至少15G了）<br>于是，我就上网搜，发现别人早就整好了vhdx(一个叫虚拟硬盘的东西，我当时没有做，现在做也来不及了），<br>所以别人的限制硬盘占用的方法，转移到别的位置的办法，我都没办法用了。</p>
 <p>打算卸载重装到D盘。用这个帖子解决问题了：<a href="https://blog.csdn.net/LaughingMei/article/details/109736965">https://blog.csdn.net/LaughingMei/article/details/109736965</a> </p>
 <p>卸载完C盘有16G了。</p>
@@ -1499,21 +1499,10 @@ inside(tri, x,y) = \left\{\begin{array}{rcl}
       </tags>
   </entry>
   <entry>
-    <title>数据库基础__笔记</title>
-    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%94%B6%E8%97%8F%E5%A4%B9/</url>
-    <content><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/41347.html">大学课程 | 数据库基础 | Justlovesmile’s BLOG</a></p>
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>算法分析与设计__笔记</title>
-    <url>/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95/%E6%94%B6%E8%97%8F%E5%A4%B9/</url>
+    <title>收藏夹</title>
+    <url>/%E7%AE%97%E6%B3%95/%E6%94%B6%E8%97%8F%E5%A4%B9/%E6%94%B6%E8%97%8F%E5%A4%B9/</url>
     <content><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/16050.html">大学课程 | 《算法分析与设计》笔记 | Justlovesmile’s BLOG</a></p>
+<p> <a href="https://blog.justlovesmile.top/posts/41347.html">大学课程 | 数据库基础 | Justlovesmile’s BLOG</a></p>
 ]]></content>
       <categories>
         <category>算法</category>
@@ -1794,68 +1783,6 @@ Hello World!<span aria-hidden="true" class="line-numbers-rows"><span></span><spa
       </tags>
   </entry>
   <entry>
-    <title>Python爬虫之Xpath解析</title>
-    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%ABxpath%E8%A7%A3%E6%9E%90/</url>
-    <content><![CDATA[<h2 id="xpath解析"><a href="#xpath解析" class="headerlink" title="xpath解析"></a>xpath解析</h2><ul>
-<li>// :从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置。</li>
-<li>/ : 匹配当前目录下的直接子节点。</li>
-<li>.. : 匹配当前节点的父节点。</li>
-<li>@：选取属性。</li>
-<li>//* : 选取文档中所有元素</li>
-</ul>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; &quot;&quot;&quot;
-            &lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;
-            &lt;bookstore&gt;
-            &lt;book&gt;
-              &lt;title lang&#x3D;&quot;eng&quot;&gt;Harry Potter&lt;&#x2F;title&gt;
-              &lt;price&gt;29.99&lt;&#x2F;price&gt;
-            &lt;&#x2F;book&gt;
-            &lt;book&gt;
-              &lt;title lang&#x3D;&quot;cn&quot;&gt;Learning XML&lt;&#x2F;title&gt;
-              &lt;price&gt;39.95&lt;&#x2F;price&gt;
-              &lt;aa lang&#x3D;&quot;cn eng aa bb&quot; name&#x3D;&quot;cc&quot;&gt;Learning XML&lt;&#x2F;aa&gt;
-            &lt;&#x2F;book&gt;
-            &lt;&#x2F;bookstore&gt;
-&quot;&quot;&quot;
-from lxml import etree
-html &#x3D; etree.HTML(text)
-# print(etree.tostring(html).decode(&#39;utf-8&#39;))
-
-# 选取所有指定的节点
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#39;)
-
-# 获取指定节点的所有直接子节点
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#x2F;aa&#39;)
-
-# 获取指定节点的父节点
-res &#x3D; html.xpath(&quot;&#x2F;&#x2F;aa&#x2F;..&quot;)
-
-# 通过属性匹配选择节点
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#39;)
-
-# 获取文本值
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#x2F;text()&#39;)
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;price&#x2F;text()&#39;)
-
-# 获取属性值 [&#39;eng&#39;, &#39;cn&#39;]
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title&#x2F;@lang&#39;)
-
-# 属性多值匹配
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;)]&#39;)
-# 对于属性值有多个的节点，不用contains函数的话，匹配到的是空[]
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[@lang&#x3D;&quot;aa&quot;]&#39;)
-
-# 文本匹配
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[contains(text(), &quot;XML&quot;)]&#39;)
-
-# 运算符
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;) and @name&#x3D;&quot;cc&quot;]&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Python爬虫之BeautifulSoup</title>
     <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8BBeautifulSoup/</url>
     <content><![CDATA[<h4 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python">html_doc &#x3D; &quot;&quot;&quot;
@@ -1919,6 +1846,68 @@ res &#x3D; soup.select_one(&#39;a[href]&#39;)
 res &#x3D; soup.select_one(&#39;a[href]&#39;).get(&#39;href&#39;)
 # 获取元素的文本
 res &#x3D; soup.select_one(&#39;a[href]&#39;).text<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python爬虫之Xpath解析</title>
+    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%ABxpath%E8%A7%A3%E6%9E%90/</url>
+    <content><![CDATA[<h2 id="xpath解析"><a href="#xpath解析" class="headerlink" title="xpath解析"></a>xpath解析</h2><ul>
+<li>// :从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置。</li>
+<li>/ : 匹配当前目录下的直接子节点。</li>
+<li>.. : 匹配当前节点的父节点。</li>
+<li>@：选取属性。</li>
+<li>//* : 选取文档中所有元素</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; &quot;&quot;&quot;
+            &lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;
+            &lt;bookstore&gt;
+            &lt;book&gt;
+              &lt;title lang&#x3D;&quot;eng&quot;&gt;Harry Potter&lt;&#x2F;title&gt;
+              &lt;price&gt;29.99&lt;&#x2F;price&gt;
+            &lt;&#x2F;book&gt;
+            &lt;book&gt;
+              &lt;title lang&#x3D;&quot;cn&quot;&gt;Learning XML&lt;&#x2F;title&gt;
+              &lt;price&gt;39.95&lt;&#x2F;price&gt;
+              &lt;aa lang&#x3D;&quot;cn eng aa bb&quot; name&#x3D;&quot;cc&quot;&gt;Learning XML&lt;&#x2F;aa&gt;
+            &lt;&#x2F;book&gt;
+            &lt;&#x2F;bookstore&gt;
+&quot;&quot;&quot;
+from lxml import etree
+html &#x3D; etree.HTML(text)
+# print(etree.tostring(html).decode(&#39;utf-8&#39;))
+
+# 选取所有指定的节点
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#39;)
+
+# 获取指定节点的所有直接子节点
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#x2F;aa&#39;)
+
+# 获取指定节点的父节点
+res &#x3D; html.xpath(&quot;&#x2F;&#x2F;aa&#x2F;..&quot;)
+
+# 通过属性匹配选择节点
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#39;)
+
+# 获取文本值
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#x2F;text()&#39;)
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;price&#x2F;text()&#39;)
+
+# 获取属性值 [&#39;eng&#39;, &#39;cn&#39;]
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title&#x2F;@lang&#39;)
+
+# 属性多值匹配
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;)]&#39;)
+# 对于属性值有多个的节点，不用contains函数的话，匹配到的是空[]
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[@lang&#x3D;&quot;aa&quot;]&#39;)
+
+# 文本匹配
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[contains(text(), &quot;XML&quot;)]&#39;)
+
+# 运算符
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;) and @name&#x3D;&quot;cc&quot;]&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 ]]></content>
       <categories>
         <category>爬虫</category>
@@ -3041,8 +3030,8 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
       </categories>
       <tags>
         <tag>marp</tag>
-        <tag>css</tag>
         <tag>折腾</tag>
+        <tag>css</tag>
       </tags>
   </entry>
   <entry>
@@ -3471,28 +3460,8 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
       </tags>
   </entry>
   <entry>
-    <title>路径规划</title>
-    <url>/MARL/MADRL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/</url>
-    <content><![CDATA[<p><strong>路径规划</strong></p>
-<ul>
-<li><p>多智能体强化学习路径规划**](<a href="https://zhuanlan.zhihu.com/p/100813774">https://zhuanlan.zhihu.com/p/100813774</a>)</p>
-</li>
-<li><p>基于以上分析，移动机器人智能路径规划方法研究虽然取得了重要成果，但仍存在局限性，如遗传算法、蚁群算法容易陷入局部最优，神经网络算法需要大量样本。目前的改进算法以多种算法相结合、分层优化等方式为主，虽弥补了缺点，但存在诸多发展瓶颈，如算法复杂度增加，收敛速度慢。</p>
-<p>较于其他算法，强化学习，学习能力强，适应复杂未知环境，但目前强化学习的试错学习、状态泛化，需要耗费大量资源。</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>避障</title>
-    <url>/MARL/MADRL/%E9%81%BF%E9%9A%9C/</url>
+    <url>/MARL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E9%81%BF%E9%9A%9C/</url>
     <content><![CDATA[<h3 id="避障"><a href="#避障" class="headerlink" title="避障"></a><strong>避障</strong></h3><ul>
 <li><p>集群协同避障汇总**](<a href="https://blog.csdn.net/qq_16775293/article/details/88556986">https://blog.csdn.net/qq_16775293/article/details/88556986</a>)</p>
 </li>
@@ -3517,6 +3486,26 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
 <li>环境是啥？</li>
 <li><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103730.png" alt="image-20210710182339529"></li>
 </ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+        <tag>机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>路径规划</title>
+    <url>/MARL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/</url>
+    <content><![CDATA[<p><strong>路径规划</strong></p>
+<ul>
+<li><p>多智能体强化学习路径规划**](<a href="https://zhuanlan.zhihu.com/p/100813774">https://zhuanlan.zhihu.com/p/100813774</a>)</p>
+</li>
+<li><p>基于以上分析，移动机器人智能路径规划方法研究虽然取得了重要成果，但仍存在局限性，如遗传算法、蚁群算法容易陷入局部最优，神经网络算法需要大量样本。目前的改进算法以多种算法相结合、分层优化等方式为主，虽弥补了缺点，但存在诸多发展瓶颈，如算法复杂度增加，收敛速度慢。</p>
+<p>较于其他算法，强化学习，学习能力强，适应复杂未知环境，但目前强化学习的试错学习、状态泛化，需要耗费大量资源。</p>
 </li>
 </ul>
 ]]></content>
@@ -3621,6 +3610,36 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
       </tags>
   </entry>
   <entry>
+    <title>保护变量的访问与设置</title>
+    <url>/python/others/%E4%BF%9D%E6%8A%A4%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE%E4%B8%8E%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<h1 id="保护变量的访问与设置"><a href="#保护变量的访问与设置" class="headerlink" title="保护变量的访问与设置"></a>保护变量的访问与设置</h1><p>对于私有变量（双下划线）或者保护变量（单下划线），不允许外部直接访问，类似于Java的private，可以通过对外提供get，set接口来访问和修改这类变量，便于控制。</p>
+<ul>
+<li>@property装饰器会将方法转换为相同名称的只读属性，相当于实现get方法</li>
+<li>@xxx.setter装饰器使得可以直接通过 对象.xxx来修改保护变量的值，相当于实现set方法</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">class Student(object):
+    def __init__(self, name):
+        self.name &#x3D; name
+        self._score &#x3D; None
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        self._score &#x3D; value
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    s &#x3D; Student(&#39;王大锤&#39;)
+    s.score &#x3D; 100  # 设置保护变量的值
+    print(s.score)  # 访问保护变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Python函数参数的传递机制</title>
     <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/others/Python%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E7%9A%84%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/</url>
     <content><![CDATA[<h1 id="Python函数参数的传递机制"><a href="#Python函数参数的传递机制" class="headerlink" title="Python函数参数的传递机制"></a>Python函数参数的传递机制</h1><h2 id="不可变对象是值传递"><a href="#不可变对象是值传递" class="headerlink" title="不可变对象是值传递"></a>不可变对象是值传递</h2><p><strong>python中不可变对象，函数实际参数(实参)传递给形式参数(形参)的过程，实际上是把实际参数值的副本(复制品)传入函数，参数本身不会收到任何影响。</strong></p>
@@ -3651,36 +3670,6 @@ if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
 ]]></content>
       <categories>
         <category>碎碎念</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>保护变量的访问与设置</title>
-    <url>/python/others/%E4%BF%9D%E6%8A%A4%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE%E4%B8%8E%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<h1 id="保护变量的访问与设置"><a href="#保护变量的访问与设置" class="headerlink" title="保护变量的访问与设置"></a>保护变量的访问与设置</h1><p>对于私有变量（双下划线）或者保护变量（单下划线），不允许外部直接访问，类似于Java的private，可以通过对外提供get，set接口来访问和修改这类变量，便于控制。</p>
-<ul>
-<li>@property装饰器会将方法转换为相同名称的只读属性，相当于实现get方法</li>
-<li>@xxx.setter装饰器使得可以直接通过 对象.xxx来修改保护变量的值，相当于实现set方法</li>
-</ul>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">class Student(object):
-    def __init__(self, name):
-        self.name &#x3D; name
-        self._score &#x3D; None
-
-    @property
-    def score(self):
-        return self._score
-
-    @score.setter
-    def score(self, value):
-        self._score &#x3D; value
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    s &#x3D; Student(&#39;王大锤&#39;)
-    s.score &#x3D; 100  # 设置保护变量的值
-    print(s.score)  # 访问保护变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>python</category>
       </categories>
   </entry>
   <entry>
