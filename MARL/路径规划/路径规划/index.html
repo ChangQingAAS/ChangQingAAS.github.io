@@ -30,7 +30,7 @@
 <meta property="og:description" content="一些关于路径规划的notes">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-07-20T14:00:33.000Z">
-<meta property="article:modified_time" content="2021-08-27T06:52:08.933Z">
+<meta property="article:modified_time" content="2022-01-17T01:13:53.676Z">
 <meta property="article:author" content="常青">
 <meta property="article:tag" content="MARL">
 <meta property="article:tag" content="机器学习">
@@ -145,7 +145,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -159,6 +159,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92"><span class="nav-text">路径规划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E9%9A%9C%E6%96%B9%E6%B3%95"><span class="nav-text">避障方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92%E7%AE%97%E6%B3%95%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">移动机器人路径规划算法存在的问题</span></a></li></ol></div>
         </div>
         <!--/noindex-->
       <!--/个人简介-->
@@ -176,20 +177,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -289,7 +290,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-08-27 14:52:08" itemprop="dateModified" datetime="2021-08-27T14:52:08+08:00">2021-08-27</time>
+        <time title="修改时间：2022-01-17 09:13:53" itemprop="dateModified" datetime="2022-01-17T09:13:53+08:00">2022-01-17</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -309,7 +310,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>243</span>
+      <span>841</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -328,13 +329,30 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p><strong>路径规划</strong></p>
+        <h3 id="路径规划"><a href="#路径规划" class="headerlink" title="路径规划"></a><strong>路径规划</strong></h3><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/100813774">多智能体强化学习路径规划</a></li>
+<li>基于以上分析，移动机器人智能路径规划方法研究虽然取得了重要成果，但仍存在局限性，如遗传算法、蚁群算法容易陷入局部最优，神经网络算法需要大量样本。目前的改进算法以多种算法相结合、分层优化等方式为主，虽弥补了缺点，但存在诸多发展瓶颈，如算法复杂度增加，收敛速度慢。</li>
+<li>较于其他算法，强化学习，学习能力强，适应复杂未知环境，但目前强化学习的试错学习、状态泛化，需要耗费大量资源。</li>
+</ul>
+<h3 id="避障方法"><a href="#避障方法" class="headerlink" title="避障方法"></a><strong>避障方法</strong></h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_16775293/article/details/88556986">集群协同避障汇总</a></p>
+</li>
+<li><p>奖惩函数 与 避障的关系</p>
+</li>
+<li><p>人工势场法</p>
 <ul>
-<li><p>多智能体强化学习路径规划**](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/100813774">https://zhuanlan.zhihu.com/p/100813774</a>)</p>
+<li>人工势场路径规划技术的基本思想是将机器人在环境中的运动视为一种机器人，在虚拟的人工受力场中的运动。障碍物对机器人产生斥力，目标点对机器人产生引力，引力和斥力的合力作为机器人的控制力，从而控制机器人避开障碍物而到达目标位置。</li>
+<li>对于动态路径规划问题来说，与机器人避障相关的主要是机器人与障碍物之间的<strong>相对位置和相对速度</strong>，而非绝对位置和速度。将机器人与目标物的相对位置与相对速度引入吸引势函数，将机器人与障碍的相对位置与相对速度引入排斥势函数，提出动态环境下的机器人路径规划算法。 </li>
+<li>人工势场路径规划技术<em>原理简单，便于底层的实时控制，在机器人的实时避障和平滑轨迹控制等方面得到了广泛研究</em>。但人工势场路径规划方法通常<strong>存在局部极小点</strong>，尽管也有不少针对局部极小的改进方法，但到目前为止，仍未找到完全满意的答案。另外,在引力和斥力场设计时<strong>存在人为不确定因素</strong>，<strong>在障碍物较多时还存在计算量过大等问题</strong>，这些因素的存在限制了人工势场路径规划方法的广泛应用。应用中的<strong>难点是动态环境中引力场与斥力场的设计、局部极小问题的解决</strong>。</li>
+</ul>
 </li>
-<li><p>基于以上分析，移动机器人智能路径规划方法研究虽然取得了重要成果，但仍存在局限性，如遗传算法、蚁群算法容易陷入局部最优，神经网络算法需要大量样本。目前的改进算法以多种算法相结合、分层优化等方式为主，虽弥补了缺点，但存在诸多发展瓶颈，如算法复杂度增加，收敛速度慢。</p>
-<p>较于其他算法，强化学习，学习能力强，适应复杂未知环境，但目前强化学习的试错学习、状态泛化，需要耗费大量资源。</p>
+<li><p>无人机群 在运动过程中 需要（通过传感器）感知到动态障碍物的运动状态方可避障</p>
 </li>
+<li><p>无人机基于当前环境信息的局部路径规划算法，将对环境的建模与搜索避障融为一体，能对规划结果进行实时反馈和校正，动态性高，但是由于缺乏全局环境信息，规划结果往往不是全局最优，甚至可能找不到正确路径或完整路径</p>
+</li>
+</ul>
+<h3 id="移动机器人路径规划算法存在的问题"><a href="#移动机器人路径规划算法存在的问题" class="headerlink" title="移动机器人路径规划算法存在的问题"></a>移动机器人路径规划算法存在的问题</h3><ul>
+<li>未知环境下的动态障碍物路径规划  </li>
 </ul>
 
     </div>
@@ -389,8 +407,8 @@
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/MARL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E9%81%BF%E9%9A%9C/" rel="next" title="避障">
-                  避障 <i class="fa fa-chevron-right"></i>
+                <a href="/MARL/MADRL/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="next" title="多智能体强化学习">
+                  多智能体强化学习 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -423,14 +441,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">90k</span>
+    <span title="站点总字数">95k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:22</span>
+    <span title="站点阅读时长">1:27</span>
   </span>
 </div>
 <div class="busuanzi-count">

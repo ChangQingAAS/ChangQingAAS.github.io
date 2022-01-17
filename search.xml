@@ -1,6 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>线性模型</title>
+    <url>/others/math/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/</url>
+    <content><![CDATA[<p>1.变量之间的关系一般分为两类</p>
+<ul>
+<li>完全确定的关系，即可表达为函数解析式</li>
+<li>非确定的关系，也称相关关系</li>
+</ul>
+<p>2.回归分析研究的主要内容</p>
+<ul>
+<li>通过观察或实验数据的处理，找出变量间相关系数的定量数学表达式—经验公式，即进行参数估计，并确定经验回归方程的具体形式</li>
+<li>检验所建立的经验回归方程是否合理</li>
+<li>利用合理的回归方程对随机变量Y进行预测和控制。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>数学</tag>
+        <tag>美赛</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>统计分析</title>
+    <url>/others/math/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="多元统计分析"><a href="#多元统计分析" class="headerlink" title="多元统计分析"></a>多元统计分析</h1><h2 id="聚类分析"><a href="#聚类分析" class="headerlink" title="聚类分析"></a>聚类分析</h2><h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ul>
+<li>事先不知道类别的个数与结构；</li>
+<li>进行分析的数据是对象间的相似性或相异性（距离）；</li>
+<li>将距离近的对象归入一类。</li>
+</ul>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><ul>
+<li><p>根据分类对象不同分为</p>
+<ul>
+<li><p>Q型聚类：对样本进行聚类</p>
+</li>
+<li><p>R型聚类：对变量进行聚类</p>
+</li>
+</ul>
+</li>
+<li><p>根据聚类方法主要分为</p>
+<ul>
+<li>系统聚类法</li>
+<li>动态聚类法</li>
+</ul>
+</li>
+</ul>
+<h3 id="距离"><a href="#距离" class="headerlink" title="距离"></a>距离</h3><h4 id="Minikowski距离："><a href="#Minikowski距离：" class="headerlink" title="Minikowski距离："></a>Minikowski距离：</h4><script type="math/tex; mode=display">
+d(x,y) = [\sum\limits_{k=1}^p|x_{k} - y_{k}|^{m}]^{\frac{1}{m}}，  x,y为p维列向量</script><ul>
+<li>m = 1时，为绝对距离</li>
+<li>m = 2时，为欧氏距离</li>
+<li>m = $\infty$,  为切比雪夫距离，即 $\mathop{max}\limits_{1\le k \le p}|x_{k} - y_{k}|$</li>
+</ul>
+<h4 id="Mahalanobis距离-聚类分析中常用"><a href="#Mahalanobis距离-聚类分析中常用" class="headerlink" title="Mahalanobis距离(聚类分析中常用)"></a>Mahalanobis距离(聚类分析中常用)</h4><script type="math/tex; mode=display">
+d(x,y) = \sqrt{(x - y)^{T} \sum\nolimits^{-1} (x - y)}</script><p>其中x, y为来自 p 维总体Z的样本观测值，Σ为Z 的协方差矩阵，实际中Σ往往是不知道的，常常需要用样本协方差来估计。马氏距离对一切线性变换是不变的，故不受量纲的影响。 </p>
+<h4 id="R语句："><a href="#R语句：" class="headerlink" title="R语句："></a>R语句：</h4><pre class="line-numbers language-R" data-language="R"><code class="language-R">dist(x,method&#x3D;“euclidean”, diag&#x3D;FALSE, upper&#x3D;FALSE, p&#x3D;2)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li><p>method: 计算距离的方法</p>
+<ul>
+<li><p>“euclidean”: 欧式距离</p>
+</li>
+<li><p>“maximum”: Chebyshev距离</p>
+</li>
+<li><p>“manhattan”: 绝对值距离</p>
+</li>
+<li><p>“minkowski”: Minkowski距离，p是Minkowski距离的阶数</p>
+</li>
+</ul>
+</li>
+<li><p>diag=TRUE: 输出对角线上的距离</p>
+</li>
+<li>upper=TRUE: 输出上三角矩阵的值（默认值仅输出下 三角矩阵的值）</li>
+</ul>
+<p>python语句：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">import rpy2.robjects as robjects
+
+x &#x3D; [1, 2, 6, 8, 11]
+r &#x3D; robjects.r
+res &#x3D; r.dist(x)
+print(res)
+#    1  2  3  4
+# 2  1
+# 3  5  4
+# 4  7  6  2
+# 5 10  9  5  3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">import rpy2
+import rpy2.robjects.numpy2ri
+
+R &#x3D; rpy2.robjects.r
+r_code &#x3D; &quot;&quot;&quot;
+x&lt;-c(1,2,6,8,11)
+y&lt;-dist(x)
+print(y)
+&quot;&quot;&quot;
+R(r_code)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>注：我用rpy2来实现这个感觉比较费劲。可能不太能从python 调用R语言，建议直接用R语言吧</li>
+</ul>
+<h3 id="标准化处理"><a href="#标准化处理" class="headerlink" title="标准化处理"></a>标准化处理</h3><p>当指标的测量值相差悬殊时，应先对数据进行标准化处理，再利用标准化的数据计算距离。</p>
+<h4 id="普通标准化变换"><a href="#普通标准化变换" class="headerlink" title="普通标准化变换"></a>普通标准化变换</h4><script type="math/tex; mode=display">
+X_{ij}^{*} = \frac{X_{ij} - \overline{X}_{j}}{S_{j}}</script><p>i=1,2,…n表示第i个样本，j=1,2,…p表示样本的第j个指标，每个样本均有p个观测指标.       是第j个指标的样本均值</p>
+<h4 id="极差标准化变换"><a href="#极差标准化变换" class="headerlink" title="极差标准化变换"></a>极差标准化变换</h4><script type="math/tex; mode=display">
+X_{ij}^{*} = \frac{X_{ij} - \overline{X}_{j}}{R_{j}} \\
+其中，R_{j} = \mathop{\max}\limits_{1\le k \le n}X_{kj} - \mathop{\max}\limits_{1 \le k \le n}X_{kj}</script><h4 id="极差正规化变换"><a href="#极差正规化变换" class="headerlink" title="极差正规化变换"></a>极差正规化变换</h4><script type="math/tex; mode=display">
+X_{ij}^{*} = \frac{X_{ij} - \mathop{\min}\limits_{1\le k\le n} X_{kj}}{R_{j}}</script><h4 id="程序语句"><a href="#程序语句" class="headerlink" title="程序语句"></a>程序语句</h4><h5 id="数据的中心化和标准化处理"><a href="#数据的中心化和标准化处理" class="headerlink" title="数据的中心化和标准化处理"></a>数据的中心化和标准化处理</h5><h6 id="R语句"><a href="#R语句" class="headerlink" title="R语句"></a>R语句</h6><pre class="line-numbers language-R" data-language="R"><code class="language-R">scale(X,center &#x3D; True, scale &#x3D; True)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>X:样本数据矩阵，center = TURE表示对数据做中心化变换，scale=TRUE表示对数据做标准化变化</p>
+<h6 id="python语句"><a href="#python语句" class="headerlink" title="python语句"></a>python语句</h6><pre class="line-numbers language-python" data-language="python"><code class="language-python">import rpy2
+import numpy
+import rpy2.robjects.numpy2ri
+
+rpy2.robjects.numpy2ri.activate()
+
+R &#x3D; rpy2.robjects.r
+x &#x3D; numpy.array([[1.0, 2.0], [3.0, 1.0]])
+res &#x3D; R.scale(x, center&#x3D;True, scale&#x3D;True)
+print(res)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h5 id="数据做极差标准化处理"><a href="#数据做极差标准化处理" class="headerlink" title="数据做极差标准化处理"></a>数据做极差标准化处理</h5><pre class="line-numbers language-R" data-language="R"><code class="language-R">x &lt;- data.frame(
+    points &#x3D; c(99, 97, 104, 79, 84, 88, 91, 99),
+    rebounds &#x3D; c(34, 40, 41, 38, 29, 30, 22, 25),
+    blocks &#x3D; c(12, 8, 8, 7, 8, 11, 6, 7)
+)
+# apply（）函数必须应用于dataframe或matrix
+center &lt;- sweep(x, 2, apply(x, 2, mean))
+R &lt;- apply(x, 2, max) - apply(x, 2, min)
+x_star &lt;- sweep(center, 2, R, &quot;&#x2F;&quot;)
+# 若x_star&lt;-sweep(center, 2, sd(x), &quot;&#x2F;&quot;), 则得到（普通）标准化变换后的数据；
+print(x_star)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220117160257.png" alt="image-20220117160237414"></p>
+<p>sweep(x, MARGIN, STATS, FUN=”-“, …)</p>
+<ul>
+<li><p>x:数组或矩阵；MARGIN:运算区域，对矩阵1表示行，2表示列；</p>
+</li>
+<li><p>STATS是统计量，apply(x, 2, mean)表示各列的均值；</p>
+</li>
+<li><p>FUN表示函数的运算，缺省值为减法运算。</p>
+</li>
+</ul>
+<h3 id="相似系数"><a href="#相似系数" class="headerlink" title="相似系数"></a>相似系数</h3><p>计算样本不同指标间的相关系数，适用于对变量进行聚类。</p>
+<h3 id="系统聚类法"><a href="#系统聚类法" class="headerlink" title="系统聚类法"></a>系统聚类法</h3><h4 id="聚类分析方法中最常用"><a href="#聚类分析方法中最常用" class="headerlink" title="聚类分析方法中最常用"></a>聚类分析方法中最常用</h4><h4 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h4><ul>
+<li>（1）视各样本（或变量）自成一类，规定类与类之间的距离（或相似系数）；</li>
+<li>（2）把最相似的样本（或变量）聚为小类，再将已聚合的小类按相似性再聚合；</li>
+<li>（3）最后将一切子类都聚合到一个大类，从而得到一个按相似性大小聚集起来的谱系关系</li>
+</ul>
+<h4 id="3-根据距离定义的不同分为"><a href="#3-根据距离定义的不同分为" class="headerlink" title="3.根据距离定义的不同分为"></a>3.根据距离定义的不同分为</h4><ul>
+<li>（1）最短距离法：类与类之间的距离定义为两类中最近样本间的距离；</li>
+<li>（2）最长距离法：类与类之间的距离定义为两类中最远样本间的距离；</li>
+<li>（3）类平均法：类与类之间的距离定义为两类中两两样本间距离的平均数；</li>
+</ul>
+<h4 id="程序"><a href="#程序" class="headerlink" title="程序"></a>程序</h4><pre class="line-numbers language-R" data-language="R"><code class="language-R"> x&lt;-c(1,2,6,8,11); 
+dim(x)&lt;-c(5,1); 
+d&lt;-dist(x) #生成距离结构
+hc1&lt;-hclust(d, &quot;single&quot;); hc2&lt;-hclust(d, &quot;complete&quot;)
+hc3&lt;-hclust(d, &quot;median&quot;); hc4&lt;-hclust(d, &quot;mcquitty&quot;) #生成系统聚类
+opar &lt;- par(mfrow &#x3D; c(2, 2))
+plot(hc1,hang&#x3D;-1); plot(hc2,hang&#x3D;-1)
+plot(hc3,hang&#x3D;-1); plot(hc4,hang&#x3D;-1)
+par(opar)#  画出所有树形结构图，以2*2的形式画在一张图上<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>hclust():进行系统聚类的计算<br>plot():画出系统聚类的树形图<br>hclust(d, method = “complete”)<br>d:dist构成的距离结构，<br>method:系统聚类的方法（默认为最长距离法），其<br>参数有：<br>（1）“single”：最短距离法<br>（2）“complete”：最长距离法<br>（3）“average”：类平均法<br>……<br>plot(x, labels = NULL, hang = 0.1, main = “Cluster<br>Dendrogram”, sb = NULL, xlab = NULL, ylab =”Height”, …)</p>
+<p>x: hclust()函数生成的对象<br>hang: 表明树形图中各类的位置，取负值表示树形图中的类从底部画起<br>main: 绘图名称</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220117165301.png" alt="image-20220117165300798"></p>
+<h3 id="动态聚类法"><a href="#动态聚类法" class="headerlink" title="动态聚类法"></a>动态聚类法</h3><p>系统聚类：一次形成类后就不再改变；<br>动态聚类：逐步聚类</p>
+<h4 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h4><p>首先粗略分类，然后按某种最优原则修改不合理的分类，直至分得比较合理为止，形成最终分类结果。</p>
+<h4 id="程序-1"><a href="#程序-1" class="headerlink" title="程序"></a>程序</h4><p>kmeans(x, centers, <em>iter.max</em>=10, <em>nstart</em>=1, algorithm*=c(“Hartigan-Wong”, “Lloyd”, “MacQueen”))</p>
+<ul>
+<li>x是由数据构成的矩阵或数据框，</li>
+<li>centers是聚类的个数或者初始类的中心，</li>
+<li>iter.max为最大迭代次数（最大值为10），</li>
+<li>nstart是随机集合的个数，</li>
+<li>algorithm是动态聚类的算法。</li>
+</ul>
+<pre class="line-numbers language-R" data-language="R"><code class="language-R">X&lt;-data.frame(
+   x1&#x3D;c(2959.19, 2459.77, 1495.63, 1046.33, 1303.97, 1730.84, 1561.86, 1410.11, 3712.31, 2207.58, 2629.16, 1844.78, 2709.46, 1563.78, 1675.75, 1427.65, 1783.43, 1942.23, 3055.17, 2033.87, 2057.86, 2303.29, 1974.28, 1673.82, 2194.25, 2646.61, 1472.95, 1525.57, 1654.69, 1375.46, 1608.82), 
+   x2&#x3D;c(730.79, 495.47, 515.90, 477.77, 524.29, 553.90, 492.42, 510.71, 550.74, 449.37, 557.32, 430.29, 428.11, 303.65, 613.32, 431.79, 511.88, 512.27, 353.23, 300.82, 186.44, 589.99, 507.76, 437.75, 537.01, 839.70, 390.89, 472.98, 437.77, 480.99, 536.05),
+   x3&#x3D;c(749.41, 697.33, 362.37, 290.15, 254.83, 246.91, 200.49, 211.88, 893.37, 572.40, 689.73, 271.28, 334.12, 233.81, 550.71, 288.55, 282.84, 401.39, 564.56, 338.65, 202.72, 516.21, 344.79, 461.61, 369.07, 204.44, 447.95, 328.90, 258.78, 273.84, 432.46), 
+   x4&#x3D;c(513.34, 302.87, 285.32, 208.57, 192.17, 279.81, 218.36, 277.11, 346.93, 211.92, 435.69, 126.33, 160.77, 107.90, 219.79, 208.14, 201.01, 206.06, 356.27, 157.78, 171.79, 236.55, 203.21, 153.32, 249.54, 209.11, 259.51, 219.86, 303.00, 317.32, 235.82),
+   x5&#x3D;c(467.87, 284.19, 272.95, 201.50, 249.81, 239.18, 220.69, 224.65, 527.00, 302.09, 514.66, 250.56, 405.14, 209.70,272.59, 217.00, 237.60, 321.29, 811.88, 329.06, 329.65, 403.92, 240.24, 254.66, 290.84, 379.30, 230.61, 206.65, 244.93, 251.08, 250.28),
+   x6&#x3D;c(1141.82, 735.97, 540.58, 414.72, 463.09, 445.20, 459.62, 376.82, 1034.98, 585.23, 795.87, 513.18, 461.67, 393.99, 599.43, 337.76, 617.74, 697.22, 873.06, 621.74, 477.17, 730.05, 575.10, 445.59, 561.91, 371.04, 490.90, 449.69, 479.53, 424.75, 541.30),
+   x7&#x3D;c(478.42, 570.84, 364.91, 281.84, 287.87, 330.24, 360.48, 317.61, 720.33, 429.77, 575.76, 314.00, 535.13, 509.39, 371.62, 421.31, 523.52, 492.60, 1082.82, 587.02, 312.93,438.41, 430.36, 346.11, 407.70, 269.59, 469.10, 249.66, 288.56, 228.73, 344.85),
+   x8&#x3D;c(457.64, 305.08, 188.63, 212.10, 192.96, 163.86, 147.76, 152.85, 462.03, 252.54, 323.36, 151.39, 232.29, 160.12, 211.84, 165.32, 182.52, 226.45, 420.81, 218.27, 279.19, 225.80, 223.46, 191.48, 330.95, 389.33, 191.34, 228.19, 236.51, 195.93, 214.40),
+   row.names &#x3D; c(&quot;北京&quot;, &quot;天津&quot;, &quot;河北&quot;, &quot;山西&quot;, &quot;内蒙古&quot;, &quot;辽宁&quot;, &quot;吉林&quot;, &quot;黑龙江&quot;, &quot;上海&quot;, &quot;江苏&quot;, &quot;浙江&quot;, &quot;安徽&quot;, &quot;福建&quot;, &quot;江西&quot;, &quot;山东&quot;,  &quot;河南&quot;, &quot;湖北&quot;, &quot;湖南&quot;, &quot;广东&quot;, &quot;广西&quot;, &quot;海南&quot;, &quot;重庆&quot;, &quot;四川&quot;, &quot;贵州&quot;, &quot;云南&quot;, &quot;西藏&quot;, &quot;陕西&quot;, &quot;甘肃&quot;, &quot;青海&quot;, &quot;宁夏&quot;, &quot;新疆&quot;)
+)
+
+kmeans(scale(X),5)
+
+
+K-means clustering with 5 clusters of sizes 10, 7, 3, 7, 4
+
+
+Clustering vector:
+  北京   天津   河北   山西 内蒙古   辽宁   吉林 黑龙江   上海   江苏 
+     5      4      3      3      3      3      3      3      5      4 
+  浙江   安徽   福建   江西   山东   河南   湖北   湖南   广东   广西 
+     5      1      2      1      4      1      1      4      5      2 
+  海南   重庆   四川   贵州   云南   西藏   陕西   甘肃   青海   宁夏 
+     2      4      1      1      4      4      1      3      3      3 
+  新疆
+     3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主成分分析法"><a href="#主成分分析法" class="headerlink" title="主成分分析法"></a>主成分分析法</h2><h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p>实际问题中的变量的重要性有所不同，且众多变量间有一定的相关关系。通过这种相关性对这些变量加以改造，用为数较少的新变量反映原变量提供的大部分信息，简化原问题。即数据降维</p>
+<p>主成分分析法就是在这种降维思想下产生的处理高维数据的统计方法。</p>
+<h3 id="基本方法"><a href="#基本方法" class="headerlink" title="基本方法"></a>基本方法</h3><p>通过适当构造原变量的线性组合，产生一列互不相关的新变量，从中选出少数几个新变量并使它们含有尽可能多的原变量带有的信息，从而使用少数几个新变量代替原变量，以分析原问题。</p>
+<p>变量中所含“信息”的大小通常用该变量的方差或样本方差来度量。</p>
+<p>如常数a,Var(a) = 0 ,我们通过a，只能知道a这个常数，其所含信息少。</p>
+<h3 id="主成分的定义"><a href="#主成分的定义" class="headerlink" title="主成分的定义"></a>主成分的定义</h3><p>设$X = (X_{1}, X_{2},……,X_{p})^{T}$为实际问题涉及的p个随机变量构成的向量，记X的均值为$\mu$，协方差阵为$\sum$.</p>
+<p>考虑线性组合</p>
+<script type="math/tex; mode=display">
+\left\{
+\begin{aligned}
+Y_{1} &  = & a_{1}^{T}X \\
+. \\
+. \\
+Y_{p} &  = & a_{p}^{T}X \\
+\end{aligned}
+\right.</script><p>………………………………………………………………………………………………………</p>
+<p>warning： 直接写代码了</p>
+<h3 id="程序-2"><a href="#程序-2" class="headerlink" title="程序"></a>程序</h3><h4 id="求矩阵的特征值和特征向量"><a href="#求矩阵的特征值和特征向量" class="headerlink" title="求矩阵的特征值和特征向量"></a>求矩阵的特征值和特征向量</h4><pre class="line-numbers language-R" data-language="R"><code class="language-R">a &lt;- c(1, -2, 0, -2, 5, 0, 0, 0, 2)
+# 由向量a构造一3列的矩阵， byrow&#x3D;T表示生成矩阵的数据按行放置；
+b &lt;- matrix(data &#x3D; a, ncol &#x3D; 3, byrow &#x3D; T)
+c &lt;- eigen(b) # 求b的特征值与特征向量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <tags>
+        <tag>数学</tag>
+        <tag>美赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Policy Gradient Methods</title>
     <url>/MARL/MADRL/Policy%20Gradient%20Mwthods/</url>
     <content><![CDATA[<p>上一篇博文的内容整理了我们如何去近似价值函数或者是动作价值函数的方法：</p>
@@ -197,6 +418,21 @@ D=\{<s_1, v_1^{\pi}>, <s_2, v_2^{\pi}>, ..., <s_T, v_T^{\pi}>\}</script><p>Repea
 <ul>
 <li>梯度：线性拟合情况，$\Delta\mathbf{w}=\alpha\delta\mathbf{x}(S_t, A_t)$</li>
 </ul>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Cross-entrpy Method</title>
+    <url>/MARL/MADRL/Cross-entroy%20Method/</url>
+    <content><![CDATA[<h3 id="CEM-amp-amp-RL"><a href="#CEM-amp-amp-RL" class="headerlink" title="CEM &amp;&amp; RL"></a>CEM &amp;&amp; RL</h3><p>注：以下内容引自博文《进化策略优化算法CEM(Cross Entropy Method)》[1]。</p>
+<p>CEM也可以用来求解马尔可夫决策过程，也就是强化学习问题。我们知道，强化学习也是一种动态规划过程，在某个状态下选择某个动作就像在某个节点选择路径一样，整个过程就是一个从初始状态到末状态的路径规划问题，只不过我们希望得到一条能最大化收益的路径。在这种考虑下，就可以用CEM建模了，我们让一条完整的路径成为一个样本x=(s0,a0,s1,a1,…,sn,an)，路径获得的总收益为S(x)=∑Ni=0r(si,ai)，目标是最大化这个S(x)，那么如何采样出这些样本呢？我们可以构建一个pp矩阵：矩阵行表示状态，列表示动作，如pij表示在状态si下执行aj动作的概率，我们通过对这个pp矩阵进行多次采样就可以获得多个样本，然后选出S(x)较高的样本用来更新pp矩阵，不断迭代，最终找到最优p^矩阵。</p>
+<p>这是一种类似于策略迭代(policy iteration)的强化学习方法：通过p矩阵找到在每一步状态下各个动作的概率来形成决策策略，但参数更新并没有用到梯度。从另外一个角度，你也可以认为这是一种值迭代(value iteration)的强化学习方法，此时p矩阵就是经典Q-learning中的Q矩阵，只不过Q矩阵中第i行第j列元素表示的是状态si下动作aj的未来收益的期望，基于贝尔曼方程(Bellman equation)来更新Q值；而p矩阵表示的是概率值，通过交叉墒来更新。</p>
+<p>[1] <a href="https://blog.csdn.net/ppp8300885/article/details/80567682">进化策略优化算法CEM(Cross Entropy Method)</a></p>
 ]]></content>
       <categories>
         <category>MARL</category>
@@ -548,21 +784,6 @@ V(S_t) ← V(S_t) + \alpha (\textcolor{Red}{R_{t+1} + \gamma V(S_{t+1})} - V(S_t
 </ul>
 <p>下图从宏观的视角显示了 RL 的几种基本方法的区别：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20211005231530.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Cross-entrpy Method</title>
-    <url>/MARL/MADRL/Cross-entroy%20Method/</url>
-    <content><![CDATA[<h3 id="CEM-amp-amp-RL"><a href="#CEM-amp-amp-RL" class="headerlink" title="CEM &amp;&amp; RL"></a>CEM &amp;&amp; RL</h3><p>注：以下内容引自博文《进化策略优化算法CEM(Cross Entropy Method)》[1]。</p>
-<p>CEM也可以用来求解马尔可夫决策过程，也就是强化学习问题。我们知道，强化学习也是一种动态规划过程，在某个状态下选择某个动作就像在某个节点选择路径一样，整个过程就是一个从初始状态到末状态的路径规划问题，只不过我们希望得到一条能最大化收益的路径。在这种考虑下，就可以用CEM建模了，我们让一条完整的路径成为一个样本x=(s0,a0,s1,a1,…,sn,an)，路径获得的总收益为S(x)=∑Ni=0r(si,ai)，目标是最大化这个S(x)，那么如何采样出这些样本呢？我们可以构建一个pp矩阵：矩阵行表示状态，列表示动作，如pij表示在状态si下执行aj动作的概率，我们通过对这个pp矩阵进行多次采样就可以获得多个样本，然后选出S(x)较高的样本用来更新pp矩阵，不断迭代，最终找到最优p^矩阵。</p>
-<p>这是一种类似于策略迭代(policy iteration)的强化学习方法：通过p矩阵找到在每一步状态下各个动作的概率来形成决策策略，但参数更新并没有用到梯度。从另外一个角度，你也可以认为这是一种值迭代(value iteration)的强化学习方法，此时p矩阵就是经典Q-learning中的Q矩阵，只不过Q矩阵中第i行第j列元素表示的是状态si下动作aj的未来收益的期望，基于贝尔曼方程(Bellman equation)来更新Q值；而p矩阵表示的是概率值，通过交叉墒来更新。</p>
-<p>[1] <a href="https://blog.csdn.net/ppp8300885/article/details/80567682">进化策略优化算法CEM(Cross Entropy Method)</a></p>
 ]]></content>
       <categories>
         <category>MARL</category>
@@ -1502,7 +1723,7 @@ inside(tri, x,y) = \left\{\begin{array}{rcl}
     <title>收藏夹</title>
     <url>/%E7%AE%97%E6%B3%95/%E6%94%B6%E8%97%8F%E5%A4%B9/%E6%94%B6%E8%97%8F%E5%A4%B9/</url>
     <content><![CDATA[<p><a href="https://blog.justlovesmile.top/posts/16050.html">大学课程 | 《算法分析与设计》笔记 | Justlovesmile’s BLOG</a></p>
-<p> <a href="https://blog.justlovesmile.top/posts/41347.html">大学课程 | 数据库基础 | Justlovesmile’s BLOG</a></p>
+<p><a href="https://blog.justlovesmile.top/posts/41347.html">大学课程 | 数据库基础 | Justlovesmile’s BLOG</a></p>
 ]]></content>
       <categories>
         <category>算法</category>
@@ -1748,7 +1969,7 @@ Hello World!<span aria-hidden="true" class="line-numbers-rows"><span></span><spa
 <h2 id="知识输入与输出"><a href="#知识输入与输出" class="headerlink" title="知识输入与输出"></a>知识输入与输出</h2><p>当你学习一个东西的时候, 如果学完马上用语言讲给别人听, 你会学的更好, 而且会发现新问题.</p>
 <p>很多学习理论都指出, 知识的学习, 输入固然重要, 输出更为重要.</p>
 <p>输入就是学习别人的知识, 输出就是把自己学会的知识用文字, 语言的形式表达出来, 很多人的学习, 只有输入, 没有输出, 这样的学习肯定是不行的.</p>
-<p>几乎所有优秀的程序员, 都有攥写技术文章的习惯, 很多时候, 并不是他们什么都懂, 而是他们刚学会了什么, 然后就围绕着这个刚学会的东西, 用自己的语言讲出来, 久而久之, 就会被别人觉得是大牛, 但是他和你的区别, 有可能仅仅是是否输出的区别.</p>
+<p>几乎所有优秀的程序员, 都有撰写技术文章的习惯, 很多时候, 并不是他们什么都懂, 而是他们刚学会了什么, 然后就围绕着这个刚学会的东西, 用自己的语言讲出来, 久而久之, 就会被别人觉得是大牛, 但是他和你的区别, 有可能仅仅是是否输出的区别.</p>
 <p>建议所有计算机学习者, 都要有写技术文章/读书笔记的习惯, 可以发表在自己的个人主页, 其他平台上, 攥写技术文章也可以很好地增加面试官对你的好感.</p>
 <p>写技术文章的时候, 最好用<code>MarkDown</code>哦, 程序员是不需要用<code>Word</code>这种东西的, 我们的内容是要方便发表在网站上, <code>Word</code>不能直接在网站里显示, 而<code>MarkDown</code>可以轻易地转换成<code>html</code>格式文件, 在浏览器中显示.</p>
 <h2 id="代码风格篇"><a href="#代码风格篇" class="headerlink" title="代码风格篇"></a>代码风格篇</h2><p>现在几乎所有主流语言都有相应的代码风格检查工具, 一般已IDE或Editor的插件或扩展形式给出</p>
@@ -1781,6 +2002,68 @@ Hello World!<span aria-hidden="true" class="line-numbers-rows"><span></span><spa
       <tags>
         <tag>Advice</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Python爬虫之Xpath解析</title>
+    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%ABxpath%E8%A7%A3%E6%9E%90/</url>
+    <content><![CDATA[<h2 id="xpath解析"><a href="#xpath解析" class="headerlink" title="xpath解析"></a>xpath解析</h2><ul>
+<li>// :从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置。</li>
+<li>/ : 匹配当前目录下的直接子节点。</li>
+<li>.. : 匹配当前节点的父节点。</li>
+<li>@：选取属性。</li>
+<li>//* : 选取文档中所有元素</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; &quot;&quot;&quot;
+            &lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;
+            &lt;bookstore&gt;
+            &lt;book&gt;
+              &lt;title lang&#x3D;&quot;eng&quot;&gt;Harry Potter&lt;&#x2F;title&gt;
+              &lt;price&gt;29.99&lt;&#x2F;price&gt;
+            &lt;&#x2F;book&gt;
+            &lt;book&gt;
+              &lt;title lang&#x3D;&quot;cn&quot;&gt;Learning XML&lt;&#x2F;title&gt;
+              &lt;price&gt;39.95&lt;&#x2F;price&gt;
+              &lt;aa lang&#x3D;&quot;cn eng aa bb&quot; name&#x3D;&quot;cc&quot;&gt;Learning XML&lt;&#x2F;aa&gt;
+            &lt;&#x2F;book&gt;
+            &lt;&#x2F;bookstore&gt;
+&quot;&quot;&quot;
+from lxml import etree
+html &#x3D; etree.HTML(text)
+# print(etree.tostring(html).decode(&#39;utf-8&#39;))
+
+# 选取所有指定的节点
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#39;)
+
+# 获取指定节点的所有直接子节点
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#x2F;aa&#39;)
+
+# 获取指定节点的父节点
+res &#x3D; html.xpath(&quot;&#x2F;&#x2F;aa&#x2F;..&quot;)
+
+# 通过属性匹配选择节点
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#39;)
+
+# 获取文本值
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#x2F;text()&#39;)
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;price&#x2F;text()&#39;)
+
+# 获取属性值 [&#39;eng&#39;, &#39;cn&#39;]
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title&#x2F;@lang&#39;)
+
+# 属性多值匹配
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;)]&#39;)
+# 对于属性值有多个的节点，不用contains函数的话，匹配到的是空[]
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[@lang&#x3D;&quot;aa&quot;]&#39;)
+
+# 文本匹配
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[contains(text(), &quot;XML&quot;)]&#39;)
+
+# 运算符
+res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;) and @name&#x3D;&quot;cc&quot;]&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
   </entry>
   <entry>
     <title>Python爬虫之BeautifulSoup</title>
@@ -1846,68 +2129,6 @@ res &#x3D; soup.select_one(&#39;a[href]&#39;)
 res &#x3D; soup.select_one(&#39;a[href]&#39;).get(&#39;href&#39;)
 # 获取元素的文本
 res &#x3D; soup.select_one(&#39;a[href]&#39;).text<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Python爬虫之Xpath解析</title>
-    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%ABxpath%E8%A7%A3%E6%9E%90/</url>
-    <content><![CDATA[<h2 id="xpath解析"><a href="#xpath解析" class="headerlink" title="xpath解析"></a>xpath解析</h2><ul>
-<li>// :从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置。</li>
-<li>/ : 匹配当前目录下的直接子节点。</li>
-<li>.. : 匹配当前节点的父节点。</li>
-<li>@：选取属性。</li>
-<li>//* : 选取文档中所有元素</li>
-</ul>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">text &#x3D; &quot;&quot;&quot;
-            &lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;
-            &lt;bookstore&gt;
-            &lt;book&gt;
-              &lt;title lang&#x3D;&quot;eng&quot;&gt;Harry Potter&lt;&#x2F;title&gt;
-              &lt;price&gt;29.99&lt;&#x2F;price&gt;
-            &lt;&#x2F;book&gt;
-            &lt;book&gt;
-              &lt;title lang&#x3D;&quot;cn&quot;&gt;Learning XML&lt;&#x2F;title&gt;
-              &lt;price&gt;39.95&lt;&#x2F;price&gt;
-              &lt;aa lang&#x3D;&quot;cn eng aa bb&quot; name&#x3D;&quot;cc&quot;&gt;Learning XML&lt;&#x2F;aa&gt;
-            &lt;&#x2F;book&gt;
-            &lt;&#x2F;bookstore&gt;
-&quot;&quot;&quot;
-from lxml import etree
-html &#x3D; etree.HTML(text)
-# print(etree.tostring(html).decode(&#39;utf-8&#39;))
-
-# 选取所有指定的节点
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#39;)
-
-# 获取指定节点的所有直接子节点
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;book&#x2F;aa&#39;)
-
-# 获取指定节点的父节点
-res &#x3D; html.xpath(&quot;&#x2F;&#x2F;aa&#x2F;..&quot;)
-
-# 通过属性匹配选择节点
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#39;)
-
-# 获取文本值
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[@lang&#x3D;&quot;cn&quot;]&#x2F;text()&#39;)
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;price&#x2F;text()&#39;)
-
-# 获取属性值 [&#39;eng&#39;, &#39;cn&#39;]
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title&#x2F;@lang&#39;)
-
-# 属性多值匹配
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;)]&#39;)
-# 对于属性值有多个的节点，不用contains函数的话，匹配到的是空[]
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[@lang&#x3D;&quot;aa&quot;]&#39;)
-
-# 文本匹配
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;title[contains(text(), &quot;XML&quot;)]&#39;)
-
-# 运算符
-res &#x3D; html.xpath(&#39;&#x2F;&#x2F;aa[contains(@lang,&quot;aa&quot;) and @name&#x3D;&quot;cc&quot;]&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 ]]></content>
       <categories>
         <category>爬虫</category>
@@ -2255,53 +2476,6 @@ os.remove(pic_name)<span aria-hidden="true" class="line-numbers-rows"><span></sp
       </categories>
   </entry>
   <entry>
-    <title>爬虫概念</title>
-    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/%E7%88%AC%E8%99%AB%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<h2 id="1-robots协议"><a href="#1-robots协议" class="headerlink" title="1.robots协议"></a>1.robots协议</h2><p>也叫robots.txt，是存放在网站根目录下的文本文件，用来告诉搜索引擎该网站哪些内容是不应该被抓取的，哪些是可以抓取的。</p>
-<p>如<a href="https://www.csdn.net/robots.txt">https://www.csdn.net/robots.txt</a></p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">User-agent: *
-Disallow: &#x2F;scripts
-Disallow: &#x2F;public
-Disallow: &#x2F;css&#x2F;
-Disallow: &#x2F;images&#x2F;
-Disallow: &#x2F;content&#x2F;
-Disallow: &#x2F;ui&#x2F;
-Disallow: &#x2F;js&#x2F;
-Disallow: &#x2F;scripts&#x2F;
-Disallow: &#x2F;article_preview.html*
-Disallow: &#x2F;tag&#x2F;
-Disallow: &#x2F;*?*
-Disallow: &#x2F;link&#x2F;
-
-Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;sitemap-aggpage-index.xml
-Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;article&#x2F;sitemap.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="2-常见的反爬虫措施"><a href="#2-常见的反爬虫措施" class="headerlink" title="2.常见的反爬虫措施"></a>2.常见的反爬虫措施</h2><h4 id="1-请求头校验"><a href="#1-请求头校验" class="headerlink" title="1.请求头校验"></a>1.请求头校验</h4><p>一般网站会对请求头进行校验，比如Host，UA，Content-Type字段等，模拟请求的时候，这些常见的请求头最好是带上。</p>
-<h4 id="2-IP访问次数控制"><a href="#2-IP访问次数控制" class="headerlink" title="2.IP访问次数控制"></a>2.IP访问次数控制</h4><p>同一个IP地址短时间内大量发起请求，会引起IP限制，解决方法是用代理IP，或者构建自己的代理IP池。</p>
-<h4 id="3-接口请求频率限制"><a href="#3-接口请求频率限制" class="headerlink" title="3.接口请求频率限制"></a>3.接口请求频率限制</h4><p>有的网站会控制接口访问的频率，比如有些查询接口，控制两三秒访问一次。</p>
-<h4 id="4-接口访问次数限制"><a href="#4-接口访问次数限制" class="headerlink" title="4.接口访问次数限制"></a>4.接口访问次数限制</h4><p>每天限制某个IP或账号访问接口的次数，达到上限后出现二次验证或者直接封账号/IP.比如登录接口</p>
-<h4 id="5-行为认证"><a href="#5-行为认证" class="headerlink" title="5.行为认证"></a>5.行为认证</h4><p>请求次数过多会出现人工认证，如图片验证码，滑动认证，点击认证等，可以对接打码平台。</p>
-<h4 id="6，自动化环境检测"><a href="#6，自动化环境检测" class="headerlink" title="6，自动化环境检测"></a>6，自动化环境检测</h4><p>selenium自动化工具有的网站会检测出来，大部分可以通过下面两种方式跳过检测,下面两种方式无法处理的话，还可以尝试把页面改为移动端页面(手机模式)，最后还有一种方法就是代理服务器拦截修改js代码，把检测selenium的js修改掉。</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">options &#x3D; webdriver.ChromeOptions()
-# 躲避部分网站selenium检测
-options.add_experimental_option(&#39;excludeSwitches&#39;, [&#39;enable-automation&#39;])
-options.add_experimental_option(&quot;useAutomationExtension&quot;, False)
-
-driver &#x3D; webdriver.Chrome(executable_path&#x3D;chromedriver_path, options&#x3D;options)
-
-# 躲避部分网站selenium检测
-script &#x3D; &quot;Object.defineProperty(navigator, &#39;webdriver&#39;, &#123;get: () &#x3D;&gt; undefined&#125;);&quot;
-driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;&quot;source&quot;: script&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>对于移动端appium的检测，可以尝试替换为uiautomator2实现自动化</p>
-<h4 id="7-数据动态加载"><a href="#7-数据动态加载" class="headerlink" title="7.数据动态加载"></a>7.数据动态加载</h4><p>有的数据不是通过html页面的接口请求返回的，抓包分析请求，找到正确的数据接口。</p>
-<h4 id="8-请求参数加密"><a href="#8-请求参数加密" class="headerlink" title="8.请求参数加密"></a>8.请求参数加密</h4><p>网易云音乐的post请求的请求体就是前端经过js加密后计算得到的，需要逆向js代码</p>
-<h4 id="9-返回数据加密"><a href="#9-返回数据加密" class="headerlink" title="9.返回数据加密"></a>9.返回数据加密</h4><p>需要逆向js代码，分析如何解密。还有一种像大众点评的评论，需要通过定位去找到文本。</p>
-<h4 id="10-动态更新cookies"><a href="#10-动态更新cookies" class="headerlink" title="10.动态更新cookies"></a>10.动态更新cookies</h4><p>华为手机云服务，每次请求接口都会重新设置cookies，并且请求头参数也需要跟着cookies一起变化</p>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Python爬虫之构建自己的代理IP池</title>
     <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB%E4%B9%8B%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A3%E7%90%86IP%E6%B1%A0/</url>
     <content><![CDATA[<h1 id="Python爬虫—代理池维护"><a href="#Python爬虫—代理池维护" class="headerlink" title="Python爬虫—代理池维护"></a>Python爬虫—代理池维护</h1><h2 id="大致思路"><a href="#大致思路" class="headerlink" title="大致思路"></a>大致思路</h2><ol>
@@ -2482,6 +2656,53 @@ if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
       </categories>
   </entry>
   <entry>
+    <title>爬虫概念</title>
+    <url>/%E7%88%AC%E8%99%AB/Python%E7%88%AC%E8%99%AB/%E7%88%AC%E8%99%AB%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<h2 id="1-robots协议"><a href="#1-robots协议" class="headerlink" title="1.robots协议"></a>1.robots协议</h2><p>也叫robots.txt，是存放在网站根目录下的文本文件，用来告诉搜索引擎该网站哪些内容是不应该被抓取的，哪些是可以抓取的。</p>
+<p>如<a href="https://www.csdn.net/robots.txt">https://www.csdn.net/robots.txt</a></p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">User-agent: *
+Disallow: &#x2F;scripts
+Disallow: &#x2F;public
+Disallow: &#x2F;css&#x2F;
+Disallow: &#x2F;images&#x2F;
+Disallow: &#x2F;content&#x2F;
+Disallow: &#x2F;ui&#x2F;
+Disallow: &#x2F;js&#x2F;
+Disallow: &#x2F;scripts&#x2F;
+Disallow: &#x2F;article_preview.html*
+Disallow: &#x2F;tag&#x2F;
+Disallow: &#x2F;*?*
+Disallow: &#x2F;link&#x2F;
+
+Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;sitemap-aggpage-index.xml
+Sitemap: https:&#x2F;&#x2F;www.csdn.net&#x2F;article&#x2F;sitemap.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2-常见的反爬虫措施"><a href="#2-常见的反爬虫措施" class="headerlink" title="2.常见的反爬虫措施"></a>2.常见的反爬虫措施</h2><h4 id="1-请求头校验"><a href="#1-请求头校验" class="headerlink" title="1.请求头校验"></a>1.请求头校验</h4><p>一般网站会对请求头进行校验，比如Host，UA，Content-Type字段等，模拟请求的时候，这些常见的请求头最好是带上。</p>
+<h4 id="2-IP访问次数控制"><a href="#2-IP访问次数控制" class="headerlink" title="2.IP访问次数控制"></a>2.IP访问次数控制</h4><p>同一个IP地址短时间内大量发起请求，会引起IP限制，解决方法是用代理IP，或者构建自己的代理IP池。</p>
+<h4 id="3-接口请求频率限制"><a href="#3-接口请求频率限制" class="headerlink" title="3.接口请求频率限制"></a>3.接口请求频率限制</h4><p>有的网站会控制接口访问的频率，比如有些查询接口，控制两三秒访问一次。</p>
+<h4 id="4-接口访问次数限制"><a href="#4-接口访问次数限制" class="headerlink" title="4.接口访问次数限制"></a>4.接口访问次数限制</h4><p>每天限制某个IP或账号访问接口的次数，达到上限后出现二次验证或者直接封账号/IP.比如登录接口</p>
+<h4 id="5-行为认证"><a href="#5-行为认证" class="headerlink" title="5.行为认证"></a>5.行为认证</h4><p>请求次数过多会出现人工认证，如图片验证码，滑动认证，点击认证等，可以对接打码平台。</p>
+<h4 id="6，自动化环境检测"><a href="#6，自动化环境检测" class="headerlink" title="6，自动化环境检测"></a>6，自动化环境检测</h4><p>selenium自动化工具有的网站会检测出来，大部分可以通过下面两种方式跳过检测,下面两种方式无法处理的话，还可以尝试把页面改为移动端页面(手机模式)，最后还有一种方法就是代理服务器拦截修改js代码，把检测selenium的js修改掉。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">options &#x3D; webdriver.ChromeOptions()
+# 躲避部分网站selenium检测
+options.add_experimental_option(&#39;excludeSwitches&#39;, [&#39;enable-automation&#39;])
+options.add_experimental_option(&quot;useAutomationExtension&quot;, False)
+
+driver &#x3D; webdriver.Chrome(executable_path&#x3D;chromedriver_path, options&#x3D;options)
+
+# 躲避部分网站selenium检测
+script &#x3D; &quot;Object.defineProperty(navigator, &#39;webdriver&#39;, &#123;get: () &#x3D;&gt; undefined&#125;);&quot;
+driver.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;&quot;source&quot;: script&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对于移动端appium的检测，可以尝试替换为uiautomator2实现自动化</p>
+<h4 id="7-数据动态加载"><a href="#7-数据动态加载" class="headerlink" title="7.数据动态加载"></a>7.数据动态加载</h4><p>有的数据不是通过html页面的接口请求返回的，抓包分析请求，找到正确的数据接口。</p>
+<h4 id="8-请求参数加密"><a href="#8-请求参数加密" class="headerlink" title="8.请求参数加密"></a>8.请求参数加密</h4><p>网易云音乐的post请求的请求体就是前端经过js加密后计算得到的，需要逆向js代码</p>
+<h4 id="9-返回数据加密"><a href="#9-返回数据加密" class="headerlink" title="9.返回数据加密"></a>9.返回数据加密</h4><p>需要逆向js代码，分析如何解密。还有一种像大众点评的评论，需要通过定位去找到文本。</p>
+<h4 id="10-动态更新cookies"><a href="#10-动态更新cookies" class="headerlink" title="10.动态更新cookies"></a>10.动态更新cookies</h4><p>华为手机云服务，每次请求接口都会重新设置cookies，并且请求头参数也需要跟着cookies一起变化</p>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+  </entry>
+  <entry>
     <title>jupyter_notebook常用插件介绍</title>
     <url>/others/jupyter-notebook/jupyter-notebook%E5%B8%B8%E7%94%A8%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<h2 id="Jupyter-NbExtensions-Configurator"><a href="#Jupyter-NbExtensions-Configurator" class="headerlink" title="Jupyter NbExtensions Configurator"></a>Jupyter NbExtensions Configurator</h2><p>Jupyter NbExtensions Configurator 是Jupyter Notebook的一个扩展工具，它提供了一系列标签，只需勾选相应插件就能自动载入。里面的插件能帮助减少工作量，书写更优雅的代码和更好的展示结构。</p>
@@ -2613,7 +2834,7 @@ size: 4K
 &lt;&#x2F;style&gt;
 ---<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>正式使用了一次，ppt做出来是图片，啥都不能动，真的难顶。</p>
-<p>不适合多人协作</p>
+<p>感觉不适合多人协作</p>
 ]]></content>
       <categories>
         <category>碎碎念</category>
@@ -3235,56 +3456,6 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
       </tags>
   </entry>
   <entry>
-    <title>tf.graph()</title>
-    <url>/tensorflow/MADRL/tf.graph()/</url>
-    <content><![CDATA[<h2 id="tf-graph"><a href="#tf-graph" class="headerlink" title="tf.graph()"></a>tf.graph()</h2><p> tf.Graph()表示实例化一个用于tensorflow计算和表示用的数据流图，不负责运行计算。在代码中添加的操作和数据都是画在纸上的画，而图就是呈现这些画的纸。我们可以利用很多线程生成很多张图，但是默认图就只有一张。</p>
-<p>  tf中可以定义多个计算图，不同计算图上的张量和运算是相互独立的，不会共享。计算图可以用来隔离张量和计算，同时提供了管理张量和计算的机制。</p>
-<p>  1、使用g = tf.Graph()函数创建新的计算图</p>
-<p>  2、在with g.as_default():语句下定义属于计算图g的张量和操作</p>
-<p>  3、在with tf.Session()中通过参数graph=xxx指定当前会话所运行的计算图</p>
-<p>  4、如果没有显示指定张量和操作所属的计算图，则这些张量和操作属于默认计算图</p>
-<p>  5、一个图可以在多个sess中运行，一个ses也能运行多个图</p>
-<p>  操作示例：</p>
-<p># 默认计算图上的操作</p>
-<p>a = tf.constant([1.0, 2.0])</p>
-<p>b = tf.constant([2.0, 3.0])</p>
-<p>result = a + b</p>
-<p># 定义两个计算图</p>
-<p>g1 = tf.Graph()</p>
-<p>g2 = tf.Graph()</p>
-<p># 在g1中定义张量和操作</p>
-<p>with g1.as_default():</p>
-<p>  a = tf.constant([1.0, 1.0])</p>
-<p>  b = tf.constant([1.0, 1.0])</p>
-<p>  result1 = a + b</p>
-<p># 在g2中定义张量和操作</p>
-<p>with g2.as_default():</p>
-<p>  a = tf.constant([2.0, 2.0])</p>
-<p>  b = tf.constant([2.0, 2.0])</p>
-<p>  result2 = a + b</p>
-<p># 创建会话</p>
-<p>with tf.Session(graph=g1) as sess:</p>
-<p>  out = sess.run(result1)</p>
-<p>  print(out)</p>
-<p>with tf.Session(graph=g2) as sess:</p>
-<p>  out = sess.run(result2)</p>
-<p>  print(out)</p>
-<p>with tf.Session(graph=tf.get_default_graph()) as sess:</p>
-<p>  out = sess.run(result)</p>
-<p>  print(out)</p>
-<p>返回：</p>
-<p>[2.0, 2.0]</p>
-<p>[4.0, 4.0]</p>
-<p>[3.0, 5.0]</p>
-]]></content>
-      <categories>
-        <category>tensorflow</category>
-      </categories>
-      <tags>
-        <tag>tensorflow</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>一些关于DRL的概念</title>
     <url>/MARL/MADRL/%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/</url>
     <content><![CDATA[<p>注意力机制（方法论）：为了让计算机更加适应人类交流场景，我们必须教会计算机选择遗忘和关联上下文，这种机制就是所谓的「注意力机制」 </p>
@@ -3308,33 +3479,6 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
       <tags>
         <tag>MARL</tag>
         <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>人工蜂群算法</title>
-    <url>/MARL/MADRL/%E4%BA%BA%E5%B7%A5%E8%9C%82%E7%BE%A4%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="人工蜂群算法"><a href="#人工蜂群算法" class="headerlink" title="**人工蜂群算法"></a>**人工蜂群算法</h3><ul>
-<li><p><strong>模仿蜜蜂行为提出的一种优化方法 群智能算法</strong></p>
-</li>
-<li><p><strong>特点</strong></p>
-</li>
-</ul>
-<ul>
-<li><p><strong>其使用了较少的控制参数，并且鲁棒性强，在每次迭代过程中都会进行全局和局部的最优解搜索，因此能够找到最优解的概率大大增加。</strong></p>
-</li>
-<li><p><strong>不需要了解问题的特殊信息，只需要对问题进行优劣的比较，通过各人工蜂个体的局部寻优行为，最终在群体中使全局最优值突现出来，有着较快的收敛速度。</strong></p>
-</li>
-</ul>
-<ul>
-<li>人工蜂群算法详解**](<a href="https://zhuanlan.zhihu.com/p/253220840">https://zhuanlan.zhihu.com/p/253220840</a>)</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>群体智能</tag>
       </tags>
   </entry>
   <entry>
@@ -3460,10 +3604,15 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
       </tags>
   </entry>
   <entry>
-    <title>避障</title>
-    <url>/MARL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E9%81%BF%E9%9A%9C/</url>
-    <content><![CDATA[<h3 id="避障"><a href="#避障" class="headerlink" title="避障"></a><strong>避障</strong></h3><ul>
-<li><p>集群协同避障汇总**](<a href="https://blog.csdn.net/qq_16775293/article/details/88556986">https://blog.csdn.net/qq_16775293/article/details/88556986</a>)</p>
+    <title>路径规划</title>
+    <url>/MARL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/</url>
+    <content><![CDATA[<h3 id="路径规划"><a href="#路径规划" class="headerlink" title="路径规划"></a><strong>路径规划</strong></h3><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/100813774">多智能体强化学习路径规划</a></li>
+<li>基于以上分析，移动机器人智能路径规划方法研究虽然取得了重要成果，但仍存在局限性，如遗传算法、蚁群算法容易陷入局部最优，神经网络算法需要大量样本。目前的改进算法以多种算法相结合、分层优化等方式为主，虽弥补了缺点，但存在诸多发展瓶颈，如算法复杂度增加，收敛速度慢。</li>
+<li>较于其他算法，强化学习，学习能力强，适应复杂未知环境，但目前强化学习的试错学习、状态泛化，需要耗费大量资源。</li>
+</ul>
+<h3 id="避障方法"><a href="#避障方法" class="headerlink" title="避障方法"></a><strong>避障方法</strong></h3><ul>
+<li><p><a href="https://blog.csdn.net/qq_16775293/article/details/88556986">集群协同避障汇总</a></p>
 </li>
 <li><p>奖惩函数 与 避障的关系</p>
 </li>
@@ -3478,35 +3627,9 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
 </li>
 <li><p>无人机基于当前环境信息的局部路径规划算法，将对环境的建模与搜索避障融为一体，能对规划结果进行实时反馈和校正，动态性高，但是由于缺乏全局环境信息，规划结果往往不是全局最优，甚至可能找不到正确路径或完整路径</p>
 </li>
-<li><h3 id="移动机器人路径规划算法存在的问题"><a href="#移动机器人路径规划算法存在的问题" class="headerlink" title="移动机器人路径规划算法存在的问题"></a>移动机器人路径规划算法存在的问题</h3></li>
 </ul>
-<ul>
-<li><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103725.png" alt="image-20210710162533883" style="zoom: 67%;" /><ul>
-<li>要解决的问题是 未知环境下的动态障碍物路径规划 基于传感器信息的局部路径规划</li>
-<li>环境是啥？</li>
-<li><img src="https://raw.githubusercontent.com/ChangQingAAS/for_picgo/main/img/20210903103730.png" alt="image-20210710182339529"></li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>路径规划</title>
-    <url>/MARL/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/</url>
-    <content><![CDATA[<p><strong>路径规划</strong></p>
-<ul>
-<li><p>多智能体强化学习路径规划**](<a href="https://zhuanlan.zhihu.com/p/100813774">https://zhuanlan.zhihu.com/p/100813774</a>)</p>
-</li>
-<li><p>基于以上分析，移动机器人智能路径规划方法研究虽然取得了重要成果，但仍存在局限性，如遗传算法、蚁群算法容易陷入局部最优，神经网络算法需要大量样本。目前的改进算法以多种算法相结合、分层优化等方式为主，虽弥补了缺点，但存在诸多发展瓶颈，如算法复杂度增加，收敛速度慢。</p>
-<p>较于其他算法，强化学习，学习能力强，适应复杂未知环境，但目前强化学习的试错学习、状态泛化，需要耗费大量资源。</p>
-</li>
+<h3 id="移动机器人路径规划算法存在的问题"><a href="#移动机器人路径规划算法存在的问题" class="headerlink" title="移动机器人路径规划算法存在的问题"></a>移动机器人路径规划算法存在的问题</h3><ul>
+<li>未知环境下的动态障碍物路径规划  </li>
 </ul>
 ]]></content>
       <categories>
@@ -3595,12 +3718,8 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
 <li><strong>Temporal-Difference (TD)</strong>：时间差分是一种结合动态规划和蒙特卡罗原理的学习方法；它像蒙特卡洛一样“在飞行中”学习，但是像动态规划一样更新它的估计。最简单的时域差分算法之一，称为一步时域或时域(0)。它根据以下更新规则更新值函数（Value Function）：<br>V ( s t ) = V ( s t ) + α [ r t + 1 + γ V ( s t + 1 ) − V ( s t ) V(s_t) = V(s_t) + \alpha [r_{t+1} + \gamma V(s_{t+1}) - V(s_t)<em>V</em>(<em>s**t</em>​)=<em>V</em>(<em>s**t</em>​)+<em>α</em>[<em>r**t</em>+1​+<em>γ**V</em>(<em>s**t</em>+1​)−<em>V</em>(<em>s**t</em>​)<br>其中 V V<em>V</em> 是值函数，s s<em>s</em> 是状态，r r<em>r</em> 是奖励，γ γ<em>γ</em> 是折扣因子，α α<em>α</em> 是学习率，t t<em>t</em> 是时间步长，<strong>等号用作更新运算符，而不是等式</strong>。方括号中的术语被称为 <strong>时间差异误差（temporal difference error）</strong>。</li>
 <li><strong>Terminal State</strong>：See State。</li>
 <li><strong>Upper Confident Bound (UCB)</strong>：UCB是一种探索方法，它试图确保每个动作都得到很好的探索。考虑一个完全随机的探索策略——也就是说，每个可能的动作都有相同的被选择的机会。有些动作很有可能会比其他动作被探索得更多。选择的动作越少，代理对其预期奖励的信心就越低，其开发阶段就可能受到损害。UCB的探索考虑了每一个动作被选择的次数，并给那些不太被探索的动作额外的权重。从数学上对此进行形式化，所选择的动作是通过：<br>a c t i o n = a r g m a x a  [ R ( a ) + c l n t N ( a ) ] action = argmax_a\ [R(a) + c\sqrt{\frac{lnt}{N(a)}}]<em>a<strong>c</strong>t<strong>i</strong>o**n</em>=<em>a<strong>r</strong>g<strong>m</strong>a<strong>x</strong>a</em>​ [<em>R</em>(<em>a</em>)+<em>c**N</em>(<em>a</em>)<em>l<strong>n</strong>t</em>​​]<br>其中，R ( a ) R(a)<em>R</em>(<em>a</em>) 是动作 a a<em>a</em> 的预期总回报，t t<em>t</em> 是采取的步骤数（总共选择了多少个动作），N ( a ) N(a)<em>N</em>(<em>a</em>) 是选择动作 a a<em>a</em> 的次数，c c<em>c</em> 是可配置的超参数。这种方法有时也被称为 乐观探索（exploration through optimism），因为它给不太被探索的行为一个更高的价值，鼓励模型选择它们。</li>
-<li><strong>Value Function</strong>：价值函数通常表示为<em>V</em>(<em>s</em>)，有时带有 π 下标，它是对总体预期奖励的一种度量，假设代理处于状态<em>s</em>，然后按照某个策略<em>π</em> 继续执行，直到情景结束。它在数学上定义为：<em>V</em>(<em>s</em>)=<em>E</em>[<em>n</em>=0∑<em>N</em>​<em>γ<strong>n</strong>r**n</em>​]<br>虽然它看起来确实类似于 Q-Value 的定义，但是有一个隐含的，重要的区别：对于n<em>=0，V</em>(<em>s</em>) 的 <em>r</em>0 的奖励是在任何动作被执行之前处于状态<em>s</em> 的预期奖励，而在Q-Value中，<em>r</em>0 是在某个动作被执行之后的预期奖励。这种差异也产生了优势函数（Advantage function）。</li>
+<li><strong>Value Function</strong>：价值函数通常表示为<em>V</em>(<em>s</em>)，有时带有 π 下标，它是对总体预期奖励的一种度量，假设代理处于状态<em>s</em>，然后按照某个策略<em>π</em> 继续执行，直到情景结束。它在数学上定义为：<em>V</em>(<em>s</em>)=<em>E</em>[<em>n</em>=0∑<em>N</em>​<em>γ<strong>n</strong>r**n</em>​]<br>虽然它看起来确实类似于 Q-Value 的定义，但是有一个隐含的，重要的区别：对于n<em>=0，V</em>(<em>s</em>) 的 <em>r</em>0 的奖励是在任何动作被执行之前处于状态<em>s</em> 的预期奖励，而在Q-Value中，<em>r</em>0 是在某个动作被执行之后的预期奖励。这种差异也产生了优势函数（Advantage function）</li>
 </ul>
-<p>env  环境</p>
-<p>obs  观察</p>
-<p>arg 参量</p>
-<p>arglist 参量表</p>
 ]]></content>
       <categories>
         <category>MARL</category>
@@ -3608,36 +3727,6 @@ stop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
       <tags>
         <tag>MARL</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>保护变量的访问与设置</title>
-    <url>/python/others/%E4%BF%9D%E6%8A%A4%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE%E4%B8%8E%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<h1 id="保护变量的访问与设置"><a href="#保护变量的访问与设置" class="headerlink" title="保护变量的访问与设置"></a>保护变量的访问与设置</h1><p>对于私有变量（双下划线）或者保护变量（单下划线），不允许外部直接访问，类似于Java的private，可以通过对外提供get，set接口来访问和修改这类变量，便于控制。</p>
-<ul>
-<li>@property装饰器会将方法转换为相同名称的只读属性，相当于实现get方法</li>
-<li>@xxx.setter装饰器使得可以直接通过 对象.xxx来修改保护变量的值，相当于实现set方法</li>
-</ul>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">class Student(object):
-    def __init__(self, name):
-        self.name &#x3D; name
-        self._score &#x3D; None
-
-    @property
-    def score(self):
-        return self._score
-
-    @score.setter
-    def score(self, value):
-        self._score &#x3D; value
-
-if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
-    s &#x3D; Student(&#39;王大锤&#39;)
-    s.score &#x3D; 100  # 设置保护变量的值
-    print(s.score)  # 访问保护变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
   </entry>
   <entry>
     <title>Python函数参数的传递机制</title>
@@ -3670,6 +3759,36 @@ if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
 ]]></content>
       <categories>
         <category>碎碎念</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>保护变量的访问与设置</title>
+    <url>/python/others/%E4%BF%9D%E6%8A%A4%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE%E4%B8%8E%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<h1 id="保护变量的访问与设置"><a href="#保护变量的访问与设置" class="headerlink" title="保护变量的访问与设置"></a>保护变量的访问与设置</h1><p>对于私有变量（双下划线）或者保护变量（单下划线），不允许外部直接访问，类似于Java的private，可以通过对外提供get，set接口来访问和修改这类变量，便于控制。</p>
+<ul>
+<li>@property装饰器会将方法转换为相同名称的只读属性，相当于实现get方法</li>
+<li>@xxx.setter装饰器使得可以直接通过 对象.xxx来修改保护变量的值，相当于实现set方法</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">class Student(object):
+    def __init__(self, name):
+        self.name &#x3D; name
+        self._score &#x3D; None
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        self._score &#x3D; value
+
+if __name__ &#x3D;&#x3D; &#39;__main__&#39;:
+    s &#x3D; Student(&#39;王大锤&#39;)
+    s.score &#x3D; 100  # 设置保护变量的值
+    print(s.score)  # 访问保护变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>python</category>
       </categories>
   </entry>
   <entry>
