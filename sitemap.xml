@@ -312,13 +312,6 @@
   </url>
   
   <url>
-    <loc>https://changqingaas.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%EF%BC%8C%E7%A2%8E%E7%A2%8E%E5%BF%B5/</loc>
-    <lastmod>2022-01-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://changqingaas.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2022-01-26</lastmod>
     <changefreq>daily</changefreq>
@@ -326,7 +319,28 @@
   </url>
   
   <url>
+    <loc>https://changqingaas.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%EF%BC%8C%E7%A2%8E%E7%A2%8E%E5%BF%B5/</loc>
+    <lastmod>2022-01-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://changqingaas.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2022-01-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://changqingaas.github.io/tags/jupyter-notebook/</loc>
+    <lastmod>2022-01-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://changqingaas.github.io/tags/%E8%B8%A9%E5%9D%91/</loc>
     <lastmod>2022-01-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -354,28 +368,14 @@
   </url>
   
   <url>
+    <loc>https://changqingaas.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2022-01-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://changqingaas.github.io/tags/Advice/</loc>
-    <lastmod>2022-01-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://changqingaas.github.io/tags/jupyter-notebook/</loc>
-    <lastmod>2022-01-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://changqingaas.github.io/tags/%E8%B8%A9%E5%9D%91/</loc>
-    <lastmod>2022-01-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://changqingaas.github.io/tags/books/</loc>
     <lastmod>2022-01-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -396,14 +396,14 @@
   </url>
   
   <url>
-    <loc>https://changqingaas.github.io/tags/%E7%BB%8F%E6%B5%8E%E5%AD%A6/</loc>
+    <loc>https://changqingaas.github.io/tags/books/</loc>
     <lastmod>2022-01-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://changqingaas.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
+    <loc>https://changqingaas.github.io/tags/%E7%BB%8F%E6%B5%8E%E5%AD%A6/</loc>
     <lastmod>2022-01-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -447,6 +447,13 @@
   </url>
   
   <url>
+    <loc>https://changqingaas.github.io/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <lastmod>2022-01-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://changqingaas.github.io/categories/css/</loc>
     <lastmod>2022-01-26</lastmod>
     <changefreq>daily</changefreq>
@@ -461,14 +468,14 @@
   </url>
   
   <url>
-    <loc>https://changqingaas.github.io/categories/python/</loc>
+    <loc>https://changqingaas.github.io/categories/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2022-01-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://changqingaas.github.io/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <loc>https://changqingaas.github.io/categories/python/</loc>
     <lastmod>2022-01-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -483,13 +490,6 @@
   
   <url>
     <loc>https://changqingaas.github.io/categories/%E5%8D%9A%E5%BC%88%E8%AE%BA/</loc>
-    <lastmod>2022-01-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://changqingaas.github.io/categories/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2022-01-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
