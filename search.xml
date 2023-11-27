@@ -1,77 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>墨子平台训练教程</title>
-    <url>/MARL/MADRL/%E5%A2%A8%E5%AD%90%E5%B9%B3%E5%8F%B0%E8%AE%AD%E7%BB%83%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<p>下面介绍一下windows版本墨子平台的使用流程：</p>
-<ol>
-<li><h2 id="进入华戍防务-官网-hs-defense-com-下载软件"><a href="#进入华戍防务-官网-hs-defense-com-下载软件" class="headerlink" title="进入华戍防务 官网(hs-defense.com)下载软件"></a>进入<a href="http://www.hs-defense.com/col.jsp?id=105">华戍防务 官网(hs-defense.com)</a>下载软件</h2></li>
-</ol>
-<p>我下载的是<code>墨子·联合作战推演系统（个人版）</code> </p>
-<p><code>墨子·AI开发包</code>主要是一些开发会用到的代码和文档。代码也可以在gitee.com上找到：<a href="https://gitee.com/hs-defense/moziai">moziai: 墨子AI开发包及“子牙”智能体开源代码  </a></p>
-<p><code>竞赛客户端(互联网)</code> 主要是用来军事推演比赛的，与强化学习训练关系不大，可以不下载。</p>
-<p><code>墨子·AI版（Linux)</code> 因为一开始没办法下载，后面断断续续也没有弄出什么效果</p>
-<p>注：</p>
-<ul>
-<li><p>文件采用ftp协议下载，下载链接格式为：ftp: ip/port/文件夹s/文件</p>
-</li>
-<li><p>由于部分浏览器不支持，推荐使用QQ浏览器下载</p>
-</li>
-<li><p>一般点击下载按钮后，会默认让迅雷接管下载</p>
-</li>
-</ul>
-<ol>
-<li><h2 id="安装软件"><a href="#安装软件" class="headerlink" title="安装软件"></a>安装软件</h2><p>​    根据安装手册安装该软件，基本上按照手册进行就可以了</p>
-</li>
-<li><h2 id="启动该软件"><a href="#启动该软件" class="headerlink" title="启动该软件"></a>启动该软件</h2><ol>
-<li>进入安装目录下的\MoziData，右键点击<code>mysql.bat</code>，以管理员身份运行它，随后退出</li>
-<li>进入安装目录下的\MoziServer，运行MoziServer.exe，尽量关掉杀毒软件，最好以管理员身份运行<ul>
-<li>这里大概会遇到一个问题：<code>临时许可码过期，请联系华戍防务重新授权</code>，具体解决方案略</li>
-<li>我在数据库方面也出过问题，不过忘了具体细节了</li>
-</ul>
-</li>
-</ol>
-</li>
-<li><h2 id="运行代码，进行仿真训练"><a href="#运行代码，进行仿真训练" class="headerlink" title="运行代码，进行仿真训练"></a>运行代码，进行仿真训练</h2><ol>
-<li><p>获取代码，在IDE打开代码</p>
-</li>
-<li><p>加载代码所需的scen想定文件</p>
-<ul>
-<li>进入墨子平台，可以在想定一栏下找到<code>加载想定</code>的选项，想定文件是从<code>安装路径\MoziServer\bin\Scenarios\</code>获取的，因此需要把代码包里的scen文件放到这里。</li>
-<li>加载想定文件，选择推演方</li>
-<li>随后可以看到墨子平台上有了具体的想定环境</li>
-<li>如果要更改想定文件，改完之后，需要保存，再重新加载<ul>
-<li>因为训练的每个回合都会刷新环境，如果不保存更改到新scen文件，那么这个更改只能用于一个回合</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>运行main.py代码即可看到效果</p>
-<ul>
-<li><p>注：</p>
-<ul>
-<li><p>这里可能需要指定一下 墨子平台的路径，可以执行代码</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">os.environ[&#39;MOZIPATH&#39;] &#x3D; &#39;D:\\MoZiSystem\\Mozi\\MoziServer\\bin&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>也可以在<code>编辑系统环境变量</code>中添加路径</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-</li>
-</ol>
-<p>注：Linux版本的墨子平台还在折腾，因为虚拟机比较卡，服务器上又没办法弄出显示界面，还折腾了一堆配置，最近还没弄，如果有结果了，会在这里更新的</p>
-]]></content>
-      <categories>
-        <category>MARL</category>
-      </categories>
-      <tags>
-        <tag>MARL</tag>
-        <tag>机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>《涉过愤怒的海》影评</title>
     <url>/%E8%B8%A9%E5%9D%91/Movies/%E3%80%8A%E6%B6%89%E8%BF%87%E6%84%A4%E6%80%92%E7%9A%84%E6%B5%B7%E3%80%8B/</url>
     <content><![CDATA[<p>本人年度最低性价比电影：《涉过愤怒的海》</p>
@@ -143,6 +72,338 @@
       </tags>
   </entry>
   <entry>
+    <title>brew命令不能正常使用</title>
+    <url>/%E8%B8%A9%E5%9D%91/Pitfalls/brew%E8%B8%A9%E5%9D%91/</url>
+    <content><![CDATA[<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>想尝试一下<a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui，但是运行./webui.sh报错了:大概是gfpgan安装不上。">https://github.com/AUTOMATIC1111/stable-diffusion-webui，但是运行./webui.sh报错了:大概是gfpgan安装不上。</a></p>
+<p>定位到launch.py.227:</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">gfpgan_package &#x3D; os.environ.get(&#39;GFPGAN_PACKAGE&#39;, &quot;git+https:&#x2F;&#x2F;github.com&#x2F;TencentARC&#x2F;GFPGAN.git@8d2447a2d918f8eba5a4a01463fd48e45126a379&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>然后修改为：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">gfpgan_package &#x3D; os.environ.get(&#39;GFPGAN_PACKAGE&#39;, &quot;https:&#x2F;&#x2F;github.com&#x2F;TencentARC&#x2F;GFPGAN.git&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>不行。</p>
+<p>在./stable-diffusion-webui和./stable-diffusion-webui/venv/lib/pyhton3/site-packages/都手动git clone <a href="https://github.com/TencentARC/GFPGAN.git">https://github.com/TencentARC/GFPGAN.git</a> 还是不行。</p>
+<p>遂放弃。</p>
+<p>后记：</p>
+<p>添加<a href="https://ghproxy.com/即可">https://ghproxy.com/即可</a></p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">gfpgan_package &#x3D; os.environ.get(&#39;GFPGAN_PACKAGE&#39;, &quot;https:&#x2F;&#x2F;ghproxy.com&#x2F;https:&#x2F;&#x2F;github.com&#x2F;TencentARC&#x2F;GFPGAN.git&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>居然是网络问题，看报错根本看不出来！啊 哒哒哒！</p>
+<p>中途可能使用了该命令：</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git config --global --unset http.proxy
+
+git config --global --unset https.proxy<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h1 id="经过"><a href="#经过" class="headerlink" title="经过"></a>经过</h1><p>第二天，就不能正常使用brew相关的命令了。（brew update会涉及到git fetch更新一些仓库的命令）</p>
+<p>但最近有在这上面有需求，就不能回避了</p>
+<p>下面为我踩坑时常看到的信息:</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">brew update --verbose
+
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew...
+Fetching &#x2F;opt&#x2F;homebrew...
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;carlocab&#x2F;homebrew-personal...
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;dart-lang&#x2F;homebrew-dart...
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;grpc&#x2F;homebrew-grpc...
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-cask...
+Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-cask...
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-cask-versions...
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-core...
+Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-core...
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-services...
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;mongodb&#x2F;homebrew-brew...
+Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;probezy&#x2F;homebrew-core...
+Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;dart-lang&#x2F;homebrew-dart...
+Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;grpc&#x2F;homebrew-grpc...
+Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-cask-versions...
+Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-services...
+Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;mongodb&#x2F;homebrew-brew...
+Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;probezy&#x2F;homebrew-core...
+Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;carlocab&#x2F;homebrew-personal...
+fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;mongodb&#x2F;homebrew-brew&#x2F;&#39;: Failed to connect to github.com port 443 after 75008 ms: Couldn&#39;t connect to server
+fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;carlocab&#x2F;homebrew-personal&#x2F;&#39;: Failed to connect to github.com port 443 after 75003 ms: Couldn&#39;t connect to server
+fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;dart-lang&#x2F;homebrew-dart&#x2F;&#39;: HTTP&#x2F;2 stream 1 was not closed cleanly before end of the underlying stream
+fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;Homebrew&#x2F;homebrew-cask-versions&#x2F;&#39;: HTTP&#x2F;2 stream 1 was not closed cleanly before end of the underlying stream
+fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;probezy&#x2F;homebrew-core&#x2F;&#39;: HTTP&#x2F;2 stream 1 was not closed cleanly before end of the underlying stream
+fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;Homebrew&#x2F;homebrew-services&#x2F;&#39;: error:02FFF036:system library:func(4095):Connection reset by peer
+fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;grpc&#x2F;homebrew-grpc&#x2F;&#39;: error:02FFF036:system library:func(4095):Connection reset by peer<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>中途把github的代理弄了好几个版本，也改过DNS8.8.8.8+重启。</p>
+<p>把brew改成清华镜像也不是很有用。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>最后的解决方案是：</p>
+<h2 id="step1"><a href="#step1" class="headerlink" title="step1:"></a>step1:</h2><p>没改DNS，brew镜像.</p>
+<p>下面为brew config的输出，以供参考</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">HOMEBREW_VERSION: 4.0.3-32-ga3207a0
+ORIGIN: https:&#x2F;&#x2F;github.com&#x2F;Homebrew&#x2F;brew
+HEAD: a3207a03900d7b012c999fad911a701baed82be5
+Last commit: 4 hours ago
+Core tap origin: https:&#x2F;&#x2F;github.com&#x2F;Homebrew&#x2F;homebrew-core
+Core tap HEAD: 3e0f7cf00d2e1b9ea58aeee6009c3c98dd3fc3fe
+Core tap last commit: 47 minutes ago
+Core tap branch: master
+Core tap JSON: 22 Feb 07:36 UTC
+HOMEBREW_PREFIX: &#x2F;opt&#x2F;homebrew
+HOMEBREW_BOTTLE_DOMAIN: https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;homebrew-bottles
+HOMEBREW_CASK_OPTS: []
+HOMEBREW_GITHUB_API_TOKEN: set
+HOMEBREW_MAKE_JOBS: 8
+Homebrew Ruby: 2.6.10 &#x3D;&gt; &#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;Ruby.framework&#x2F;Versions&#x2F;2.6&#x2F;usr&#x2F;bin&#x2F;ruby
+CPU: octa-core 64-bit arm_firestorm_icestorm
+Clang: 14.0.0 build 1400
+Git: 2.37.1 &#x3D;&gt; &#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;usr&#x2F;bin&#x2F;git
+Curl: 7.86.0 &#x3D;&gt; &#x2F;usr&#x2F;bin&#x2F;curl
+macOS: 13.2.1-arm64
+CLT: 14.2.0.0.1.1668646533
+Xcode: N&#x2F;A
+Rosetta 2: false<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="step2"><a href="#step2" class="headerlink" title="step2:"></a>step2:</h2><p>修改github的代理为clash的端口(mixed-port为7890，或socks5:7891)。<br>最后我的/Users/changqingaas/.gitconfig文件为:</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">[user]
+	name &#x3D; chang_qing_aas
+	email &#x3D; 1736731090@qq.com
+[safe]
+	directory &#x3D; &#x2F;usr&#x2F;local&#x2F;Homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-core
+[core]
+	quotepath &#x3D; false
+[filter &quot;lfs&quot;]
+	clean &#x3D; git-lfs clean -- %f
+	smudge &#x3D; git-lfs smudge -- %f
+	process &#x3D; git-lfs filter-process
+	required &#x3D; true
+[http]
+	version &#x3D; HTTP&#x2F;1.1
+	proxy &#x3D; socks5:&#x2F;&#x2F;127.0.0.1:7891
+[https]
+	proxy &#x3D; socks5:&#x2F;&#x2F;127.0.0.1:7891
+[http &quot;https:&#x2F;&#x2F;github.com&quot;]
+	proxy &#x3D; socks5:&#x2F;&#x2F;127.0.0.1:7891
+[https &quot;https:&#x2F;&#x2F;github.com&quot;]
+	proxy &#x3D; socks5:&#x2F;&#x2F;127.0.0.1:7891<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>具体命令我没保存，如果觉得有用直接vim .gitconfig修改吧。</p>
+<p>我还改了.ssh/config:</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">Host github.com
+   HostName github.com
+   User git
+   #socks5
+   ProxyCommand nc -X 5 -x 127.0.0.1:7891 %h %p<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在/etc/config添加:</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"># Github
+140.82.114.3 github.com
+
+185.199.110.133 raw.github.com
+
+185.199.110.133 raw.githubusercontent.com
+
+199.232.69.194 github.global.ssl.fastly.net
+
+185.199.108.153 assets-cdn.github.com
+
+185.199.109.153 assets-cdn.github.com
+
+185.199.110.153 assets-cdn.github.com<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="step3"><a href="#step3" class="headerlink" title="step3:"></a>step3:</h2><p>我在brew cleanup 遇到”Failed to download <a href="https://formulae.brew.sh/api/cask.json">https://formulae.brew.sh/api/cask.json</a> “<br>这个文件不知道为啥下载很慢，以前没这个问题。<br>使用wget测出需要好几十个小时，才能下完。<br>猜测是终端不能翻墙的原因。<br>遂google<br>在这里看到解决办法：<a href="https://github.com/Homebrew/brew/issues/14516">https://github.com/Homebrew/brew/issues/14516</a><br>我做了如下:</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rm -r &quot;$(brew --cache)&#x2F;api&quot; # &#x2F;Users&#x2F;changqingaas&#x2F;Library&#x2F;Caches&#x2F;Homebrew&#x2F;api
+export HOMEBREW_NO_INSTALL_FROM_API&#x3D;1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>成功了，绕过了这个文件下载很慢的问题。</p>
+<p>但是，当我</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">brew upgrade<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>发现了下载速度很慢，不知道这和之前改到清华镜像是否有原因。</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">&#x3D;&#x3D;&gt; Fetching node@16
+&#x3D;&#x3D;&gt; Downloading https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;homebrew-bottles&#x2F;node%4016-
+######################################################################## 100.0%<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="step4"><a href="#step4" class="headerlink" title="step4:"></a>step4:</h2><p>到这里事情并没有结束。</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">wget https:&#x2F;&#x2F;formulae.brew.sh&#x2F;api&#x2F;formula.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>速度依然很慢。</p>
+<p>但是，基本每条brew指令都需要下载该文件。</p>
+<p>实践后，可知：每次运行brew命令前，可以执行</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">export HOMEBREW_NO_INSTALL_FROM_API&#x3D;1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>执行之后，基本就能使用brew命令了。不过这样只能起到短期效果。</p>
+<p>长期解决办法是：把它写进.zshrc or .bash_profile；source一下。</p>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>git命令翻墙和终端翻墙可能仍是问题。</p>
+<ul>
+<li>目前实测git clone <a href="https://github.com/XXX/XXX">https://github.com/XXX/XXX</a> 没问题 <ul>
+<li>速度：M/s </li>
+</ul>
+</li>
+<li>目前实测 wget <a href="https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz">https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz</a><ul>
+<li>速度：几十kb/s有点慢 </li>
+<li>好在可以在浏览器下载后，move到目标文件夹</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>踩坑</category>
+      </categories>
+      <tags>
+        <tag>踩坑</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一件小事</title>
+    <url>/%E8%AE%B0%E5%BD%95/Others/%E4%B8%80%E4%BB%B6%E5%B0%8F%E4%BA%8B/</url>
+    <content><![CDATA[<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/For_Picgo@main/img/image-20221203211545712.png![image-20221203211545712](/Users/changqingaas/Library/Application Support/typora-user-images/image-20221203211545712.png" alt="image-20221203211545712"></p>
+<p><a href="https://github.com/antlr/grammars-v4/blob/master/golang/examples/unicodeIdentifier.go">https://github.com/antlr/grammars-v4/blob/master/golang/examples/unicodeIdentifier.go</a></p>
+<p>当我准备删掉测试未通过样例时的忽然发现。</p>
+<p>或许，这就是技术传播的魅力吧！</p>
+]]></content>
+      <categories>
+        <category>记录</category>
+      </categories>
+      <tags>
+        <tag>碎碎念</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>论文黑话祛魅</title>
+    <url>/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/Others/%E8%AE%BA%E6%96%87%E9%BB%91%E8%AF%9D%E7%A5%9B%E9%AD%85/</url>
+    <content><![CDATA[<p>feature：一个数组</p>
+<p>representation：还是一个数组</p>
+<p>embedding：把输入映射成数组</p>
+<p>提高泛化性：预测更准了</p>
+<p>过拟合：训练过头了</p>
+<p>attention：加权</p>
+<p>adaptive：还是加权</p>
+<p>few-shot learning：看了几个样本就学</p>
+<p>zero-shot learning：一个没看就开始瞎蒙</p>
+<p>self-supervised：自学</p>
+<p>semi-supervised：教一点自学一点</p>
+<p>unsupervised：没人教了，跟谁学？</p>
+<p>end-to-end：一套操作，行云流水搞到底</p>
+<p>multi-stage：发现不行，还得一步一步来</p>
+<p>domain：我圈起来一堆样本，就管他叫一个domain</p>
+<p>transfer：我非得在这一堆样本上训练，用在另一堆样本上，就是不直接训练，就是玩～</p>
+<p>adversarial：我加了一部分就是让loss增大</p>
+<p>robust：很稳我不会让loss变大的（但也不容易变小了）</p>
+<p>state of the art：我（吹nb）第一</p>
+<p>outperform：我虽然没第一，但是我比baseline强</p>
+<p>baseline：(故意)选出来的方法，让我能够outperform</p>
+<p>empirically：我做实验了，不知道为啥work</p>
+<p>theoretically：我以为我知道为啥work，但没做实验，或者只做了个toy model</p>
+<h2 id="multi"><a href="#multi" class="headerlink" title="multi-"></a>multi-</h2><p>multi-task：把几个loss加一起，完事</p>
+<p>multi-domain：把几堆儿样本混一块训练，完事</p>
+<p>multi-modality：把视频语音文字图像graph点云xxx混一块训练，完事</p>
+<p>multi-domain multi-modal multi-media model：mua～mua～mua～mua……</p>
+<p>Transformer：拉成条儿加权</p>
+<p>消融实验：控制变量法</p>
+<p>n-fold 验证：数据切n份验证遍</p>
+<p>集成学习：多训几个模型一起用</p>
+<p>back propagation: 求导</p>
+<p>Trade-off：两个需求都满足得不好，但都不太差  </p>
+<p>Novel：把一个风马牛不相及的东西用在了这里  </p>
+<p>Compared method：专门选出来的能打赢的对手  </p>
+<p>Rethink：一竿子打翻一船人  </p>
+<p>X is all you need：标题只是为了把你骗进来，其实你need lots of tricks  </p>
+<p>Long-standing problem: 出现不超过五年的问题  </p>
+<p>Efficient：少用了点儿时间或数据  </p>
+<p>Intuitive：我想到了你一下子也能想到的东西</p>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+      </categories>
+      <tags>
+        <tag>碎碎念</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>创新者的困境</title>
+    <url>/%E8%AE%B0%E5%BD%95/Others/%E5%85%B3%E4%BA%8E%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E7%9A%84%E6%84%9F%E6%83%B3/</url>
+    <content><![CDATA[<p>在6月左右我换了个新电脑。</p>
+<p>我把老电脑中的blog项目，保存到百度网盘中已进行迁移。</p>
+<p>在把新电脑的各种环境配置的整整齐齐后（最新版本），我开始进行迁移blog到新电脑，我犯的最大错误就是上来就node install之类的指令，使得大量package产生了版本冲突，折腾几个小时后，没整明白（我对node不太熟，所以基本就是几个指令换着用，google报错说咋做我就直接照搬）。</p>
+<p>因为当时在做别的作业，所以就把解决这个问题搁置了，后面因为准备找工作，卷毛概绩点都优先于这件事，所以连续搁置下去。</p>
+<p>直到今天看新闻到晚上8点，觉得没啥学习动力，开始上网冲浪，无意中看到新人的博客，又激起了我的兴趣，我把项目又下载下来，这次我直接hexo d -g，竟然就成功了。</p>
+<p>这充分意识到可能没必要要求‘版本最新’，这个我三年来对于软件，操作系统的洁癖，其实是有无形代价的。仔细一想，我这个我可也是当时配了很久的博客，除了评论功能没有，好像也不缺啥了（PS：我还煞有介事地配了个公益404的界面）。</p>
+<p>对于创新、创业来说，是守成，还是继续创新，是一个重大的问题。有时，在一个波诡云谲的全球行业中，对于换届来说，可能守成是更优的选项，对于我的博客来说，现在的项目功能确实够用了（或者说经历教训后，我不开始追求更好的功能了，能用、稳定就行）</p>
+<p>今天看新闻联播看到晚上8点，上面是我的借景抒情。</p>
+]]></content>
+      <categories>
+        <category>记录</category>
+      </categories>
+      <tags>
+        <tag>碎碎念</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>WSL踩坑</title>
+    <url>/%E8%B8%A9%E5%9D%91/Pitfalls/wsl%E8%B8%A9%E5%9D%91/</url>
+    <content><![CDATA[<h1 id="WSL踩坑"><a href="#WSL踩坑" class="headerlink" title="WSL踩坑"></a>WSL踩坑</h1><p>大二上学期期末，稀里糊涂装了wsl, 一直用到现在。<br>本来是打算，和OS相关，那就装到C盘把。<br>这么一大意，在大三上装东西的时候出了不少问题。（当时没仔细装，而且也不懂）<br>这次为了装temu的交叉编译环境，装了不少东西，直接把C盘干到2G了，这么下去肯定不行。（Ubuntu20。04的主要文件夹就有至少15G了）<br>于是，我就上网搜，发现别人早就整好了vhdx(一个叫虚拟硬盘的东西，我当时没有做，现在做也来不及了），<br>所以别人的限制硬盘占用的方法，转移到别的位置的办法，我都没办法用了。</p>
+<p>打算卸载重装到D盘。用这个帖子解决问题了：<a href="https://blog.csdn.net/LaughingMei/article/details/109736965">https://blog.csdn.net/LaughingMei/article/details/109736965</a> </p>
+<p>卸载完C盘有16G了。</p>
+<p>比较脑瘫，当时看到的有两种方式，第一种要vhdx，第二种不用</p>
+]]></content>
+      <categories>
+        <category>踩坑</category>
+      </categories>
+      <tags>
+        <tag>踩坑</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>墨子平台训练教程</title>
+    <url>/MARL/MADRL/%E5%A2%A8%E5%AD%90%E5%B9%B3%E5%8F%B0%E8%AE%AD%E7%BB%83%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<p>下面介绍一下windows版本墨子平台的使用流程：</p>
+<ol>
+<li><h2 id="进入华戍防务-官网-hs-defense-com-下载软件"><a href="#进入华戍防务-官网-hs-defense-com-下载软件" class="headerlink" title="进入华戍防务 官网(hs-defense.com)下载软件"></a>进入<a href="http://www.hs-defense.com/col.jsp?id=105">华戍防务 官网(hs-defense.com)</a>下载软件</h2></li>
+</ol>
+<p>我下载的是<code>墨子·联合作战推演系统（个人版）</code> </p>
+<p><code>墨子·AI开发包</code>主要是一些开发会用到的代码和文档。代码也可以在gitee.com上找到：<a href="https://gitee.com/hs-defense/moziai">moziai: 墨子AI开发包及“子牙”智能体开源代码  </a></p>
+<p><code>竞赛客户端(互联网)</code> 主要是用来军事推演比赛的，与强化学习训练关系不大，可以不下载。</p>
+<p><code>墨子·AI版（Linux)</code> 因为一开始没办法下载，后面断断续续也没有弄出什么效果</p>
+<p>注：</p>
+<ul>
+<li><p>文件采用ftp协议下载，下载链接格式为：ftp: ip/port/文件夹s/文件</p>
+</li>
+<li><p>由于部分浏览器不支持，推荐使用QQ浏览器下载</p>
+</li>
+<li><p>一般点击下载按钮后，会默认让迅雷接管下载</p>
+</li>
+</ul>
+<ol>
+<li><h2 id="安装软件"><a href="#安装软件" class="headerlink" title="安装软件"></a>安装软件</h2><p>​    根据安装手册安装该软件，基本上按照手册进行就可以了</p>
+</li>
+<li><h2 id="启动该软件"><a href="#启动该软件" class="headerlink" title="启动该软件"></a>启动该软件</h2><ol>
+<li>进入安装目录下的\MoziData，右键点击<code>mysql.bat</code>，以管理员身份运行它，随后退出</li>
+<li>进入安装目录下的\MoziServer，运行MoziServer.exe，尽量关掉杀毒软件，最好以管理员身份运行<ul>
+<li>这里大概会遇到一个问题：<code>临时许可码过期，请联系华戍防务重新授权</code>，具体解决方案略</li>
+<li>我在数据库方面也出过问题，不过忘了具体细节了</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><h2 id="运行代码，进行仿真训练"><a href="#运行代码，进行仿真训练" class="headerlink" title="运行代码，进行仿真训练"></a>运行代码，进行仿真训练</h2><ol>
+<li><p>获取代码，在IDE打开代码</p>
+</li>
+<li><p>加载代码所需的scen想定文件</p>
+<ul>
+<li>进入墨子平台，可以在想定一栏下找到<code>加载想定</code>的选项，想定文件是从<code>安装路径\MoziServer\bin\Scenarios\</code>获取的，因此需要把代码包里的scen文件放到这里。</li>
+<li>加载想定文件，选择推演方</li>
+<li>随后可以看到墨子平台上有了具体的想定环境</li>
+<li>如果要更改想定文件，改完之后，需要保存，再重新加载<ul>
+<li>因为训练的每个回合都会刷新环境，如果不保存更改到新scen文件，那么这个更改只能用于一个回合</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>运行main.py代码即可看到效果</p>
+<ul>
+<li><p>注：</p>
+<ul>
+<li><p>这里可能需要指定一下 墨子平台的路径，可以执行代码</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">os.environ[&#39;MOZIPATH&#39;] &#x3D; &#39;D:\\MoZiSystem\\Mozi\\MoziServer\\bin&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>也可以在<code>编辑系统环境变量</code>中添加路径</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<p>注：Linux版本的墨子平台还在折腾，因为虚拟机比较卡，服务器上又没办法弄出显示界面，还折腾了一堆配置，最近还没弄，如果有结果了，会在这里更新的</p>
+]]></content>
+      <categories>
+        <category>MARL</category>
+      </categories>
+      <tags>
+        <tag>MARL</tag>
+        <tag>机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>How-to-be-a-good-programmer</title>
     <url>/%E7%A2%8E%E7%A2%8E%E5%BF%B5/Others/To-be-a-good-programmer/</url>
     <content><![CDATA[<h2 id="实例驱动学习"><a href="#实例驱动学习" class="headerlink" title="实例驱动学习"></a>实例驱动学习</h2><p>在知识爆炸的年代, 想成为一个好的程序员, 要具备这样一个精神:</p>
@@ -207,91 +468,6 @@
       </categories>
       <tags>
         <tag>Advice</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>一件小事</title>
-    <url>/%E8%AE%B0%E5%BD%95/Others/%E4%B8%80%E4%BB%B6%E5%B0%8F%E4%BA%8B/</url>
-    <content><![CDATA[<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/For_Picgo@main/img/image-20221203211545712.png![image-20221203211545712](/Users/changqingaas/Library/Application Support/typora-user-images/image-20221203211545712.png" alt="image-20221203211545712"></p>
-<p><a href="https://github.com/antlr/grammars-v4/blob/master/golang/examples/unicodeIdentifier.go">https://github.com/antlr/grammars-v4/blob/master/golang/examples/unicodeIdentifier.go</a></p>
-<p>当我准备删掉测试未通过样例时的忽然发现。</p>
-<p>或许，这就是技术传播的魅力吧！</p>
-]]></content>
-      <categories>
-        <category>记录</category>
-      </categories>
-      <tags>
-        <tag>碎碎念</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>创新者的困境</title>
-    <url>/%E8%AE%B0%E5%BD%95/Others/%E5%85%B3%E4%BA%8E%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E7%9A%84%E6%84%9F%E6%83%B3/</url>
-    <content><![CDATA[<p>在6月左右我换了个新电脑。</p>
-<p>我把老电脑中的blog项目，保存到百度网盘中已进行迁移。</p>
-<p>在把新电脑的各种环境配置的整整齐齐后（最新版本），我开始进行迁移blog到新电脑，我犯的最大错误就是上来就node install之类的指令，使得大量package产生了版本冲突，折腾几个小时后，没整明白（我对node不太熟，所以基本就是几个指令换着用，google报错说咋做我就直接照搬）。</p>
-<p>因为当时在做别的作业，所以就把解决这个问题搁置了，后面因为准备找工作，卷毛概绩点都优先于这件事，所以连续搁置下去。</p>
-<p>直到今天看新闻到晚上8点，觉得没啥学习动力，开始上网冲浪，无意中看到新人的博客，又激起了我的兴趣，我把项目又下载下来，这次我直接hexo d -g，竟然就成功了。</p>
-<p>这充分意识到可能没必要要求‘版本最新’，这个我三年来对于软件，操作系统的洁癖，其实是有无形代价的。仔细一想，我这个我可也是当时配了很久的博客，除了评论功能没有，好像也不缺啥了（PS：我还煞有介事地配了个公益404的界面）。</p>
-<p>对于创新、创业来说，是守成，还是继续创新，是一个重大的问题。有时，在一个波诡云谲的全球行业中，对于换届来说，可能守成是更优的选项，对于我的博客来说，现在的项目功能确实够用了（或者说经历教训后，我不开始追求更好的功能了，能用、稳定就行）</p>
-<p>今天看新闻联播看到晚上8点，上面是我的借景抒情。</p>
-]]></content>
-      <categories>
-        <category>记录</category>
-      </categories>
-      <tags>
-        <tag>碎碎念</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>论文黑话祛魅</title>
-    <url>/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/Others/%E8%AE%BA%E6%96%87%E9%BB%91%E8%AF%9D%E7%A5%9B%E9%AD%85/</url>
-    <content><![CDATA[<p>feature：一个数组</p>
-<p>representation：还是一个数组</p>
-<p>embedding：把输入映射成数组</p>
-<p>提高泛化性：预测更准了</p>
-<p>过拟合：训练过头了</p>
-<p>attention：加权</p>
-<p>adaptive：还是加权</p>
-<p>few-shot learning：看了几个样本就学</p>
-<p>zero-shot learning：一个没看就开始瞎蒙</p>
-<p>self-supervised：自学</p>
-<p>semi-supervised：教一点自学一点</p>
-<p>unsupervised：没人教了，跟谁学？</p>
-<p>end-to-end：一套操作，行云流水搞到底</p>
-<p>multi-stage：发现不行，还得一步一步来</p>
-<p>domain：我圈起来一堆样本，就管他叫一个domain</p>
-<p>transfer：我非得在这一堆样本上训练，用在另一堆样本上，就是不直接训练，就是玩～</p>
-<p>adversarial：我加了一部分就是让loss增大</p>
-<p>robust：很稳我不会让loss变大的（但也不容易变小了）</p>
-<p>state of the art：我（吹nb）第一</p>
-<p>outperform：我虽然没第一，但是我比baseline强</p>
-<p>baseline：(故意)选出来的方法，让我能够outperform</p>
-<p>empirically：我做实验了，不知道为啥work</p>
-<p>theoretically：我以为我知道为啥work，但没做实验，或者只做了个toy model</p>
-<h2 id="multi"><a href="#multi" class="headerlink" title="multi-"></a>multi-</h2><p>multi-task：把几个loss加一起，完事</p>
-<p>multi-domain：把几堆儿样本混一块训练，完事</p>
-<p>multi-modality：把视频语音文字图像graph点云xxx混一块训练，完事</p>
-<p>multi-domain multi-modal multi-media model：mua～mua～mua～mua……</p>
-<p>Transformer：拉成条儿加权</p>
-<p>消融实验：控制变量法</p>
-<p>n-fold 验证：数据切n份验证遍</p>
-<p>集成学习：多训几个模型一起用</p>
-<p>back propagation: 求导</p>
-<p>Trade-off：两个需求都满足得不好，但都不太差  </p>
-<p>Novel：把一个风马牛不相及的东西用在了这里  </p>
-<p>Compared method：专门选出来的能打赢的对手  </p>
-<p>Rethink：一竿子打翻一船人  </p>
-<p>X is all you need：标题只是为了把你骗进来，其实你need lots of tricks  </p>
-<p>Long-standing problem: 出现不超过五年的问题  </p>
-<p>Efficient：少用了点儿时间或数据  </p>
-<p>Intuitive：我想到了你一下子也能想到的东西</p>
-]]></content>
-      <categories>
-        <category>论文阅读</category>
-      </categories>
-      <tags>
-        <tag>碎碎念</tag>
       </tags>
   </entry>
   <entry>
@@ -763,182 +939,6 @@ marp: true
       <tags>
         <tag>折腾</tag>
         <tag>markdown</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>brew命令不能正常使用</title>
-    <url>/%E8%B8%A9%E5%9D%91/Pitfalls/brew%E8%B8%A9%E5%9D%91/</url>
-    <content><![CDATA[<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>想尝试一下<a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui，但是运行./webui.sh报错了:大概是gfpgan安装不上。">https://github.com/AUTOMATIC1111/stable-diffusion-webui，但是运行./webui.sh报错了:大概是gfpgan安装不上。</a></p>
-<p>定位到launch.py.227:</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">gfpgan_package &#x3D; os.environ.get(&#39;GFPGAN_PACKAGE&#39;, &quot;git+https:&#x2F;&#x2F;github.com&#x2F;TencentARC&#x2F;GFPGAN.git@8d2447a2d918f8eba5a4a01463fd48e45126a379&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>然后修改为：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">gfpgan_package &#x3D; os.environ.get(&#39;GFPGAN_PACKAGE&#39;, &quot;https:&#x2F;&#x2F;github.com&#x2F;TencentARC&#x2F;GFPGAN.git&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>不行。</p>
-<p>在./stable-diffusion-webui和./stable-diffusion-webui/venv/lib/pyhton3/site-packages/都手动git clone <a href="https://github.com/TencentARC/GFPGAN.git">https://github.com/TencentARC/GFPGAN.git</a> 还是不行。</p>
-<p>遂放弃。</p>
-<p>后记：</p>
-<p>添加<a href="https://ghproxy.com/即可">https://ghproxy.com/即可</a></p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">gfpgan_package &#x3D; os.environ.get(&#39;GFPGAN_PACKAGE&#39;, &quot;https:&#x2F;&#x2F;ghproxy.com&#x2F;https:&#x2F;&#x2F;github.com&#x2F;TencentARC&#x2F;GFPGAN.git&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>居然是网络问题，看报错根本看不出来！啊 哒哒哒！</p>
-<p>中途可能使用了该命令：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git config --global --unset http.proxy
-
-git config --global --unset https.proxy<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h1 id="经过"><a href="#经过" class="headerlink" title="经过"></a>经过</h1><p>第二天，就不能正常使用brew相关的命令了。（brew update会涉及到git fetch更新一些仓库的命令）</p>
-<p>但最近有在这上面有需求，就不能回避了</p>
-<p>下面为我踩坑时常看到的信息:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">brew update --verbose
-
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew...
-Fetching &#x2F;opt&#x2F;homebrew...
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;carlocab&#x2F;homebrew-personal...
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;dart-lang&#x2F;homebrew-dart...
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;grpc&#x2F;homebrew-grpc...
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-cask...
-Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-cask...
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-cask-versions...
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-core...
-Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-core...
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-services...
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;mongodb&#x2F;homebrew-brew...
-Checking if we need to fetch &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;probezy&#x2F;homebrew-core...
-Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;dart-lang&#x2F;homebrew-dart...
-Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;grpc&#x2F;homebrew-grpc...
-Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-cask-versions...
-Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-services...
-Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;mongodb&#x2F;homebrew-brew...
-Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;probezy&#x2F;homebrew-core...
-Fetching &#x2F;opt&#x2F;homebrew&#x2F;Library&#x2F;Taps&#x2F;carlocab&#x2F;homebrew-personal...
-fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;mongodb&#x2F;homebrew-brew&#x2F;&#39;: Failed to connect to github.com port 443 after 75008 ms: Couldn&#39;t connect to server
-fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;carlocab&#x2F;homebrew-personal&#x2F;&#39;: Failed to connect to github.com port 443 after 75003 ms: Couldn&#39;t connect to server
-fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;dart-lang&#x2F;homebrew-dart&#x2F;&#39;: HTTP&#x2F;2 stream 1 was not closed cleanly before end of the underlying stream
-fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;Homebrew&#x2F;homebrew-cask-versions&#x2F;&#39;: HTTP&#x2F;2 stream 1 was not closed cleanly before end of the underlying stream
-fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;probezy&#x2F;homebrew-core&#x2F;&#39;: HTTP&#x2F;2 stream 1 was not closed cleanly before end of the underlying stream
-fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;Homebrew&#x2F;homebrew-services&#x2F;&#39;: error:02FFF036:system library:func(4095):Connection reset by peer
-fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;grpc&#x2F;homebrew-grpc&#x2F;&#39;: error:02FFF036:system library:func(4095):Connection reset by peer<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>中途把github的代理弄了好几个版本，也改过DNS8.8.8.8+重启。</p>
-<p>把brew改成清华镜像也不是很有用。</p>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>最后的解决方案是：</p>
-<h2 id="step1"><a href="#step1" class="headerlink" title="step1:"></a>step1:</h2><p>没改DNS，brew镜像.</p>
-<p>下面为brew config的输出，以供参考</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">HOMEBREW_VERSION: 4.0.3-32-ga3207a0
-ORIGIN: https:&#x2F;&#x2F;github.com&#x2F;Homebrew&#x2F;brew
-HEAD: a3207a03900d7b012c999fad911a701baed82be5
-Last commit: 4 hours ago
-Core tap origin: https:&#x2F;&#x2F;github.com&#x2F;Homebrew&#x2F;homebrew-core
-Core tap HEAD: 3e0f7cf00d2e1b9ea58aeee6009c3c98dd3fc3fe
-Core tap last commit: 47 minutes ago
-Core tap branch: master
-Core tap JSON: 22 Feb 07:36 UTC
-HOMEBREW_PREFIX: &#x2F;opt&#x2F;homebrew
-HOMEBREW_BOTTLE_DOMAIN: https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;homebrew-bottles
-HOMEBREW_CASK_OPTS: []
-HOMEBREW_GITHUB_API_TOKEN: set
-HOMEBREW_MAKE_JOBS: 8
-Homebrew Ruby: 2.6.10 &#x3D;&gt; &#x2F;System&#x2F;Library&#x2F;Frameworks&#x2F;Ruby.framework&#x2F;Versions&#x2F;2.6&#x2F;usr&#x2F;bin&#x2F;ruby
-CPU: octa-core 64-bit arm_firestorm_icestorm
-Clang: 14.0.0 build 1400
-Git: 2.37.1 &#x3D;&gt; &#x2F;Library&#x2F;Developer&#x2F;CommandLineTools&#x2F;usr&#x2F;bin&#x2F;git
-Curl: 7.86.0 &#x3D;&gt; &#x2F;usr&#x2F;bin&#x2F;curl
-macOS: 13.2.1-arm64
-CLT: 14.2.0.0.1.1668646533
-Xcode: N&#x2F;A
-Rosetta 2: false<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="step2"><a href="#step2" class="headerlink" title="step2:"></a>step2:</h2><p>修改github的代理为clash的端口(mixed-port为7890，或socks5:7891)。<br>最后我的/Users/changqingaas/.gitconfig文件为:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">[user]
-	name &#x3D; chang_qing_aas
-	email &#x3D; 1736731090@qq.com
-[safe]
-	directory &#x3D; &#x2F;usr&#x2F;local&#x2F;Homebrew&#x2F;Library&#x2F;Taps&#x2F;homebrew&#x2F;homebrew-core
-[core]
-	quotepath &#x3D; false
-[filter &quot;lfs&quot;]
-	clean &#x3D; git-lfs clean -- %f
-	smudge &#x3D; git-lfs smudge -- %f
-	process &#x3D; git-lfs filter-process
-	required &#x3D; true
-[http]
-	version &#x3D; HTTP&#x2F;1.1
-	proxy &#x3D; socks5:&#x2F;&#x2F;127.0.0.1:7891
-[https]
-	proxy &#x3D; socks5:&#x2F;&#x2F;127.0.0.1:7891
-[http &quot;https:&#x2F;&#x2F;github.com&quot;]
-	proxy &#x3D; socks5:&#x2F;&#x2F;127.0.0.1:7891
-[https &quot;https:&#x2F;&#x2F;github.com&quot;]
-	proxy &#x3D; socks5:&#x2F;&#x2F;127.0.0.1:7891<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>具体命令我没保存，如果觉得有用直接vim .gitconfig修改吧。</p>
-<p>我还改了.ssh/config:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">Host github.com
-   HostName github.com
-   User git
-   #socks5
-   ProxyCommand nc -X 5 -x 127.0.0.1:7891 %h %p<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>在/etc/config添加:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"># Github
-140.82.114.3 github.com
-
-185.199.110.133 raw.github.com
-
-185.199.110.133 raw.githubusercontent.com
-
-199.232.69.194 github.global.ssl.fastly.net
-
-185.199.108.153 assets-cdn.github.com
-
-185.199.109.153 assets-cdn.github.com
-
-185.199.110.153 assets-cdn.github.com<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="step3"><a href="#step3" class="headerlink" title="step3:"></a>step3:</h2><p>我在brew cleanup 遇到”Failed to download <a href="https://formulae.brew.sh/api/cask.json">https://formulae.brew.sh/api/cask.json</a> “<br>这个文件不知道为啥下载很慢，以前没这个问题。<br>使用wget测出需要好几十个小时，才能下完。<br>猜测是终端不能翻墙的原因。<br>遂google<br>在这里看到解决办法：<a href="https://github.com/Homebrew/brew/issues/14516">https://github.com/Homebrew/brew/issues/14516</a><br>我做了如下:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rm -r &quot;$(brew --cache)&#x2F;api&quot; # &#x2F;Users&#x2F;changqingaas&#x2F;Library&#x2F;Caches&#x2F;Homebrew&#x2F;api
-export HOMEBREW_NO_INSTALL_FROM_API&#x3D;1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>成功了，绕过了这个文件下载很慢的问题。</p>
-<p>但是，当我</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">brew upgrade<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>发现了下载速度很慢，不知道这和之前改到清华镜像是否有原因。</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">&#x3D;&#x3D;&gt; Fetching node@16
-&#x3D;&#x3D;&gt; Downloading https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;homebrew-bottles&#x2F;node%4016-
-######################################################################## 100.0%<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h2 id="step4"><a href="#step4" class="headerlink" title="step4:"></a>step4:</h2><p>到这里事情并没有结束。</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">wget https:&#x2F;&#x2F;formulae.brew.sh&#x2F;api&#x2F;formula.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>速度依然很慢。</p>
-<p>但是，基本每条brew指令都需要下载该文件。</p>
-<p>实践后，可知：每次运行brew命令前，可以执行</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">export HOMEBREW_NO_INSTALL_FROM_API&#x3D;1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>执行之后，基本就能使用brew命令了。不过这样只能起到短期效果。</p>
-<p>长期解决办法是：把它写进.zshrc or .bash_profile；source一下。</p>
-<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>git命令翻墙和终端翻墙可能仍是问题。</p>
-<ul>
-<li>目前实测git clone <a href="https://github.com/XXX/XXX">https://github.com/XXX/XXX</a> 没问题 <ul>
-<li>速度：M/s </li>
-</ul>
-</li>
-<li>目前实测 wget <a href="https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz">https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz</a><ul>
-<li>速度：几十kb/s有点慢 </li>
-<li>好在可以在浏览器下载后，move到目标文件夹</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>踩坑</category>
-      </categories>
-      <tags>
-        <tag>踩坑</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>WSL踩坑</title>
-    <url>/%E8%B8%A9%E5%9D%91/Pitfalls/wsl%E8%B8%A9%E5%9D%91/</url>
-    <content><![CDATA[<h1 id="WSL踩坑"><a href="#WSL踩坑" class="headerlink" title="WSL踩坑"></a>WSL踩坑</h1><p>大二上学期期末，稀里糊涂装了wsl, 一直用到现在。<br>本来是打算，和OS相关，那就装到C盘把。<br>这么一大意，在大三上装东西的时候出了不少问题。（当时没仔细装，而且也不懂）<br>这次为了装temu的交叉编译环境，装了不少东西，直接把C盘干到2G了，这么下去肯定不行。（Ubuntu20。04的主要文件夹就有至少15G了）<br>于是，我就上网搜，发现别人早就整好了vhdx(一个叫虚拟硬盘的东西，我当时没有做，现在做也来不及了），<br>所以别人的限制硬盘占用的方法，转移到别的位置的办法，我都没办法用了。</p>
-<p>打算卸载重装到D盘。用这个帖子解决问题了：<a href="https://blog.csdn.net/LaughingMei/article/details/109736965">https://blog.csdn.net/LaughingMei/article/details/109736965</a> </p>
-<p>卸载完C盘有16G了。</p>
-<p>比较脑瘫，当时看到的有两种方式，第一种要vhdx，第二种不用</p>
-]]></content>
-      <categories>
-        <category>踩坑</category>
-      </categories>
-      <tags>
-        <tag>踩坑</tag>
       </tags>
   </entry>
 </search>
