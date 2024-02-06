@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 5.4.2">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
@@ -30,7 +30,7 @@
 <meta property="og:description" content="问题简介：为了修改GitHub代理，导致homebrew不能正常使用。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-22T15:30:16.000Z">
-<meta property="article:modified_time" content="2023-11-27T09:17:24.120Z">
+<meta property="article:modified_time" content="2023-11-27T09:17:24.000Z">
 <meta property="article:author" content="ChangQingAAS">
 <meta property="article:tag" content="踩坑">
 <meta name="twitter:card" content="summary">
@@ -176,14 +176,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -344,13 +344,13 @@
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">gfpgan_package &#x3D; os.environ.get(&#39;GFPGAN_PACKAGE&#39;, &quot;https:&#x2F;&#x2F;ghproxy.com&#x2F;https:&#x2F;&#x2F;github.com&#x2F;TencentARC&#x2F;GFPGAN.git&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>居然是网络问题，看报错根本看不出来！啊 哒哒哒！</p>
 <p>中途可能使用了该命令：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git config --global --unset http.proxy
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">git config --global --unset http.proxy
 
 git config --global --unset https.proxy<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <h1 id="经过"><a href="#经过" class="headerlink" title="经过"></a>经过</h1><p>第二天，就不能正常使用brew相关的命令了。（brew update会涉及到git fetch更新一些仓库的命令）</p>
 <p>但最近有在这上面有需求，就不能回避了</p>
 <p>下面为我踩坑时常看到的信息:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">brew update --verbose
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">brew update --verbose
 
 Checking if we need to fetch &#x2F;opt&#x2F;homebrew...
 Fetching &#x2F;opt&#x2F;homebrew...
@@ -384,7 +384,7 @@ fatal: unable to access &#39;https:&#x2F;&#x2F;github.com&#x2F;grpc&#x2F;homebre
 <h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>最后的解决方案是：</p>
 <h2 id="step1"><a href="#step1" class="headerlink" title="step1:"></a>step1:</h2><p>没改DNS，brew镜像.</p>
 <p>下面为brew config的输出，以供参考</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">HOMEBREW_VERSION: 4.0.3-32-ga3207a0
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">HOMEBREW_VERSION: 4.0.3-32-ga3207a0
 ORIGIN: https:&#x2F;&#x2F;github.com&#x2F;Homebrew&#x2F;brew
 HEAD: a3207a03900d7b012c999fad911a701baed82be5
 Last commit: 4 hours ago
@@ -408,7 +408,7 @@ CLT: 14.2.0.0.1.1668646533
 Xcode: N&#x2F;A
 Rosetta 2: false<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="step2"><a href="#step2" class="headerlink" title="step2:"></a>step2:</h2><p>修改github的代理为clash的端口(mixed-port为7890，或socks5:7891)。<br>最后我的/Users/changqingaas/.gitconfig文件为:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">[user]
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">[user]
 	name &#x3D; chang_qing_aas
 	email &#x3D; 1736731090@qq.com
 [safe]
@@ -431,13 +431,13 @@ Rosetta 2: false<span aria-hidden="true" class="line-numbers-rows"><span></span>
 	proxy &#x3D; socks5:&#x2F;&#x2F;127.0.0.1:7891<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>具体命令我没保存，如果觉得有用直接vim .gitconfig修改吧。</p>
 <p>我还改了.ssh/config:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">Host github.com
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Host github.com
    HostName github.com
    User git
    #socks5
    ProxyCommand nc -X 5 -x 127.0.0.1:7891 %h %p<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>在/etc/config添加:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"># Github
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># Github
 140.82.114.3 github.com
 
 185.199.110.133 raw.github.com
@@ -452,21 +452,21 @@ Rosetta 2: false<span aria-hidden="true" class="line-numbers-rows"><span></span>
 
 185.199.110.153 assets-cdn.github.com<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="step3"><a href="#step3" class="headerlink" title="step3:"></a>step3:</h2><p>我在brew cleanup 遇到”Failed to download <a target="_blank" rel="noopener" href="https://formulae.brew.sh/api/cask.json">https://formulae.brew.sh/api/cask.json</a> “<br>这个文件不知道为啥下载很慢，以前没这个问题。<br>使用wget测出需要好几十个小时，才能下完。<br>猜测是终端不能翻墙的原因。<br>遂google<br>在这里看到解决办法：<a target="_blank" rel="noopener" href="https://github.com/Homebrew/brew/issues/14516">https://github.com/Homebrew/brew/issues/14516</a><br>我做了如下:</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rm -r &quot;$(brew --cache)&#x2F;api&quot; # &#x2F;Users&#x2F;changqingaas&#x2F;Library&#x2F;Caches&#x2F;Homebrew&#x2F;api
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">rm -r &quot;$(brew --cache)&#x2F;api&quot; # &#x2F;Users&#x2F;changqingaas&#x2F;Library&#x2F;Caches&#x2F;Homebrew&#x2F;api
 export HOMEBREW_NO_INSTALL_FROM_API&#x3D;1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>成功了，绕过了这个文件下载很慢的问题。</p>
 <p>但是，当我</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">brew upgrade<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">brew upgrade<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>发现了下载速度很慢，不知道这和之前改到清华镜像是否有原因。</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">&#x3D;&#x3D;&gt; Fetching node@16
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">&#x3D;&#x3D;&gt; Fetching node@16
 &#x3D;&#x3D;&gt; Downloading https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;homebrew-bottles&#x2F;node%4016-
 ######################################################################## 100.0%<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <h2 id="step4"><a href="#step4" class="headerlink" title="step4:"></a>step4:</h2><p>到这里事情并没有结束。</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">wget https:&#x2F;&#x2F;formulae.brew.sh&#x2F;api&#x2F;formula.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">wget https:&#x2F;&#x2F;formulae.brew.sh&#x2F;api&#x2F;formula.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>速度依然很慢。</p>
 <p>但是，基本每条brew指令都需要下载该文件。</p>
 <p>实践后，可知：每次运行brew命令前，可以执行</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">export HOMEBREW_NO_INSTALL_FROM_API&#x3D;1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">export HOMEBREW_NO_INSTALL_FROM_API&#x3D;1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>执行之后，基本就能使用brew命令了。不过这样只能起到短期效果。</p>
 <p>长期解决办法是：把它写进.zshrc or .bash_profile；source一下。</p>
 <h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>git命令翻墙和终端翻墙可能仍是问题。</p>
@@ -567,14 +567,14 @@ export HOMEBREW_NO_INSTALL_FROM_API&#x3D;1<span aria-hidden="true" class="line-n
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">37k</span>
+    <span title="站点总字数">88k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">34 分钟</span>
+    <span title="站点阅读时长">1:20</span>
   </span>
 </div>
 <div class="busuanzi-count">
