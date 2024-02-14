@@ -3149,8 +3149,8 @@ mjx-container[display="true"] + br {
   margin-top: 30px;
   margin-bottom: 30px;
   padding: 25px;
-  -webkit-box-shadow: 0 0 5px rgba(202,203,203,0.5);
-  -moz-box-shadow: 0 0 5px rgba(202,203,204,0.5);
+  -webkit-box-shadow: 0 0 5px rgba(200,200,200,0.5);
+  -moz-box-shadow: 0 0 5px rgba(200,200,200,0.5);
 }
 .brand {
   color: $white;

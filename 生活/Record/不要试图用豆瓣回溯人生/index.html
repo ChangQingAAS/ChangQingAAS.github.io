@@ -231,7 +231,9 @@
           </div>
         </div>
       </div>
-      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=20110049&auto=1&height=66&autostart="false"></iframe>
+
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="https://music.163.com/outchain/player?type=2&id=20110049&auto=1&height=66&autostart="false">
+      </iframe>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -399,19 +401,20 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/%E4%B8%AA%E4%BA%BA%E6%88%90%E9%95%BF/Growth/%E7%BB%8F%E6%B5%8E%E7%8B%AC%E7%AB%8B/" rel="prev" title="我经济独立上的一小步">
-                  <i class="fa fa-chevron-left"></i> 我经济独立上的一小步
+                <a href="/%E8%A7%82%E7%82%B9/Thinkings/%E8%BF%91%E6%9C%9F%E8%BF%B7%E6%80%9D/" rel="prev" title="近期迷思">
+                  <i class="fa fa-chevron-left"></i> 近期迷思
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/%E8%A7%82%E7%82%B9/Thinkings/%E8%BF%91%E6%9C%9F%E8%BF%B7%E6%80%9D/" rel="next" title="近期迷思">
-                  近期迷思 <i class="fa fa-chevron-right"></i>
+                <a href="/%E4%B8%AA%E4%BA%BA%E6%88%90%E9%95%BF/Growth/%E8%BF%BD%E6%B1%82%E6%99%BA%E8%AF%86/" rel="next" title="旷野中，把追求智识作为道路">
+                  旷野中，把追求智识作为道路 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
     </footer>
   </article>
 </div>
+
 
 
 
@@ -426,11 +429,17 @@
 
 
 <div class="copyright">
-  &copy; 2021 – 
+  &copy;
+
+  
+    2021–
+  
   <span itemprop="copyrightYear">2024</span>
+
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
+
   <span class="author" itemprop="copyrightHolder">ChangQingAAS</span>
 </div>
 <div class="wordcount">
@@ -446,41 +455,53 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:23</span>
+    <span title="站点阅读时长">7:39</span>
   </span>
 </div>
 
-<!--
--->
 
-
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="busuanzi-count">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">
       本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
-      <span class="post-meta-divider">|</span>
+      <span class="post-meta-divider"> | </span>
     </span>
     <span id="busuanzi_container_site_uv">
       本站访客数<span id="busuanzi_value_site_uv"></span>人
     </span>
+  </div>
 
 
-  <script>
-      var now = new Date();
-      function createtime() {
-          var grt= new Date("03/12/2019 12:00:00");//此处修改你的建站时间或者网站上线时间
-          now.setTime(now.getTime()+250);
-          days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
-          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
-          if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
-          mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
-          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
-          snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
-          document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
-          document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+<script>
+var now = new Date();
+  function createtime() {
+      var grt= new Date("07/15/2021 12:00:00");//此处修改你的建站时间或者网站上线时间
+
+      now.setTime(now.getTime()+250);
+
+      days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+      hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+
+      if( String(hnum).length ==1 ){
+        hnum = "0" + hnum;
       }
+
+      minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+      mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+      seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+      snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+
+      document.getElementById("times").innerHTML = "本站已安全运行 "+dnum+" 天 " + hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
   setInterval("createtime()",250);
+</script>
+
+<div id="times"></div>
 
     </div>
+
+    <!-- 添加这个异常标签以消除原本的点击效果 -->
+    <script>
   </footer>
 
   
@@ -499,6 +520,7 @@
   <script src="/js/third-party/nprogress.js"></script>
 
   
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 
@@ -512,13 +534,13 @@
 <script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"ChangQingAAS/Blog_Comments","issue_term":"pathname","theme":"github-dark"}</script>
 <script src="/js/third-party/comments/utterances.js"></script>
 
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
 </html>
 
 <!-- 页面点击小红心 -->
 <script type="text/javascript" src="/js/love.js"></script>
 
 <!-- 樱花特效 -->
-  
-      <script async src="/js/src/fairyDustCursor.js"></script>
-  
+
+    <script async src="/js/fairyDustCursor.js"></script>
+
