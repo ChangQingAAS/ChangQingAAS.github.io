@@ -379,9 +379,9 @@
       </categories>
       <tags>
         <tag>书籍</tag>
-        <tag>观察</tag>
         <tag>政治</tag>
         <tag>哲学</tag>
+        <tag>观察</tag>
         <tag>女性主义</tag>
       </tags>
   </entry>
@@ -805,8 +805,8 @@ export HOMEBREW_NO_INSTALL_FROM_API&#x3D;1<span aria-hidden="true" class="line-n
       <tags>
         <tag>评论</tag>
         <tag>观点</tag>
-        <tag>网络舆情</tag>
         <tag>思考</tag>
+        <tag>网络舆情</tag>
       </tags>
   </entry>
   <entry>
