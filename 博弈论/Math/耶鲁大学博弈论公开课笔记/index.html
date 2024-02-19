@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic%7CRoboto+Slab:300,300italic,400,400italic,700,700italic%7CPT+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"changqingaas.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2},"disqus":{"text":"Load Disqus","order":-1}},"activeClass":"utterances"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="耶鲁大学博弈论公开课笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="耶鲁大学博弈论公开课笔记">
+<meta property="og:url" content="https://changqingaas.github.io/%E5%8D%9A%E5%BC%88%E8%AE%BA/Math/%E8%80%B6%E9%B2%81%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%BC%88%E8%AE%BA%E5%85%AC%E5%BC%80%E8%AF%BE%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="叶叶常青">
+<meta property="og:description" content="耶鲁大学博弈论公开课笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-21T14:00:33.000Z">
+<meta property="article:modified_time" content="2021-08-27T06:51:54.000Z">
+<meta property="article:author" content="ChangQingAAS">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="经济学">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://changqingaas.github.io/%E5%8D%9A%E5%BC%88%E8%AE%BA/Math/%E8%80%B6%E9%B2%81%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%BC%88%E8%AE%BA%E5%85%AC%E5%BC%80%E8%AF%BE%E7%AC%94%E8%AE%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://changqingaas.github.io/%E5%8D%9A%E5%BC%88%E8%AE%BA/Math/%E8%80%B6%E9%B2%81%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%BC%88%E8%AE%BA%E5%85%AC%E5%BC%80%E8%AF%BE%E7%AC%94%E8%AE%B0/","path":"博弈论/Math/耶鲁大学博弈论公开课笔记/","title":"耶鲁大学博弈论公开课笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>耶鲁大学博弈论公开课笔记 | 叶叶常青</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="叶叶常青" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+     
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">叶叶常青</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">保卫复杂</p>
+     
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-commonweal"><a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--个人简介-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%80%B6%E9%B2%81%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%BC%88%E8%AE%BA%E5%85%AC%E5%BC%80%E8%AF%BE%E7%AC%94%E8%AE%B0"><span class="nav-text">耶鲁大学博弈论公开课笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#P1-%E5%AF%BC%E8%AE%BA-%E4%BA%94%E4%B8%AA%E5%85%A5%E9%97%A8%E7%BB%93%E8%AE%BA"><span class="nav-text">P1 导论-五个入门结论</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E6%80%A7%E4%BA%BA"><span class="nav-text">理性人</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B%EF%BC%9A"><span class="nav-text">举例：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-text">结论</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P2-%E5%AD%A6%E4%BC%9A%E6%8D%A2%E4%BD%8D%E6%80%9D%E8%80%83"><span class="nav-text">P2 学会换位思考</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%9A%E5%BC%88%E7%9A%84%E4%B8%89%E5%A4%A7%E8%A6%81%E7%B4%A0"><span class="nav-text">博弈的三大要素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B"><span class="nav-text">举例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%A5%E6%A0%BC%E5%8A%A3%E5%8A%BF%E7%AD%96%E7%95%A5"><span class="nav-text">严格劣势策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%92%E5%8A%A8%E6%B4%BB%E5%8A%A8%EF%BC%9A-%E5%85%A8%E7%8F%AD%E5%90%8C%E5%AD%A6%E5%86%991-100%E7%9A%84%E6%95%B0%E5%AD%97%EF%BC%8C%E5%86%99%E5%88%B0%E5%B9%B3%E5%9D%87%E6%95%B0%E7%9A%84%E4%B8%89%E5%88%86%E4%B9%8B%E4%BA%8C%E7%9A%84%E4%BA%BA%E5%8D%B3%E4%B8%BA%E8%8E%B7%E8%83%9C%E6%96%B9%E3%80%82"><span class="nav-text">互动活动： 全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%84%E5%88%99"><span class="nav-text">规则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%A8%E7%90%86%E8%BF%87%E7%A8%8B"><span class="nav-text">推理过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA"><span class="nav-text">导出</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P3-%E8%BF%AD%E4%BB%A3%E5%89%94%E9%99%A4%E5%92%8C%E4%B8%AD%E4%BD%8D%E9%80%89%E6%B0%91%E5%AE%9A%E7%90%86"><span class="nav-text">P3 迭代剔除和中位选民定理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E8%BF%AD%E4%BB%A3%E5%89%94%E9%99%A4%E6%B3%95%E9%A2%86%E6%82%9F%E4%B8%AD%E9%97%B4%E9%80%89%E6%B0%91%E9%97%AE%E9%A2%98"><span class="nav-text">利用迭代剔除法领悟中间选民问题</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P4-%E8%B6%B3%E7%90%83%E6%AF%94%E8%B5%9B%E5%92%8C%E5%95%86%E4%B8%9A%E5%90%88%E4%BD%9C%E4%B9%8B%E6%9C%80%E4%BD%B3%E5%AF%B9%E7%AD%96"><span class="nav-text">P4 足球比赛和商业合作之最佳对策</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%9A%E7%82%B9%E7%90%83"><span class="nav-text">罚点球</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partnership-game%EF%BC%9A%E5%95%86%E4%B8%9A%E5%90%88%E4%BD%9C"><span class="nav-text">Partnership game：商业合作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P5-%E7%BA%B3%E4%BB%80%E5%9D%87%E8%A1%A1"><span class="nav-text">P5 纳什均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BA%B3%E4%BB%80%E5%9D%87%E8%A1%A1%E7%9A%84%E4%B8%A4%E5%A4%A7%E5%AE%9A%E4%B9%89"><span class="nav-text">1.纳什均衡的两大定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P6-%E7%AC%AC%E5%85%AD%E8%AE%B2%EF%BC%9A%E7%BA%A6%E4%BC%9A%E7%AD%96%E7%95%A5%E4%B8%8E%E5%8F%A4%E8%AF%BA%E6%A8%A1%E5%9E%8B"><span class="nav-text">P6 第六讲：约会策略与古诺模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%A4%E8%AF%BA%E6%A8%A1%E5%9E%8B"><span class="nav-text">古诺模型</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+      <!--/个人简介-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ChangQingAAS"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ChangQingAAS</p>
+  <div class="site-description" itemprop="description">行则将至</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ChangQingAAS" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ChangQingAAS" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wanghongyang@tju.edu.cn" title="E-Mail → mailto:wanghongyang@tju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/u/3836508506" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;u&#x2F;3836508506" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/199761729/" title="Douban → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;199761729&#x2F;" rel="noopener" target="_blank"><i class="fa fa-book fa-fw"></i>Douban</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title">
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://aidn.jp/mikutap/" title="https:&#x2F;&#x2F;aidn.jp&#x2F;mikutap&#x2F;" rel="noopener" target="_blank">解压玩具</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://thispersondoesnotexist.com/" title="https:&#x2F;&#x2F;thispersondoesnotexist.com&#x2F;" rel="noopener" target="_blank">他者凝视</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="https://music.163.com/outchain/player?type=2&id=20110049&auto=1&height=66&autostart="false">
+      </iframe>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://changqingaas.github.io/%E5%8D%9A%E5%BC%88%E8%AE%BA/Math/%E8%80%B6%E9%B2%81%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%BC%88%E8%AE%BA%E5%85%AC%E5%BC%80%E8%AF%BE%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ChangQingAAS">
+      <meta itemprop="description" content="行则将至">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="叶叶常青">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          耶鲁大学博弈论公开课笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-21 22:00:33" itemprop="dateCreated datePublished" datetime="2021-07-21T22:00:33+08:00">2021-07-21</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-08-27 14:51:54" itemprop="dateModified" datetime="2021-08-27T14:51:54+08:00">2021-08-27</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%8D%9A%E5%BC%88%E8%AE%BA/" itemprop="url" rel="index"><span itemprop="name">博弈论</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">耶鲁大学博弈论公开课笔记</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="耶鲁大学博弈论公开课笔记"><a href="#耶鲁大学博弈论公开课笔记" class="headerlink" title="耶鲁大学博弈论公开课笔记"></a><strong>耶鲁大学博弈论公开课笔记</strong></h1><p><strong><a target="_blank" rel="noopener" href="https://wenku.baidu.com/view/d9e4d40fc5da50e2524d7fc1.html">耶鲁大学公开课博弈论笔记(博弈论24讲) - 百度文库 (baidu.com)</a></strong></p>
+<h2 id="P1-导论-五个入门结论"><a href="#P1-导论-五个入门结论" class="headerlink" title="P1 导论-五个入门结论"></a>P1 导论-五个入门结论</h2><h4 id="理性人"><a href="#理性人" class="headerlink" title="理性人"></a>理性人</h4><p>​    指代这一类人，他们只关心自己的利益<em>(这个定义并不完备，需要修改）</em></p>
+<h4 id="举例："><a href="#举例：" class="headerlink" title="举例："></a>举例：</h4><ul>
+<li>囚徒困境（注意模型的不完备性）</li>
+<li>宿舍卫生打扫问题（没人愿意投入）</li>
+<li>企业打价格战（无限降价会使得自己收到损失）</li>
+</ul>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><ul>
+<li><p>如果选择a的结果严格优于b,那么就说a相当于b来说是一个严格优势策略。结论：不要选择严格劣势策略（<strong>Do not play a strictly dominated strategy.</strong></p>
+</li>
+<li><p>选择严格优势策略（无论对方选择什么，自己的收益都会更高）</p>
+</li>
+<li><p>在不同的参与者，不同的利益关心情况下，做出的选择都会不同</p>
+</li>
+<li><p>理性人的理性选择导致了次优的结果（<strong>Rational choice in this case,can lead to outcomes that suck.(Rational choice by rational players,can lead to bad outcomes.</strong></p>
+</li>
+<li><p>协和谬误 Payoffs matter.苟欲求之，必先知之（<strong>You can’t get what you want,till you know what you want.</strong></p>
+</li>
+<li><p>人总是以自己为出发点思考问题。</p>
+</li>
+<li><p>策略决策的核心：换位思考，站在别人的立场上看比人会怎样做，在考虑自己受益的同时，要注意别人的选择。（<strong>Put yourself in other’s shoes and try to figure out what they will do.</strong></p>
+</li>
+<li><p>耶鲁大学的学生都很自私。（<strong>Yale students are evil.</strong></p>
+</li>
+</ul>
+<h2 id="P2-学会换位思考"><a href="#P2-学会换位思考" class="headerlink" title="P2 学会换位思考"></a>P2 学会换位思考</h2><h4 id="博弈的三大要素"><a href="#博弈的三大要素" class="headerlink" title="博弈的三大要素"></a>博弈的三大要素</h4><ul>
+<li>players;参与人</li>
+<li>strategies；策略集合</li>
+<li>payoffs; 收益</li>
+</ul>
+<h4 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h4><ul>
+<li>打渔问题</li>
+<li>解决全球变暖问题（控制碳排放</li>
+<li>防线布置问题（汉尼拔是否翻越阿尔卑斯山</li>
+</ul>
+<h4 id="严格劣势策略"><a href="#严格劣势策略" class="headerlink" title="严格劣势策略"></a>严格劣势策略</h4><ul>
+<li>​    无论对方做出哪个选择，你的这个选择都是 strictly 不利的 弱劣势策略：其中的一个策略严格劣于另外一个策略。 </li>
+</ul>
+<p>​    </p>
+<p>​    当对手有严格优势策略时，而我方两个策略相同时，考虑对手优势策略下的收益。 </p>
+<h4 id="互动活动：-全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。"><a href="#互动活动：-全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。" class="headerlink" title="互动活动： 全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。"></a>互动活动： 全班同学写1-100的数字，写到平均数的三分之二的人即为获胜方。</h4><ul>
+<li><h5 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h5><ul>
+<li>所有人都从 1 到 100 中选个数字，最接近所有人选的数字的均值的2/3 者为获胜方</li>
+</ul>
+</li>
+<li><h5 id="推理过程"><a href="#推理过程" class="headerlink" title="推理过程"></a>推理过程</h5><ul>
+<li>作为理性人．每个人都会选择67（ 100 <em> 2/3 ）以下的数，进一步假设你的对手也是理性的，你会选择 45 ( 100</em> 4/9 ）以下的数 … … </li>
+<li>依据哲学观点，如果大家都是理性程度相当的，（极端理性）那么最后数字将为 1 ，然而结果却是 9 （在本次实验中</li>
+<li>这说明<strong>博弈的复杂性</strong></li>
+</ul>
+</li>
+<li><h5 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h5><ul>
+<li>共同知识的概念<ul>
+<li>在本次实验中，是这样的：要在其中了解到对方都是理性人，知道对方知道对方都是理性人，知道对方知道对方知道对方都是理性人……</li>
+</ul>
+</li>
+<li>共同知识与共有知识之间的区别<ul>
+<li>common knowledge（不同于 mutual knowledge共有知识.） ：站在对手的角度思考对手在这次博弈中有多老练，思考对手知道你在博弈中有多老练，思考对手知道你在思考他有多老练，如此一直循环成立 （<em>这个是网上抄的，我觉得不strict</em> </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>共有知识和共同知识</p>
+<ul>
+<li>共有知识 + 外部信息 -&gt; 共同知识<ul>
+<li>例如：脏脸博弈，皇帝的新衣，沉默的螺旋</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="P3-迭代剔除和中位选民定理"><a href="#P3-迭代剔除和中位选民定理" class="headerlink" title="P3 迭代剔除和中位选民定理"></a>P3 迭代剔除和中位选民定理</h2><p>学会在剔除劣势策略的情况下再重新审视博弈问题，再做决策。站在对方的立场上，考虑他们不会选择什么，再考虑对方会认为我们不会选择什么</p>
+<h5 id="利用迭代剔除法领悟中间选民问题"><a href="#利用迭代剔除法领悟中间选民问题" class="headerlink" title="利用迭代剔除法领悟中间选民问题"></a>利用迭代剔除法领悟中间选民问题</h5><ul>
+<li>迭代剔除法<ul>
+<li>反复消去严格下策，不断把劣势策略剔除出去，最后只剩下相对优势的策略</li>
+</ul>
+</li>
+<li>中间选民问题<ul>
+<li>政治选举候选人的politic position. 如果从极左到极右有10个程度，则大部分人会选择5，6。 在政治上，人们倾向于中间站位。</li>
+<li>在两党制中，政党表述纲领要吸引中间位置的选民，他们认为在选举中处于中间标度可以吸引左右两边的选民，并以此获得胜利。</li>
+<li>理论的不完备性<ul>
+<li>太多了，qaq</li>
+<li>这个公开课是200几年的，此时并没有发生民粹主义的崛起，可以用川普当选等所谓黑天鹅事件来find这个theory的missing</li>
+<li>可以由理论的missing导出理论成立所需的假设条件</li>
+</ul>
+</li>
+<li>理论成立的条件<ul>
+<li>有两个参与人</li>
+<li><del>政治立场能使选民相信</del></li>
+</ul>
+</li>
+<li>延伸出的问题（在商业上，人们倾向于选址集中。）<ul>
+<li>加油站选址</li>
+<li>快餐店选址<ul>
+<li>比如顾客认为这一片都是快餐店，从而帮助顾客选择这个地方（对于快餐企业，在不确定哪个位置较佳的时候会选在同一处）</li>
+<li>对于某快餐企业：根据其他快餐店地址，确定自己的新店地址可以减少决策量</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>在迭代剔除法不能运用时，比如说该博弈方1和2均没有严格下策，可以用二维坐标系画出选择策略之后的收益分布（即<strong>做一个函数辅助决策</strong>）</p>
+<p>最佳策略：在对方不同选择的概率下，做出自己的最佳选择。 列方程，线性规划，求不同范围下的最优解。用数字使得自己的解释更为有力。</p>
+<h2 id="P4-足球比赛和商业合作之最佳对策"><a href="#P4-足球比赛和商业合作之最佳对策" class="headerlink" title="P4 足球比赛和商业合作之最佳对策"></a>P4 足球比赛和商业合作之最佳对策</h2><h3 id="罚点球"><a href="#罚点球" class="headerlink" title="罚点球"></a>罚点球</h3><ul>
+<li>​    一个进过模型简化的点球模型：罚球这可以选择左路，中路，右路3种路线去踢点球，们将可以选择向左扑救或者向右扑救。罚球者的收益很容易计算</li>
+<li>结论<ul>
+<li>无论什么时候，罚球者向中路踢都不是一个最优的选择</li>
+<li>不要选择一个在任何brief下都不是最优策略的策略</li>
+<li>这里的brief并不是门将会向左或向右，而是指概率。我的理解是对中庸之道的批判。所以本例中，虽然罚球者的3种策略里没有劣势策略，不过还是可以用以上原则剔除掉一个策略</li>
+</ul>
+</li>
+<li>missing<ul>
+<li>罚球者是右撇子</li>
+<li>门将可以中出（to be continued)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Partnership-game：商业合作"><a href="#Partnership-game：商业合作" class="headerlink" title="Partnership game：商业合作"></a>Partnership game：商业合作</h3><ul>
+<li>列出合作对象的效用函数，对此求导，令其一介导数为0，即可得出其最佳投入精力关于对方投入精力的函数（使自己的效益最大化，总效益-个人投入）。 </li>
+<li>假设合作只有两方，令两函数相等，所得交点即为纳什均衡。 即双方都不愿意偏离这一点。</li>
+</ul>
+<h2 id="P5-纳什均衡"><a href="#P5-纳什均衡" class="headerlink" title="P5 纳什均衡"></a>P5 纳什均衡</h2><h3 id="1-纳什均衡的两大定义"><a href="#1-纳什均衡的两大定义" class="headerlink" title="1.纳什均衡的两大定义"></a>1.纳什均衡的两大定义</h3><ul>
+<li><p>No individual can do better by divieting. </p>
+</li>
+<li><p>NE can be thought of self-fullfiling. </p>
+</li>
+</ul>
+<p>2.任何参与人都严格不会改变策略，改变策略严格不会使参与人获得增益</p>
+<p>3.其他参与人不改变行为的前提下，自己改变行为并没有任何好处</p>
+<p>4.严格劣势永远不是最佳策略，最佳策略才可以出现NE</p>
+<p>5.博弈会朝着趋向于一个均衡方向自然发展，结果不断趋向于一个NE</p>
+<p>6.协和谬误不同于囚徒困境</p>
+<ul>
+<li>它有两个(nash)均衡，即all in和all out</li>
+<li>前者可以通过沟通解决，本身具有强制力，因为符合自身利益。例如： 在银行里存钱、微软垄断（规模效应） 等。</li>
+<li>后者无沟通</li>
+</ul>
+<p>7.区分协和谬误和沉默的螺旋之间的关系</p>
+<ul>
+<li>沉默的螺旋（The Spiral Of Silence）是一个政治学和大众传播理论。理论基本描述了这样一个现象：人们在表达自己想法和观点的时候，如果看到自己赞同的观点受到广泛欢迎，就会积极参与进来，这类观点就会越发大胆地发表和扩散；而发觉某一观点无人或很少有人理会（有时会有群起而攻之的遭遇），即使自己赞同它，也会保持沉默。意见一方的沉默造成另一方意见的增势，如此循环往复，便形成一方的声音越来越强大，另一方越来越沉默下去的螺旋发展过程。理论是基于这样一个假设：大多数个人会力图避免由于单独持有某些态度和信念而产生的孤立。</li>
+</ul>
+<h2 id="P6-第六讲：约会策略与古诺模型"><a href="#P6-第六讲：约会策略与古诺模型" class="headerlink" title="P6 第六讲：约会策略与古诺模型"></a>P6 第六讲：约会策略与古诺模型</h2><p><del>策略互补博弈 》协调博弈：性别大战（不同人有不同偏好） 策略代替博弈》</del></p>
+<h5 id="古诺模型"><a href="#古诺模型" class="headerlink" title="古诺模型"></a>古诺模型</h5><ul>
+<li>假设：2个公司生产可以完全互补产品，</li>
+<li>在完全竞争市场上，成本=价格 </li>
+<li>在完全垄断市场上，价格=边际成本 </li>
+<li>古诺模型中，价格高于完全竞争市场，低于完全垄断市场</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ChangQingAAS 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ChangQingAAS
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://changqingaas.github.io/%E5%8D%9A%E5%BC%88%E8%AE%BA/Math/%E8%80%B6%E9%B2%81%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%BC%88%E8%AE%BA%E5%85%AC%E5%BC%80%E8%AF%BE%E7%AC%94%E8%AE%B0/" title="耶鲁大学博弈论公开课笔记">https://changqingaas.github.io/博弈论/Math/耶鲁大学博弈论公开课笔记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E7%BB%8F%E6%B5%8E%E5%AD%A6/" rel="tag"># 经济学</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/%E4%B9%A6%E6%91%98/Math/%E3%80%8A%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E6%95%B0%E5%AD%A6%E3%80%8B/" rel="prev" title="《深度学习中的数学》读书记录">
+                  <i class="fa fa-chevron-left"></i> 《深度学习中的数学》读书记录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/%E6%9C%8D%E5%8A%A1%E5%99%A8/jupyter-notebook/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E9%85%8D%E7%BD%AEjupyter-notebook-%E4%B8%AA%E4%BA%BA%E7%AE%80%E6%98%93%E6%95%99%E7%A8%8B/" rel="next" title="服务器上配置jupyter_notebook_个人简易教程">
+                  服务器上配置jupyter_notebook_个人简易教程 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy;
+
+  
+    2021–
+  
+  <span itemprop="copyrightYear">2024</span>
+
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+
+  <span class="author" itemprop="copyrightHolder">ChangQingAAS</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">408k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">33:58</span>
+  </span>
+</div>
+
+
+  <div class="busuanzi-count">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      <span class="post-meta-divider"> | </span>
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人
+    </span>
+  </div>
+
+
+<script>
+var now = new Date();
+  function createtime() {
+      var grt= new Date("07/15/2021 12:00:00");//此处修改你的建站时间或者网站上线时间
+
+      now.setTime(now.getTime()+250);
+
+      days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+      hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+
+      if( String(hnum).length ==1 ){
+        hnum = "0" + hnum;
+      }
+
+      minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+      mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+      seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+      snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+
+      document.getElementById("times").innerHTML = "本站已安全运行 "+dnum+" 天 " + hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+  setInterval("createtime()",250);
+</script>
+
+<div id="times"></div>
+
+    </div>
+
+    <!-- 添加这个异常标签以消除原本的点击效果 -->
+    <script>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdn.jsdelivr.net/npm/pdfobject@2.2.5/pdfobject.min.js","integrity":"sha256-YuNlP9i6s/WH7EaU2kErloo9Vc85C3WVqhoMDgsEVpY="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+
+  <script class="next-config" data-name="nprogress" type="application/json">{"enable":true,"spinner":true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","cdn":"//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"ChangQingAAS/Blog_Comments","issue_term":"pathname","theme":"github-dark"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- 樱花特效 -->
+
+    <script async src="/js/fairyDustCursor.js"></script>
+

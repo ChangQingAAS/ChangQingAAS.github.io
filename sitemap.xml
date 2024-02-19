@@ -107,14 +107,14 @@
 	
 	+ 
 	<url>
-		<loc>https://changqingaas.github.io/%E8%A7%82%E7%82%B9/Gender/%E6%88%91%E7%9A%84%E5%B9%B3%E6%9D%83%E8%A7%82%E5%BF%B5/</loc>
+		<loc>https://changqingaas.github.io/%E8%A7%82%E7%82%B9/Growth/%E6%91%86%E7%83%82%E4%B8%8E%E8%87%AA%E6%B4%BD/</loc>
 		
 		<lastmod>2024-02-12T08:19:57.000Z</lastmod>
 		
-		<date>1701967096000</date>
-		<title>女性主义不该是伪命题 | 叶叶常青</title>
+		<date>1704004696000</date>
+		<title>谈摆烂与自洽 | 叶叶常青</title>
 		
-		<desc>女性主义不该是伪命题</desc>
+		<desc>自强不息，厚德载物</desc>
 	</url>
 	+ 
 	
@@ -133,19 +133,6 @@
 	
 	+ 
 	<url>
-		<loc>https://changqingaas.github.io/%E8%A7%82%E7%82%B9/Growth/%E6%91%86%E7%83%82%E4%B8%8E%E8%87%AA%E6%B4%BD/</loc>
-		
-		<lastmod>2024-02-12T08:19:57.000Z</lastmod>
-		
-		<date>1704004696000</date>
-		<title>谈摆烂与自洽 | 叶叶常青</title>
-		
-		<desc>自强不息，厚德载物</desc>
-	</url>
-	+ 
-	
-	+ 
-	<url>
 		<loc>https://changqingaas.github.io/%E8%B8%A9%E5%9D%91/Movies/%E3%80%8A%E6%B6%89%E8%BF%87%E6%84%A4%E6%80%92%E7%9A%84%E6%B5%B7%E3%80%8B%E5%BD%B1%E8%AF%84/</loc>
 		
 		<lastmod>2024-02-12T08:19:57.000Z</lastmod>
@@ -154,6 +141,19 @@
 		<title>《涉过愤怒的海》影评 | 叶叶常青</title>
 		
 		<desc>复杂源于真实</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/%E8%A7%82%E7%82%B9/Gender/%E6%88%91%E7%9A%84%E5%B9%B3%E6%9D%83%E8%A7%82%E5%BF%B5/</loc>
+		
+		<lastmod>2024-02-12T08:19:57.000Z</lastmod>
+		
+		<date>1701967096000</date>
+		<title>女性主义不该是伪命题 | 叶叶常青</title>
+		
+		<desc>女性主义不该是伪命题</desc>
 	</url>
 	+ 
 	
@@ -315,6 +315,123 @@
 	
 	+ 
 	<url>
+		<loc>https://changqingaas.github.io/%E4%B9%A6%E6%91%98/Go/Go%E8%AF%AD%E8%A8%80%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/</loc>
+		
+		<lastmod>2022-10-24T03:54:49.000Z</lastmod>
+		
+		<date>1652536833000</date>
+		<title>《Go语言高级编程》阅读笔记 | 叶叶常青</title>
+		
+		<desc>《Go语言高级编程》阅读笔记</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/%E4%B9%A6%E6%91%98/Go/GoWeb%E7%BC%96%E7%A8%8B/</loc>
+		
+		<lastmod>2022-10-24T03:41:08.000Z</lastmod>
+		
+		<date>1652709633000</date>
+		<title>《Go Web编程》阅读笔记 | 叶叶常青</title>
+		
+		<desc>《Go Web编程（谢）》阅读笔记，</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/%E4%B9%A6%E6%91%98/Go/go%E8%AF%AD%E8%A8%80%E5%9C%A3%E7%BB%8F/</loc>
+		
+		<lastmod>2022-10-24T02:57:36.000Z</lastmod>
+		
+		<date>1652191233000</date>
+		<title>《Go语言圣经》阅读笔记 | 叶叶常青</title>
+		
+		<desc>《Go语言圣经》阅读笔记</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/js/JS/%E4%BB%80%E4%B9%88%E6%98%AFnode.js/</loc>
+		
+		<lastmod>2022-10-24T02:40:21.000Z</lastmod>
+		
+		<date>1630400190000</date>
+		<title>什么是node.js | 叶叶常青</title>
+		
+		<desc>学习node.js</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/CG/CG/GAMES101%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/</loc>
+		
+		<lastmod>2022-10-24T02:38:44.000Z</lastmod>
+		
+		<date>1631533819000</date>
+		<title>GAMES101 | 叶叶常青</title>
+		
+		<desc>GAMES101:现代计算机图形学入门</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/others/Math/%E7%BE%8E%E8%B5%9B%E6%A0%A1%E9%80%89%E5%9F%B9%E8%AE%AD%E8%AF%BE%E7%AC%94%E8%AE%B0/</loc>
+		
+		<lastmod>2022-02-04T05:53:22.000Z</lastmod>
+		
+		<date>1642382974000</date>
+		<title>美赛校选培训课笔记 | 叶叶常青</title>
+		
+		<desc>美赛培训课：多元统计分析，线性模型</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/%E7%88%AC%E8%99%AB/Python/Python%E7%88%AC%E8%99%AB/</loc>
+		
+		<lastmod>2022-02-04T05:46:46.000Z</lastmod>
+		
+		<date>1630045532000</date>
+		<title>Python爬虫 | 叶叶常青</title>
+		
+		<desc>爬虫概念，requests库,BeautifulSoup库，selenium自动化，xpath解析，代理池维护</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/%E4%B9%A6%E6%91%98/Math/%E3%80%8A%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E6%95%B0%E5%AD%A6%E3%80%8B/</loc>
+		
+		<lastmod>2022-02-04T04:57:42.000Z</lastmod>
+		
+		<date>1626867016000</date>
+		<title>《深度学习中的数学》读书记录 | 叶叶常青</title>
+		
+		<desc>《深度学习中的数学》读书记录</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/%E5%BB%BA%E6%A8%A1/Math/matlab%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+		
+		<lastmod>2022-02-04T04:55:20.000Z</lastmod>
+		
+		<date>1643896833000</date>
+		<title>matlab学习笔记 | 叶叶常青</title>
+		
+		<desc>在b站学习‘MATLAB教程_台大郭彦甫（14课）’的笔记，梳理原课程的过程中，做了一点改动。</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
 		<loc>https://changqingaas.github.io/%E7%A2%8E%E7%A2%8E%E5%BF%B5/Marp/%E5%85%B3%E4%BA%8Emarp-theme-for-tju%E7%9A%84%E6%8E%A2%E7%B4%A2/</loc>
 		
 		<lastmod>2022-01-17T01:24:02.000Z</lastmod>
@@ -323,6 +440,19 @@
 		<title>关于marp-theme-for-tju的探索 | 叶叶常青</title>
 		
 		<desc>关于探索marp-theme-for-tju的经历</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/python/Python/%E4%BF%9D%E6%8A%A4%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BF%E9%97%AE%E4%B8%8E%E8%AE%BE%E7%BD%AE/</loc>
+		
+		<lastmod>2022-01-17T01:22:54.000Z</lastmod>
+		
+		<date>1385969416000</date>
+		<title>保护变量的访问与设置 | 叶叶常青</title>
+		
+		<desc>保护变量的访问与设置</desc>
 	</url>
 	+ 
 	
@@ -367,6 +497,45 @@
 	
 	+ 
 	<url>
+		<loc>https://changqingaas.github.io/%E7%A2%8E%E7%A2%8E%E5%BF%B5/Python/Python%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E7%9A%84%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6/</loc>
+		
+		<lastmod>2021-08-27T12:14:08.000Z</lastmod>
+		
+		<date>1385969416000</date>
+		<title>Python函数参数的传递机制 | 叶叶常青</title>
+		
+		<desc>Python函数参数的传递机制</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/%E7%A2%8E%E7%A2%8E%E5%BF%B5/Python/%E7%8C%B4%E5%AD%90%E8%A1%A5%E4%B8%81/</loc>
+		
+		<lastmod>2021-08-27T12:01:58.000Z</lastmod>
+		
+		<date>1385969416000</date>
+		<title>猴子补丁 | 叶叶常青</title>
+		
+		<desc>允许在运行期间动态修改一个类或模块</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/%E5%8D%9A%E5%BC%88%E8%AE%BA/Math/%E8%80%B6%E9%B2%81%E5%A4%A7%E5%AD%A6%E5%8D%9A%E5%BC%88%E8%AE%BA%E5%85%AC%E5%BC%80%E8%AF%BE%E7%AC%94%E8%AE%B0/</loc>
+		
+		<lastmod>2021-08-27T06:51:54.000Z</lastmod>
+		
+		<date>1626876033000</date>
+		<title>耶鲁大学博弈论公开课笔记 | 叶叶常青</title>
+		
+		<desc>耶鲁大学博弈论公开课笔记</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
 		<loc>https://changqingaas.github.io/%E6%95%99%E7%A8%8B/Marp/%E7%94%A8Markdown%E5%88%B6%E4%BD%9C%E5%B9%BB%E7%81%AF%E7%89%87-Marp/</loc>
 		
 		<lastmod>2021-08-18T09:02:28.000Z</lastmod>
@@ -380,6 +549,19 @@
 	
 	+ 
 	<url>
+		<loc>https://changqingaas.github.io/others/jupyter-notebook/jupyter-notebook%E5%B8%B8%E7%94%A8%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D/</loc>
+		
+		<lastmod>2021-08-12T11:24:50.000Z</lastmod>
+		
+		<date>1628766492000</date>
+		<title>jupyter_notebook常用插件介绍 | 叶叶常青</title>
+		
+		<desc>记录一下自己用的插件，以免忘记</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
 		<loc>https://changqingaas.github.io/404/index.html</loc>
 		
 		<lastmod>2021-08-10T05:57:42.000Z</lastmod>
@@ -388,6 +570,19 @@
 		<title>404 | 叶叶常青</title>
 		
 		<desc>你来到了没有知识的荒原 :(</desc>
+	</url>
+	+ 
+	
+	+ 
+	<url>
+		<loc>https://changqingaas.github.io/%E6%9C%8D%E5%8A%A1%E5%99%A8/jupyter-notebook/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E9%85%8D%E7%BD%AEjupyter-notebook-%E4%B8%AA%E4%BA%BA%E7%AE%80%E6%98%93%E6%95%99%E7%A8%8B/</loc>
+		
+		<lastmod>2021-08-09T07:16:56.000Z</lastmod>
+		
+		<date>1628412990000</date>
+		<title>服务器上配置jupyter_notebook_个人简易教程 | 叶叶常青</title>
+		
+		<desc>服务器上配置jupyter_notebook_个人简易教程</desc>
 	</url>
 	+ 
 	

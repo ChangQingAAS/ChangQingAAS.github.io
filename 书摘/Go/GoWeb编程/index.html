@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic%7CRoboto+Slab:300,300italic,400,400italic,700,700italic%7CPT+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" integrity="sha256-no0c5ccDODBwp+9hSmV5VvPpKwHCpbVzXHexIkupM6U=" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js" integrity="sha256-a5YRB27CcBwBFcT5EF/f3E4vzIqyHrSR878nseNYw64=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"changqingaas.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2},"disqus":{"text":"Load Disqus","order":-1}},"activeClass":"utterances"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="《Go Web编程（谢）》阅读笔记，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Go Web编程》阅读笔记">
+<meta property="og:url" content="https://changqingaas.github.io/%E4%B9%A6%E6%91%98/Go/GoWeb%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="叶叶常青">
+<meta property="og:description" content="《Go Web编程（谢）》阅读笔记，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.learnku.com/build-web-application-with-golang/images/navi1.png?raw=true">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514221954.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514222040.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514222503.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514222623.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514224125.png">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24ely1h2cb8l936yj20k80g4t94.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24ely1h2cbjl2w7ij20k40f0wfd.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24ely1h2cefv4idhj20f20ed0tp.jpg">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/navi4.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/4.3.escape.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/4.4.token.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/4.5.upload2.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/navi5.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/5.6.mongodb.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.1.cookie2.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.1.session.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.4.hijack.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.4.cookie.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.4.setcookie.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.4.hijacksuccess.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/9.1.csrf.png?raw=true">
+<meta property="og:image" content="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/13.1.flow.png?raw=true">
+<meta property="article:published_time" content="2022-05-16T14:00:33.000Z">
+<meta property="article:modified_time" content="2022-10-24T03:41:08.000Z">
+<meta property="article:author" content="ChangQingAAS">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.learnku.com/build-web-application-with-golang/images/navi1.png?raw=true">
+
+
+<link rel="canonical" href="https://changqingaas.github.io/%E4%B9%A6%E6%91%98/Go/GoWeb%E7%BC%96%E7%A8%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://changqingaas.github.io/%E4%B9%A6%E6%91%98/Go/GoWeb%E7%BC%96%E7%A8%8B/","path":"书摘/Go/GoWeb编程/","title":"《Go Web编程》阅读笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《Go Web编程》阅读笔记 | 叶叶常青</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="叶叶常青" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+     
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">叶叶常青</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">保卫复杂</p>
+     
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-commonweal"><a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--个人简介-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-text">1 环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E5%AE%89%E8%A3%85-Go"><span class="nav-text">1.1. 安装 Go</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Go-%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85"><span class="nav-text">Go 源码安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-GOPATH-%E4%B8%8E%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4"><span class="nav-text">1.2. GOPATH 与工作空间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GOPATH-%E8%AE%BE%E7%BD%AE"><span class="nav-text">GOPATH 设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E8%A7%84%E5%88%92"><span class="nav-text">代码目录结构规划</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%BA%94%E7%94%A8"><span class="nav-text">编译应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E8%BF%9C%E7%A8%8B%E5%8C%85"><span class="nav-text">获取远程包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-Go-%E5%91%BD%E4%BB%A4"><span class="nav-text">1.3 Go 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%91%BD%E4%BB%A4"><span class="nav-text">其它命令</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Web%E5%9F%BA%E7%A1%80"><span class="nav-text">3 Web基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Web%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F"><span class="nav-text">3.1 Web工作方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#URL%E5%92%8CDNS%E8%A7%A3%E6%9E%90"><span class="nav-text">URL和DNS解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3"><span class="nav-text">HTTP协议详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E8%AF%B7%E6%B1%82%E5%8C%85%EF%BC%88%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BF%A1%E6%81%AF%EF%BC%89"><span class="nav-text">HTTP请求包（浏览器信息）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E5%93%8D%E5%BA%94%E5%8C%85%EF%BC%88%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BF%A1%E6%81%AF%EF%BC%89"><span class="nav-text">HTTP响应包（服务器信息）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE%E6%98%AF%E6%97%A0%E7%8A%B6%E6%80%81%E7%9A%84%E5%92%8CConnection-keep-alive%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">HTTP协议是无状态的和Connection: keep-alive的区别</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E5%AE%9E%E4%BE%8B"><span class="nav-text">请求实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Go%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AAWeb%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">3.2 Go搭建一个Web服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#http%E5%8C%85%E5%BB%BA%E7%AB%8BWeb%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">http包建立Web服务器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-Go%E5%A6%82%E4%BD%95%E4%BD%BF%E5%BE%97Web%E5%B7%A5%E4%BD%9C"><span class="nav-text">3.3 Go如何使得Web工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#web%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5"><span class="nav-text">web工作方式的几个概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90http%E5%8C%85%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="nav-text">分析http包运行机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-Go%E7%9A%84http%E5%8C%85%E8%AF%A6%E8%A7%A3"><span class="nav-text">3.4 Go的http包详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Conn%E7%9A%84goroutine"><span class="nav-text">Conn的goroutine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ServeMux%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89"><span class="nav-text">ServeMux的自定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go%E4%BB%A3%E7%A0%81%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-text">Go代码的执行流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E8%A1%A8%E5%8D%95"><span class="nav-text">4 表单</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-%E5%A4%84%E7%90%86%E8%A1%A8%E5%8D%95%E7%9A%84%E8%BE%93%E5%85%A5"><span class="nav-text">4.1 处理表单的输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-%E9%AA%8C%E8%AF%81%E8%A1%A8%E5%8D%95%E7%9A%84%E8%BE%93%E5%85%A5"><span class="nav-text">4.2 验证表单的输入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E5%A1%AB%E5%AD%97%E6%AE%B5"><span class="nav-text">必填字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%97"><span class="nav-text">数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%87"><span class="nav-text">中文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E5%9C%B0%E5%9D%80"><span class="nav-text">电子邮件地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E6%9C%BA%E5%8F%B7%E7%A0%81"><span class="nav-text">手机号码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E9%80%89%E6%8C%89%E9%92%AE"><span class="nav-text">单选按钮</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4"><span class="nav-text">日期和时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%E7%A0%81"><span class="nav-text">身份证号码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-%E9%A2%84%E9%98%B2%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC"><span class="nav-text">4.3 预防跨站脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-%E9%98%B2%E6%AD%A2%E5%A4%9A%E6%AC%A1%E9%80%92%E4%BA%A4%E8%A1%A8%E5%8D%95"><span class="nav-text">4.4 防止多次递交表单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="nav-text">4.5 处理文件上传</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="nav-text">客户端上传文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-text">5 访问数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-database-sql%E6%8E%A5%E5%8F%A3"><span class="nav-text">5.1 database&#x2F;sql接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL-Register"><span class="nav-text">SQL.Register</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#driver-Driver"><span class="nav-text">driver.Driver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#driver-Conn"><span class="nav-text">driver.Conn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#driver-Stmt"><span class="nav-text">driver.Stmt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Driver-Tx"><span class="nav-text">Driver.Tx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#driver-Execer"><span class="nav-text">driver.Execer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#driver-Result"><span class="nav-text">driver.Result</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#driver-Rows"><span class="nav-text">driver.Rows</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-%E4%BD%BF%E7%94%A8MySQL%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-text">5.2 使用MySQL数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL%E9%A9%B1%E5%8A%A8"><span class="nav-text">MySQL驱动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-%E4%BD%BF%E7%94%A8SQLite%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-text">5.3 使用SQLite数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-%E4%BD%BF%E7%94%A8PostgreSQL%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-text">5.4 使用PostgreSQL数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5-%E4%BD%BF%E7%94%A8beedb%E5%BA%93%E8%BF%9B%E8%A1%8CORM%E5%BC%80%E5%8F%91"><span class="nav-text">5.5 使用beedb库进行ORM开发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-6-NOSQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="nav-text">5.6 NOSQL数据库操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis"><span class="nav-text">redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mongoDB"><span class="nav-text">mongoDB</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-session%E5%92%8C%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8"><span class="nav-text">6 session和数据存储</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-Session-amp-amp-Cookie"><span class="nav-text">6.1 Session&amp;&amp;Cookie</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie"><span class="nav-text">Cookie</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Go%E8%AF%BB%E5%8F%96cookie"><span class="nav-text">Go读取cookie</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#session"><span class="nav-text">session</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-Go%E8%AF%AD%E8%A8%80%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Session"><span class="nav-text">6.2 Go语言如何使用Session</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Session%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="nav-text">Session创建过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go%E5%AE%9E%E7%8E%B0session%E7%AE%A1%E7%90%86"><span class="nav-text">Go实现session管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Session%E7%AE%A1%E7%90%86%E8%AE%BE%E8%AE%A1"><span class="nav-text">Session管理设计</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4-%E9%A2%84%E9%98%B2session%E5%8A%AB%E6%8C%81"><span class="nav-text">6.4 预防session劫持</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#session%E5%8A%AB%E6%8C%81%E8%BF%87%E7%A8%8B"><span class="nav-text">session劫持过程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7"><span class="nav-text">7</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4-%E6%A8%A1%E6%9D%BF%E5%A4%84%E7%90%86"><span class="nav-text">7.4 模板处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E6%AE%B5%E6%93%8D%E4%BD%9C"><span class="nav-text">字段操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E5%B5%8C%E5%A5%97%E5%AD%97%E6%AE%B5%E5%86%85%E5%AE%B9"><span class="nav-text">输出嵌套字段内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%A4%84%E7%90%86"><span class="nav-text">条件处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pipelines"><span class="nav-text">pipelines</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0"><span class="nav-text">模板函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Must%E6%93%8D%E4%BD%9C"><span class="nav-text">Must操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-Web%E6%9C%8D%E5%8A%A1"><span class="nav-text">8 Web服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-3-REST"><span class="nav-text">8.3 REST</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-%E5%AE%89%E5%85%A8%E4%B8%8E%E5%8A%A0%E5%AF%86"><span class="nav-text">9 安全与加密</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#9-1-%E9%A2%84%E9%98%B2CSRF%E6%94%BB%E5%87%BB"><span class="nav-text">9.1 预防CSRF攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCSRF"><span class="nav-text">什么是CSRF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSRF%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-text">CSRF的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%A2%84%E9%98%B2CSRF"><span class="nav-text">如何预防CSRF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-4-%E9%81%BF%E5%85%8DSQL%E6%B3%A8%E5%85%A5"><span class="nav-text">9.4 避免SQL注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSQL%E6%B3%A8%E5%85%A5"><span class="nav-text">什么是SQL注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A5%E5%AE%9E%E4%BE%8B"><span class="nav-text">SQL注入实例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-%E5%9B%BD%E9%99%85%E5%8C%96%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%8C%96"><span class="nav-text">10 国际化与本地化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-1-%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E5%9C%B0%E5%8C%BA"><span class="nav-text">10.1 设置默认地区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E5%9F%9F%E5%90%8D%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AELocale"><span class="nav-text">从域名参数设置Locale</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%96%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF"><span class="nav-text">本地化文本消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%96%E8%A7%86%E5%9B%BE%E5%92%8C%E8%B5%84%E6%BA%90"><span class="nav-text">本地化视图和资源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-3-%E5%9B%BD%E9%99%85%E5%8C%96%E7%AB%99%E7%82%B9"><span class="nav-text">10.3 国际化站点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%A4%9A%E4%B8%AA%E6%9C%AC%E5%9C%B0%E5%8C%85"><span class="nav-text">管理多个本地包</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%EF%BC%8C%E8%B0%83%E8%AF%95%E5%92%8C%E6%B5%8B%E8%AF%95"><span class="nav-text">11 错误处理，调试和测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#11-2-%E4%BD%BF%E7%94%A8GDB%E8%B0%83%E8%AF%95"><span class="nav-text">11.2 使用GDB调试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-%E9%83%A8%E7%BD%B2%E4%B8%8E%E7%BB%B4%E6%8A%A4"><span class="nav-text">12 部署与维护</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AAWEB%E6%A1%86%E6%9E%B6"><span class="nav-text">13 如何设计一个WEB框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#13-1-%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%92"><span class="nav-text">13.1 项目规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-text">应用程序流程图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1"><span class="nav-text">框架设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-2-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B7%AF%E7%94%B1%E5%99%A8%E8%AE%BE%E8%AE%A1"><span class="nav-text">13.2 自定义路由器设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-3-controller%E8%AE%BE%E8%AE%A1"><span class="nav-text">13.3 controller设计</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14-%E6%8B%93%E5%B1%95Web%E6%A1%86%E6%9E%B6"><span class="nav-text">14 拓展Web框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#14-1-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E6%94%AF%E6%8C%81"><span class="nav-text">14.1 静态文件支持</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+      <!--/个人简介-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ChangQingAAS"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ChangQingAAS</p>
+  <div class="site-description" itemprop="description">行则将至</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ChangQingAAS" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ChangQingAAS" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wanghongyang@tju.edu.cn" title="E-Mail → mailto:wanghongyang@tju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/u/3836508506" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;u&#x2F;3836508506" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/199761729/" title="Douban → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;199761729&#x2F;" rel="noopener" target="_blank"><i class="fa fa-book fa-fw"></i>Douban</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title">
+      
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://aidn.jp/mikutap/" title="https:&#x2F;&#x2F;aidn.jp&#x2F;mikutap&#x2F;" rel="noopener" target="_blank">解压玩具</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://thispersondoesnotexist.com/" title="https:&#x2F;&#x2F;thispersondoesnotexist.com&#x2F;" rel="noopener" target="_blank">他者凝视</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+      </div>
+
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="https://music.163.com/outchain/player?type=2&id=20110049&auto=1&height=66&autostart="false">
+      </iframe>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://changqingaas.github.io/%E4%B9%A6%E6%91%98/Go/GoWeb%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ChangQingAAS">
+      <meta itemprop="description" content="行则将至">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="叶叶常青">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Go Web编程》阅读笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-05-16 22:00:33" itemprop="dateCreated datePublished" datetime="2022-05-16T22:00:33+08:00">2022-05-16</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-10-24 11:41:08" itemprop="dateModified" datetime="2022-10-24T11:41:08+08:00">2022-10-24</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%B9%A6%E6%91%98/" itemprop="url" rel="index"><span itemprop="name">书摘</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>55k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4:35</span>
+    </span>
+</div>
+
+            <div class="post-description">《Go Web编程（谢）》阅读笔记，</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="1-环境配置"><a href="#1-环境配置" class="headerlink" title="1 环境配置"></a>1 环境配置</h1><p>Go 是一种新的语言，一种并发的、带垃圾回收的、快速编译的语言。它具有以下特点：</p>
+<ul>
+<li><p>它可以在一台计算机上用几秒钟的时间编译一个大型的 Go 程序。</p>
+</li>
+<li><p>Go 为软件构造提供了一种模型，它使依赖分析更加容易，且避免了大部分 C 风格 include 文件与库的开头。</p>
+</li>
+<li>Go 是静态类型的语言，它的类型系统没有层级。因此用户不需要在定义类型之间的关系上花费时间，这样感觉起来比典型的面向对象语言更轻量级。</li>
+<li>Go 完全是垃圾回收型的语言，并为并发执行与通信提供了基本的支持。</li>
+<li>按照其设计，Go 打算为多核机器上系统软件的构造提供一种方法。</li>
+</ul>
+<p>Go 是一种编译型语言，它结合了解释型语言的游刃有余，动态类型语言的开发效率，以及静态类型的安全性。它也打算成为现代的，支持网络与多核计算的语言。要满足这些目标，需要解决一些语言上的问题：一个富有表达能力但轻量级的类型系统，并发与垃圾回收机制，严格的依赖规范等等。这些无法通过库或工具解决好，因此 Go 也就应运而生了。 </p>
+<p><img src="https://cdn.learnku.com/build-web-application-with-golang/images/navi1.png?raw=true" alt="img"></p>
+<h2 id="1-1-安装-Go"><a href="#1-1-安装-Go" class="headerlink" title="1.1. 安装 Go"></a>1.1. 安装 Go</h2><h3 id="Go-源码安装"><a href="#Go-源码安装" class="headerlink" title="Go 源码安装"></a>Go 源码安装</h3><p>Go 1.5 彻底移除 C 代码，Runtime、Compiler、Linker 均由 Go 编写，实现自举。只需要安装了上一个版本，即可从源码安装。</p>
+<p>在 Go 1.5 前，Go 的源代码中，有些部分是用 Plan 9 C 和 AT&amp;T 汇编写的，因此假如你要想从源码安装，就必须安装 C 的编译工具。 </p>
+<h2 id="1-2-GOPATH-与工作空间"><a href="#1-2-GOPATH-与工作空间" class="headerlink" title="1.2. GOPATH 与工作空间"></a>1.2. GOPATH 与工作空间</h2><p>GOPATH 来存放 Go 源码，Go 的可运行文件，以及相应的编译之后的包文件。所以这个目录下面有三个子目录：src、bin、pkg</p>
+<p>GOPATH 环境变量现在有一个默认值，如果它没有被设置。 它在 Unix 上默认为 <strong>$HOME/go</strong>，在 Windows 上默认为 <strong>%USERPROFILE%/go</strong>。</p>
+<h3 id="GOPATH-设置"><a href="#GOPATH-设置" class="headerlink" title="GOPATH 设置"></a>GOPATH 设置</h3><p>GOPATH 允许多个目录，当有多个目录时，请注意分隔符，多个目录的时候 Windows 是分号，Linux 系统是冒号，当有多个 GOPATH 时，默认会将 go get 的内容放在第一个目录下。</p>
+<p>以上 $GOPATH 目录约定有三个子目录：</p>
+<ul>
+<li>src 存放源代码（比如：.go .c .h .s 等）</li>
+<li>pkg 编译后生成的文件（比如：.a）</li>
+<li>bin 编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中，如果有多个 gopath，那么使用 ${GOPATH//://bin:}/bin 添加所有的 bin 目录）</li>
+<li>以后我所有的例子都是以 mygo 作为我的 gopath 目录 </li>
+</ul>
+<h3 id="代码目录结构规划"><a href="#代码目录结构规划" class="headerlink" title="代码目录结构规划"></a>代码目录结构规划</h3><p>GOPATH 下的 src 目录就是接下来开发程序的主要目录，所有的源码都是放在这个目录下面，那么一般我们的做法就是一个目录一个项目，例如: $GOPATH/src/mymath 表示 mymath 这个应用包或者可执行应用，这个根据 package 是 main 还是其他来决定，main 的话就是可执行应用，其他的话就是应用包，这个会在后续详细介绍 package。</p>
+<p> 所以当新建应用或者一个代码包时都是在 src 目录下新建一个文件夹，文件夹名称一般是代码包名称，当然也允许多级目录，例如在 src 下面新建了目录 $GOPATH/src/github.com/astaxie/beedb 那么这个包路径就是 “github.com/astaxie/beedb”，包名称是最后一个目录 beedb</p>
+<p> <strong>注意：一般建议 package 的名称和目录名保持一致</strong></p>
+<p>下面我就以mymath为例来讲述如何编写应用包，执行如下代码</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd $GOPATH&#x2F;src
+mkdir mymath<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>新建文件sqrt.go，内容如下</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">&#x2F;&#x2F; $GOPATH&#x2F;src&#x2F;mymath&#x2F;sqrt.go源码如下：
+package mymath
+
+func Sqrt(x float64) float64 &#123;
+    z :&#x3D; 0.0
+    for i :&#x3D; 0; i &lt; 1000; i++ &#123;
+        z -&#x3D; (z*z - x) &#x2F; (2 * x)
+    &#125;
+    return z
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="编译应用"><a href="#编译应用" class="headerlink" title="编译应用"></a>编译应用</h2><p>1、只要进入对应的应用包目录，然后执行<code>go install</code>，就可以安装了</p>
+<p>2、在任意的目录执行如下代码<code>go install mymath</code></p>
+<p>安装完之后，我们可以进入如下目录</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd $GOPATH&#x2F;pkg&#x2F;$&#123;GOOS&#125;_$&#123;GOARCH&#125;
+&#x2F;&#x2F;可以看到如下文件
+mymath.a<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>这个.a文件是应用包，那么我们如何进行调用呢？</p>
+<p>接下来我们新建一个应用程序来调用这个应用包</p>
+<p>新建应用包mathapp</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd $GOPATH&#x2F;src
+mkdir mathapp
+cd mathapp
+vim main.go<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>$GOPATH/src/mathapp/main.go</code>源码：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+      &quot;mymath&quot;
+      &quot;fmt&quot;
+)
+
+func main() &#123;
+      fmt.Printf(&quot;Hello, world.  Sqrt(2) &#x3D; %v\n&quot;, mymath.Sqrt(2))
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如何编译程序呢？进入该应用目录，然后执行<code>go build</code>，那么在该目录下面会生成一个mathapp的可执行文件</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">.&#x2F;mathapp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>输出如下内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Hello, world.  Sqrt(2) &#x3D; 1.414213562373095<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>如何安装该应用，进入该目录执行<code>go install</code>,那么在$GOPATH/bin/下增加了一个可执行文件mathapp, 还记得前面我们把<code>$GOPATH/bin</code>加到我们的PATH里面了，这样可以在命令行输入如下命令就可以执行</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mathapp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="获取远程包"><a href="#获取远程包" class="headerlink" title="获取远程包"></a>获取远程包</h3><p>go语言有一个获取远程包的工具就是<code>go get</code>，目前go get支持多数开源社区(例如：github、googlecode、bitbucket、Launchpad)</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">go get github.com&#x2F;astaxie&#x2F;beedb<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<blockquote>
+<p>go get -u 参数可以自动更新包，而且当go get的时候会自动获取该包依赖的其他第三方包</p>
+</blockquote>
+<p>通过这个命令可以获取相应的源码，对应的开源平台采用不同的源码控制工具，例如github采用git、googlecode采用hg，所以要想获取这些源码，必须先安装相应的源码控制工具</p>
+<h2 id="1-3-Go-命令"><a href="#1-3-Go-命令" class="headerlink" title="1.3 Go 命令"></a>1.3 Go 命令</h2><p>略</p>
+<h3 id="其它命令"><a href="#其它命令" class="headerlink" title="其它命令"></a>其它命令</h3><p>go还提供了其它很多的工具，例如下面的这些工具</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">go version 查看go当前的版本
+go env 查看当前go的环境变量
+go list 列出当前全部安装的package
+go run 编译并运行Go程序<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="3-Web基础"><a href="#3-Web基础" class="headerlink" title="3 Web基础"></a>3 Web基础</h1><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514221954.png" alt="img"></p>
+<h2 id="3-1-Web工作方式"><a href="#3-1-Web工作方式" class="headerlink" title="3.1 Web工作方式"></a>3.1 Web工作方式</h2><p>对于普通的上网过程，系统其实是这样做的：浏览器本身是一个客户端，当你输入URL的时候，首先浏览器会去请求DNS服务器，通过DNS获取相应的域名对应的IP，然后通过IP地址找到IP对应的服务器后，要求建立TCP连接，等浏览器发送完HTTP Request（请求）包后，服务器接收到请求包之后才开始处理请求包，服务器调用自身服务，返回HTTP Response（响应）包；客户端收到来自服务器的响应后开始渲染这个Response包里的主体（body），等收到全部的内容随后断开与该服务器之间的TCP连接。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514222040.png" alt="img"></p>
+<p>一个Web服务器也被称为HTTP服务器，它通过HTTP协议与客户端通信。这个客户端通常指的是Web浏览器(其实手机端客户端内部也是浏览器实现的)。</p>
+<p>Web服务器的工作原理可以简单地归纳为：</p>
+<ul>
+<li>客户机通过TCP/IP协议建立到服务器的TCP连接</li>
+<li>客户端向服务器发送HTTP协议请求包，请求服务器里的资源文档</li>
+<li>服务器向客户机发送HTTP协议应答包，如果请求的资源包含有动态语言的内容，那么服务器会调用动态语言的解释引擎负责处理“动态内容”，并将处理得到的数据返回给客户端</li>
+<li>客户机与服务器断开。由客户端解释HTML文档，在客户端屏幕上渲染图形结果</li>
+</ul>
+<h3 id="URL和DNS解析"><a href="#URL和DNS解析" class="headerlink" title="URL和DNS解析"></a>URL和DNS解析</h3><p>URL(Uniform Resource Locator)是“统一资源定位符”的英文缩写，用于描述一个网络上的资源, 基本格式如下</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">scheme:&#x2F;&#x2F;host[:port#]&#x2F;path&#x2F;...&#x2F;[?query-string][#anchor]
+scheme         指定低层使用的协议(例如：http, https, ftp)
+host           HTTP服务器的IP地址或者域名
+port#          HTTP服务器的默认端口是80，这种情况下端口号可以省略。如果使用了别的端口，必须指明，例如 http:&#x2F;&#x2F;www.cnblogs.com:8080&#x2F;
+path           访问资源的路径
+query-string   发送给http服务器的数据
+anchor         锚<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>DNS(Domain Name System)是“域名系统”的英文缩写，是一种组织成域层次结构的计算机和网络服务命名系统，它用于TCP/IP网络，它从事将主机名或域名转换为实际IP地址的工作。DNS就是这样的一位“翻译官”，它的基本工作原理可用下图来表示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514222503.png" alt="img"></p>
+<p>更详细的DNS解析的过程如下，这个过程有助于我们理解DNS的工作模式</p>
+<ol>
+<li>在浏览器中输入www.qq.com域名，操作系统会先检查自己本地的hosts文件是否有这个网址映射关系，如果有，就先调用这个IP地址映射，完成域名解析。</li>
+<li>如果hosts里没有这个域名的映射，则查找本地DNS解析器缓存，是否有这个网址映射关系，如果有，直接返回，完成域名解析。</li>
+<li>如果hosts与本地DNS解析器缓存都没有相应的网址映射关系，首先会找TCP/IP参数中设置的首选DNS服务器，在此我们叫它本地DNS服务器，此服务器收到查询时，如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。</li>
+<li>如果要查询的域名，不由本地DNS服务器区域解析，但该服务器已缓存了此网址映射关系，则调用这个IP地址映射，完成域名解析，此解析不具有权威性。</li>
+<li>如果本地DNS服务器本地区域文件与缓存解析都失效，则根据本地DNS服务器的设置（是否设置转发器）进行查询，如果未用转发模式，本地DNS就把请求发至 “根DNS服务器”，“根DNS服务器”收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个IP。本地DNS服务器收到IP信息后，将会联系负责.com域的这台服务器。这台负责.com域的服务器收到请求后，如果自己无法解析，它就会找一个管理.com域的下一级DNS服务器地址(qq.com)给本地DNS服务器。当本地DNS服务器收到这个地址后，就会找qq.com域服务器，重复上面的动作，进行查询，直至找到www.qq.com主机。</li>
+<li>如果用的是转发模式，此DNS服务器就会把请求转发至上一级DNS服务器，由上一级服务器进行解析，上一级服务器如果不能解析，或找根DNS或把转请求转至上上级，以此循环。不管是本地DNS服务器用是是转发，还是根提示，最后都是把结果返回给本地DNS服务器，由此DNS服务器再返回给客户机。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514222623.png" alt="img"></p>
+<p>  DNS解析的整个流程（完成若干次迭代查询，即，问询者角色不变，但反复更替问询对象)</p>
+<p>通过上面的步骤，我们最后获取的是IP地址，也就是浏览器最后发起请求的时候是基于IP来和服务器做信息交互的。</p>
+<h3 id="HTTP协议详解"><a href="#HTTP协议详解" class="headerlink" title="HTTP协议详解"></a>HTTP协议详解</h3><p>HTTP是一种让Web服务器与浏览器(客户端)通过Internet发送与接收数据的协议,它建立在TCP协议之上，一般采用TCP的80端口。它是一个请求、响应协议—客户端发出一个请求，服务器响应这个请求。在HTTP中，客户端总是通过建立一个连接与发送一个HTTP请求来发起一个事务。服务器不能主动去与客户端联系，也不能给客户端发出一个回调连接。客户端与服务器端都可以提前中断一个连接。例如，当浏览器下载一个文件时，你可以通过点击“停止”键来中断文件的下载，关闭与服务器的HTTP连接。</p>
+<p>HTTP协议是无状态的，同一个客户端的这次请求和上次请求是没有对应关系，对HTTP服务器来说，它并不知道这两个请求是否来自同一个客户端。为了解决这个问题， Web程序引入了Cookie机制来维护连接的可持续状态。</p>
+<p>HTTP协议是建立在TCP协议之上的，因此TCP攻击一样会影响HTTP的通讯，例如比较常见的一些攻击：SYN Flood是当前最流行的DoS（拒绝服务攻击）与DdoS（分布式拒绝服务攻击）的方式之一，这是一种利用TCP协议缺陷，发送大量伪造的TCP连接请求，从而使得被攻击方资源耗尽（CPU满负荷或内存不足）的攻击方式。</p>
+<h4 id="HTTP请求包（浏览器信息）"><a href="#HTTP请求包（浏览器信息）" class="headerlink" title="HTTP请求包（浏览器信息）"></a>HTTP请求包（浏览器信息）</h4><p>我们先来看看Request包的结构, Request包分为3部分，第一部分叫Request line（请求行）, 第二部分叫Request header（请求头）,第三部分是body（主体）。header和body之间有个空行，请求包的例子所示:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">GET &#x2F;domains&#x2F;example&#x2F; HTTP&#x2F;1.1        &#x2F;&#x2F;请求行: 请求方法 请求URI HTTP协议&#x2F;协议版本
+Host：www.iana.org                &#x2F;&#x2F;服务端的主机名
+User-Agent：Mozilla&#x2F;5.0 (Windows NT 6.1) AppleWebKit&#x2F;537.4 (KHTML, like Gecko) Chrome&#x2F;22.0.1229.94 Safari&#x2F;537.4            &#x2F;&#x2F;浏览器信息
+Accept：text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,*&#x2F;*;q&#x3D;0.8    &#x2F;&#x2F;客户端能接收的mine
+Accept-Encoding：gzip,deflate,sdch        &#x2F;&#x2F;是否支持流压缩
+Accept-Charset：UTF-8,*;q&#x3D;0.5        &#x2F;&#x2F;客户端字符编码集
+&#x2F;&#x2F;空行,用于分割请求头和消息体
+&#x2F;&#x2F;消息体,请求资源参数,例如POST传递的参数<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>HTTP协议定义了很多与服务器交互的请求方法，最基本的有4种，分别是GET,POST,PUT,DELETE。一个URL地址用于描述一个网络上的资源，而HTTP中的GET, POST, PUT, DELETE就对应着对这个资源的查，改，增，删4个操作。我们最常见的就是GET和POST了。GET一般用于获取/查询资源信息，而POST一般用于更新资源信息。</p>
+<p>我们看看GET和POST的区别:</p>
+<ol>
+<li>我们可以看到GET请求消息体为空，POST请求带有消息体。</li>
+<li>GET提交的数据会放在URL之后，以<code>?</code>分割URL和传输数据，参数之间以<code>&amp;</code>相连，如<code>EditPosts.aspx?name=test1&amp;id=123456</code>。POST方法是把提交的数据放在HTTP包的body中。</li>
+<li>GET提交的数据大小有限制（因为浏览器对URL的长度有限制），而POST方法提交的数据没有限制。</li>
+<li>GET方式提交数据，会带来安全问题，比如一个登录页面，通过GET方式提交数据时，用户名和密码将出现在URL上，如果页面可以被缓存或者其他人可以访问这台机器，就可以从历史记录获得该用户的账号和密码。</li>
+</ol>
+<h4 id="HTTP响应包（服务器信息）"><a href="#HTTP响应包（服务器信息）" class="headerlink" title="HTTP响应包（服务器信息）"></a>HTTP响应包（服务器信息）</h4><p>我们再来看看HTTP的response包，他的结构如下：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">HTTP&#x2F;1.1 200 OK                        &#x2F;&#x2F;状态行
+Server: nginx&#x2F;1.0.8                    &#x2F;&#x2F;服务器使用的WEB软件名及版本
+Date:Date: Tue, 30 Oct 2012 04:14:25 GMT        &#x2F;&#x2F;发送时间
+Content-Type: text&#x2F;html                &#x2F;&#x2F;服务器发送信息的类型
+Transfer-Encoding: chunked            &#x2F;&#x2F;表示发送HTTP包是分段发的
+Connection: keep-alive                &#x2F;&#x2F;保持连接状态
+Content-Length: 90                    &#x2F;&#x2F;主体内容长度
+&#x2F;&#x2F;空行 用来分割消息头和主体
+&lt;!DOCTYPE html PUBLIC &quot;-&#x2F;&#x2F;W3C&#x2F;&#x2F;DTD XHTML 1.0 Transitional&#x2F;&#x2F;EN&quot;... &#x2F;&#x2F;消息体<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Response包中的第一行叫做状态行，由HTTP协议版本号， 状态码， 状态消息 三部分组成。</p>
+<p>状态码用来告诉HTTP客户端,HTTP服务器是否产生了预期的Response。HTTP/1.1协议中定义了5类状态码， 状态码由三位数字组成，第一个数字定义了响应的类别</p>
+<ul>
+<li>1XX 提示信息 - 表示请求已被成功接收，继续处理</li>
+<li>2XX 成功 - 表示请求已被成功接收，理解，接受</li>
+<li>3XX 重定向 - 要完成请求必须进行更进一步的处理</li>
+<li>4XX 客户端错误 - 请求有语法错误或请求无法实现</li>
+<li>5XX 服务器端错误 - 服务器未能实现合法的请求</li>
+</ul>
+<h4 id="HTTP协议是无状态的和Connection-keep-alive的区别"><a href="#HTTP协议是无状态的和Connection-keep-alive的区别" class="headerlink" title="HTTP协议是无状态的和Connection: keep-alive的区别"></a>HTTP协议是无状态的和Connection: keep-alive的区别</h4><p>无状态是指协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。从另一方面讲，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系。</p>
+<p>HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（面对无连接）。</p>
+<p>从HTTP/1.1起，默认都开启了Keep-Alive保持连接特性，简单地说，当一个网页打开完成后，客户端和服务器之间用于传输HTTP数据的TCP连接不会关闭，如果客户端再次访问这个服务器上的网页，会继续使用这一条已经建立的TCP连接。</p>
+<p>Keep-Alive不会永久保持连接，它有一个保持时间，可以在不同服务器软件（如Apache）中设置这个时间。</p>
+<h3 id="请求实例"><a href="#请求实例" class="headerlink" title="请求实例"></a>请求实例</h3><p><img src="https://cdn.jsdelivr.net/gh/ChangQingAAS/for_picgo/img/20220514224125.png" alt="img"></p>
+<p>图3.7 一次请求的request和response</p>
+<p>上面这张图我们可以了解到整个的通讯过程，同时细心的读者是否注意到了一点，一个URL请求但是左边栏里面为什么会有那么多的资源请求(这些都是静态文件，go对于静态文件有专门的处理方式)。</p>
+<p>这个就是浏览器的一个功能，第一次请求url，服务器端返回的是html页面，然后浏览器开始渲染HTML：当解析到HTML DOM里面的图片连接，css脚本和js脚本的链接，浏览器就会自动发起一个请求静态资源的HTTP请求，获取相对应的静态资源，然后浏览器就会渲染出来，最终将所有资源整合、渲染，完整展现在我们面前的屏幕上。</p>
+<blockquote>
+<p>网页优化方面有一项措施是减少HTTP请求次数，就是把尽量多的css和js资源合并在一起，目的是尽量减少网页请求静态资源的次数，提高网页加载速度，同时减缓服务器的压力。</p>
+</blockquote>
+<h2 id="3-2-Go搭建一个Web服务器"><a href="#3-2-Go搭建一个Web服务器" class="headerlink" title="3.2 Go搭建一个Web服务器"></a>3.2 Go搭建一个Web服务器</h2><h3 id="http包建立Web服务器"><a href="#http包建立Web服务器" class="headerlink" title="http包建立Web服务器"></a>http包建立Web服务器</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;net&#x2F;http&quot;
+    &quot;strings&quot;
+    &quot;log&quot;
+)
+
+func sayhelloName(w http.ResponseWriter, r *http.Request) &#123;
+    r.ParseForm()  &#x2F;&#x2F;解析参数，默认是不会解析的
+    fmt.Println(r.Form)  &#x2F;&#x2F;这些信息是输出到服务器端的打印信息
+    fmt.Println(&quot;path&quot;, r.URL.Path)
+    fmt.Println(&quot;scheme&quot;, r.URL.Scheme)
+    fmt.Println(r.Form[&quot;url_long&quot;])
+    for k, v :&#x3D; range r.Form &#123;
+        fmt.Println(&quot;key:&quot;, k)
+        fmt.Println(&quot;val:&quot;, strings.Join(v, &quot;&quot;))
+    &#125;
+    fmt.Fprintf(w, &quot;Hello astaxie!&quot;) &#x2F;&#x2F;这个写入到w的是输出到客户端的
+&#125;
+
+func main() &#123;
+    http.HandleFunc(&quot;&#x2F;&quot;, sayhelloName) &#x2F;&#x2F;设置访问的路由
+    err :&#x3D; http.ListenAndServe(&quot;:9090&quot;, nil) &#x2F;&#x2F;设置监听的端口
+    if err !&#x3D; nil &#123;
+        log.Fatal(&quot;ListenAndServe: &quot;, err)
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>浏览器输入：<a target="_blank" rel="noopener" href="http://localhost:9090/?url_long=111&amp;url_long=222">http://localhost:9090/?url_long=111&amp;url_long=222</a> </p>
+<p>输出如下：</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h2cb8l936yj20k80g4t94.jpg" alt="image-20220518094052940"></p>
+<p>要编写一个Web服务器很简单，只要调用http包的两个函数就可以了。</p>
+<blockquote>
+<p>如果你以前是PHP程序员，那你也许就会问，我们的nginx、apache服务器不需要吗？Go就是不需要这些，因为他直接就监听tcp端口了，做了nginx做的事情，然后sayhelloName这个其实就是我们写的逻辑函数了，跟php里面的控制层（controller）函数类似。</p>
+<p>如果你以前是Python程序员，那么你一定听说过tornado，这个代码和他是不是很像，对，没错，Go就是拥有类似Python这样动态语言的特性，写Web应用很方便。</p>
+<p>如果你以前是Ruby程序员，会发现和ROR的/script/server启动有点类似。</p>
+</blockquote>
+<p>我们看到Go通过简单的几行代码就已经运行起来一个Web服务了，而且这个Web服务内部有支持高并发的特性，</p>
+<h2 id="3-3-Go如何使得Web工作"><a href="#3-3-Go如何使得Web工作" class="headerlink" title="3.3 Go如何使得Web工作"></a>3.3 Go如何使得Web工作</h2><h3 id="web工作方式的几个概念"><a href="#web工作方式的几个概念" class="headerlink" title="web工作方式的几个概念"></a>web工作方式的几个概念</h3><p>以下均是服务器端的几个概念</p>
+<p>Request：用户请求的信息，用来解析用户的请求信息，包括post、get、cookie、url等信息</p>
+<p>Response：服务器需要反馈给客户端的信息</p>
+<p>Conn：用户的每次请求链接</p>
+<p>Handler：处理请求和生成返回信息的处理逻辑</p>
+<h3 id="分析http包运行机制"><a href="#分析http包运行机制" class="headerlink" title="分析http包运行机制"></a>分析http包运行机制</h3><p>如下图所示，是Go实现Web服务的工作模式的流程图</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h2cbjl2w7ij20k40f0wfd.jpg" alt="img"></p>
+<ol>
+<li>创建Listen Socket, 监听指定的端口, 等待客户端请求到来。</li>
+<li>Listen Socket接受客户端的请求, 得到Client Socket, 接下来通过Client Socket与客户端通信。</li>
+<li>处理客户端的请求, 首先从Client Socket读取HTTP请求的协议头, 如果是POST方法, 还可能要读取客户端提交的数据, 然后交给相应的handler处理请求, handler处理完毕准备好客户端需要的数据, 通过Client Socket写给客户端。</li>
+</ol>
+<p>这整个的过程里面我们只要了解清楚下面三个问题，也就知道Go是如何让Web运行起来了</p>
+<ul>
+<li>如何监听端口？</li>
+<li>如何接收客户端请求？</li>
+<li>如何分配handler？</li>
+</ul>
+<p>前面小节的代码里面我们可以看到，Go是通过一个函数<code>ListenAndServe</code>来处理这些事情的，这个底层其实这样处理的：初始化一个server对象，然后调用了<code>net.Listen(&quot;tcp&quot;, addr)</code>，也就是底层用TCP协议搭建了一个服务，然后监控我们设置的端口。</p>
+<p>下面代码来自Go的http包的源码，通过下面的代码我们可以看到整个的http处理过程：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">func (srv *Server) Serve(l net.Listener) error &#123;
+    defer l.Close()
+    var tempDelay time.Duration &#x2F;&#x2F; how long to sleep on accept failure
+    for &#123;
+        rw, e :&#x3D; l.Accept()
+        if e !&#x3D; nil &#123;
+            if ne, ok :&#x3D; e.(net.Error); ok &amp;&amp; ne.Temporary() &#123;
+                if tempDelay &#x3D;&#x3D; 0 &#123;
+                    tempDelay &#x3D; 5 * time.Millisecond
+                &#125; else &#123;
+                    tempDelay *&#x3D; 2
+                &#125;
+                if max :&#x3D; 1 * time.Second; tempDelay &gt; max &#123;
+                    tempDelay &#x3D; max
+                &#125;
+                log.Printf(&quot;http: Accept error: %v; retrying in %v&quot;, e, tempDelay)
+                time.Sleep(tempDelay)
+                continue
+            &#125;
+            return e
+        &#125;
+        tempDelay &#x3D; 0
+        c, err :&#x3D; srv.newConn(rw)
+        if err !&#x3D; nil &#123;
+            continue
+        &#125;
+        go c.serve()
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>监控之后如何接收客户端的请求呢？上面代码执行监控端口之后，调用了<code>srv.Serve(net.Listener)</code>函数，这个函数就是处理接收客户端的请求信息。这个函数里面起了一个<code>for&#123;&#125;</code>，首先通过Listener接收请求，其次创建一个Conn，最后单独开了一个goroutine，把这个请求的数据当做参数扔给这个conn去服务：<code>go c.serve()</code>。这个就是高并发体现了，用户的每一次请求都是在一个新的goroutine去服务，相互不影响。</p>
+<p>那么如何具体分配到相应的函数来处理请求呢？conn首先会解析request:<code>c.readRequest()</code>,然后获取相应的handler:<code>handler := c.server.Handler</code>，也就是我们刚才在调用函数<code>ListenAndServe</code>时候的第二个参数，我们前面例子传递的是nil，也就是为空，那么默认获取<code>handler = DefaultServeMux</code>,那么这个变量用来做什么的呢？对，这个变量就是一个路由器，它用来匹配url跳转到其相应的handle函数，那么这个我们有设置过吗?有，我们调用的代码里面第一句不是调用了<code>http.HandleFunc(&quot;/&quot;, sayhelloName)</code>嘛。这个作用就是注册了请求<code>/</code>的路由规则，当请求uri为”/“，路由就会转到函数sayhelloName，DefaultServeMux会调用ServeHTTP方法，这个方法内部其实就是调用sayhelloName本身，最后通过写入response的信息反馈到客户端。</p>
+<p>详细的整个流程如下图所示：</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h2cefv4idhj20f20ed0tp.jpg" alt="img"></p>
+<h2 id="3-4-Go的http包详解"><a href="#3-4-Go的http包详解" class="headerlink" title="3.4 Go的http包详解"></a>3.4 Go的http包详解</h2><p>Go的http有两个核心功能：Conn、ServeMux</p>
+<h3 id="Conn的goroutine"><a href="#Conn的goroutine" class="headerlink" title="Conn的goroutine"></a>Conn的goroutine</h3><p>Go为了实现高并发和高性能, 使用了goroutines来处理Conn的读写事件, 这样每个请求都能保持独立，相互不会阻塞，可以高效的响应网络事件。这是Go高效的保证。</p>
+<p>Go在等待客户端请求里面是这样写的：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">c, err :&#x3D; srv.newConn(rw)
+if err !&#x3D; nil &#123;
+  continue
+&#125;
+go c.serve()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里我们可以看到客户端的每次请求都会创建一个Conn，这个Conn里面保存了该次请求的信息，然后再传递到对应的handler，该handler中便可以读取到相应的header信息，这样保证了每个请求的独立性。</p>
+<h3 id="ServeMux的自定义"><a href="#ServeMux的自定义" class="headerlink" title="ServeMux的自定义"></a>ServeMux的自定义</h3><p>conn.server内部是调用了http包默认的路由器，通过路由器把本次请求的信息传递到了后端的处理函数。那么这个路由器是怎么实现的呢？</p>
+<p>它的结构如下：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type ServeMux struct &#123;
+    mu sync.RWMutex   &#x2F;&#x2F;锁，由于请求涉及到并发处理，因此这里需要一个锁机制
+    m  map[string]muxEntry  &#x2F;&#x2F; 路由规则，一个string对应一个mux实体，这里的string就是注册的路由表达式
+    hosts bool &#x2F;&#x2F; 是否在任意的规则中带有host信息
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>下面看一下muxEntry</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type muxEntry struct &#123;
+    explicit bool   &#x2F;&#x2F; 是否精确匹配
+    h        Handler &#x2F;&#x2F; 这个路由表达式对应哪个handler
+    pattern  string  &#x2F;&#x2F;匹配字符串
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接着看一下Handler的定义</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type Handler interface &#123;
+    ServeHTTP(ResponseWriter, *Request)  &#x2F;&#x2F; 路由实现器
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>Handler是一个接口，但是前一小节中的<code>sayhelloName</code>函数并没有实现ServeHTTP这个接口，为什么能添加呢？原来在http包里面还定义了一个类型<code>HandlerFunc</code>,我们定义的函数<code>sayhelloName</code>就是这个HandlerFunc调用之后的结果，这个类型默认就实现了ServeHTTP这个接口，即我们调用了HandlerFunc(f),强制类型转换f成为HandlerFunc类型，这样f就拥有了ServeHTTP方法。</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type HandlerFunc func(ResponseWriter, *Request)
+
+&#x2F;&#x2F; ServeHTTP calls f(w, r).
+func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) &#123;
+    f(w, r)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>路由器里面存储好了相应的路由规则之后，那么具体的请求又是怎么分发的呢？请看下面的代码，默认的路由器实现了<code>ServeHTTP</code>：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">func (mux *ServeMux) ServeHTTP(w ResponseWriter, r *Request) &#123;
+    if r.RequestURI &#x3D;&#x3D; &quot;*&quot; &#123;
+        w.Header().Set(&quot;Connection&quot;, &quot;close&quot;)
+        w.WriteHeader(StatusBadRequest)
+        return
+    &#125;
+    h, _ :&#x3D; mux.Handler(r)
+    h.ServeHTTP(w, r)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如上所示路由器接收到请求之后，如果是<code>*</code>那么关闭链接，不然调用<code>mux.Handler(r)</code>返回对应设置路由的处理Handler，然后执行<code>h.ServeHTTP(w, r)</code></p>
+<p>也就是调用对应路由的handler的ServerHTTP接口，那么mux.Handler(r)怎么处理的呢？</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">func (mux *ServeMux) Handler(r *Request) (h Handler, pattern string) &#123;
+    if r.Method !&#x3D; &quot;CONNECT&quot; &#123;
+        if p :&#x3D; cleanPath(r.URL.Path); p !&#x3D; r.URL.Path &#123;
+            _, pattern &#x3D; mux.handler(r.Host, p)
+            return RedirectHandler(p, StatusMovedPermanently), pattern
+        &#125;
+    &#125;    
+    return mux.handler(r.Host, r.URL.Path)
+&#125;
+
+func (mux *ServeMux) handler(host, path string) (h Handler, pattern string) &#123;
+    mux.mu.RLock()
+    defer mux.mu.RUnlock()
+
+    &#x2F;&#x2F; Host-specific pattern takes precedence over generic ones
+    if mux.hosts &#123;
+        h, pattern &#x3D; mux.match(host + path)
+    &#125;
+    if h &#x3D;&#x3D; nil &#123;
+        h, pattern &#x3D; mux.match(path)
+    &#125;
+    if h &#x3D;&#x3D; nil &#123;
+        h, pattern &#x3D; NotFoundHandler(), &quot;&quot;
+    &#125;
+    return
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>原来他是根据用户请求的URL和路由器里面存储的map去匹配的，当匹配到之后返回存储的handler，调用这个handler的ServeHTTP接口就可以执行到相应的函数了。</p>
+<p>通过上面这个介绍，我们了解了整个路由过程，Go其实支持外部实现的路由器 <code>ListenAndServe</code>的第二个参数就是用以配置外部路由器的，它是一个Handler接口，即外部路由器只要实现了Handler接口就可以,我们可以在自己实现的路由器的ServeHTTP里面实现自定义路由功能。</p>
+<p>如下代码所示，我们自己实现了一个简易的路由器</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;net&#x2F;http&quot;
+)
+
+type MyMux struct &#123;
+&#125;
+
+func (p *MyMux) ServeHTTP(w http.ResponseWriter, r *http.Request) &#123;
+    if r.URL.Path &#x3D;&#x3D; &quot;&#x2F;&quot; &#123;
+        sayhelloName(w, r)
+        return
+    &#125;
+    http.NotFound(w, r)
+    return
+&#125;
+
+func sayhelloName(w http.ResponseWriter, r *http.Request) &#123;
+    fmt.Fprintf(w, &quot;Hello myroute!&quot;)
+&#125;
+
+func main() &#123;
+    mux :&#x3D; &amp;MyMux&#123;&#125;
+    http.ListenAndServe(&quot;:9090&quot;, mux)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Go代码的执行流程"><a href="#Go代码的执行流程" class="headerlink" title="Go代码的执行流程"></a>Go代码的执行流程</h3><p>通过对http包的分析之后，现在让我们来梳理一下整个的代码执行过程。</p>
+<ul>
+<li><p>首先调用Http.HandleFunc</p>
+<p>按顺序做了几件事：</p>
+<p>1 调用了DefaultServeMux的HandleFunc</p>
+<p>2 调用了DefaultServeMux的Handle</p>
+<p>3 往DefaultServeMux的map[string]muxEntry中增加对应的handler和路由规则</p>
+</li>
+<li><p>其次调用http.ListenAndServe(“:9090”, nil)</p>
+<p>按顺序做了几件事情：</p>
+<p>1 实例化Server</p>
+<p>2 调用Server的ListenAndServe()</p>
+<p>3 调用net.Listen(“tcp”, addr)监听端口</p>
+<p>4 启动一个for循环，在循环体中Accept请求</p>
+<p>5 对每个请求实例化一个Conn，并且开启一个goroutine为这个请求进行服务go c.serve()</p>
+<p>6 读取每个请求的内容w, err := c.readRequest()</p>
+<p>7 判断handler是否为空，如果没有设置handler（这个例子就没有设置handler），handler就设置为DefaultServeMux</p>
+<p>8 调用handler的ServeHttp</p>
+<p>9 在这个例子中，下面就进入到DefaultServeMux.ServeHttp</p>
+<p>10 根据request选择handler，并且进入到这个handler的ServeHTTP</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">mux.handler(r).ServeHTTP(w, r)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>11 选择handler：</p>
+<p>A 判断是否有路由能满足这个request（循环遍历ServerMux的muxEntry）</p>
+<p>B 如果有路由满足，调用这个路由handler的ServeHttp</p>
+<p>C 如果没有路由满足，调用NotFoundHandler的ServeHttp</p>
+</li>
+</ul>
+<h1 id="4-表单"><a href="#4-表单" class="headerlink" title="4 表单"></a>4 表单</h1><p>在Request里面的有专门的form处理，可以很方便的整合到Web开发里面来，4.1小节里面将讲解Go如何处理表单的输入。由于不能信任任何用户的输入，所以我们需要对这些输入进行有效性验证，4.2小节将就如何进行一些普通的验证进行详细的演示。</p>
+<p>HTTP协议是一种无状态的协议，那么如何才能辨别是否是同一个用户呢？同时又如何保证一个表单不出现多次递交的情况呢？4.3和4.4小节里面将对cookie(cookie是存储在客户端的信息，能够每次通过header和服务器进行交互的数据)等进行详细讲解。</p>
+<p>表单还有一个很大的功能就是能够上传文件，那么Go是如何处理文件上传的呢？针对大文件上传我们如何有效的处理呢？4.5小节我们将一起学习Go处理文件上传的知识。</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/navi4.png?raw=true" alt="img"></p>
+<h2 id="4-1-处理表单的输入"><a href="#4-1-处理表单的输入" class="headerlink" title="4.1 处理表单的输入"></a>4.1 处理表单的输入</h2><pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;html&#x2F;template&quot;
+    &quot;log&quot;
+    &quot;net&#x2F;http&quot;
+    &quot;strings&quot;
+)
+
+func sayhelloName(w http.ResponseWriter, r *http.Request) &#123;
+    r.ParseForm()       &#x2F;&#x2F;解析url传递的参数，对于POST则解析响应包的主体（request body）
+    &#x2F;&#x2F;注意:如果没有调用ParseForm方法，下面无法获取表单的数据
+    fmt.Println(r.Form) &#x2F;&#x2F;这些信息是输出到服务器端的打印信息
+    fmt.Println(&quot;path&quot;, r.URL.Path)
+    fmt.Println(&quot;scheme&quot;, r.URL.Scheme)
+    fmt.Println(r.Form[&quot;url_long&quot;])
+    for k, v :&#x3D; range r.Form &#123;
+        fmt.Println(&quot;key:&quot;, k)
+        fmt.Println(&quot;val:&quot;, strings.Join(v, &quot;&quot;))
+    &#125;
+    fmt.Fprintf(w, &quot;Hello astaxie!&quot;) &#x2F;&#x2F;这个写入到w的是输出到客户端的
+&#125;
+
+func login(w http.ResponseWriter, r *http.Request) &#123;
+    fmt.Println(&quot;method:&quot;, r.Method) &#x2F;&#x2F;获取请求的方法
+    if r.Method &#x3D;&#x3D; &quot;GET&quot; &#123;
+        t, _ :&#x3D; template.ParseFiles(&quot;login.html&quot;)
+        t.Execute(w, nil)
+    &#125; else &#123;
+        &#x2F;&#x2F;请求的是登陆数据，那么执行登陆的逻辑判断
+        fmt.Println(&quot;username:&quot;, r.Form[&quot;username&quot;])
+        fmt.Println(&quot;password:&quot;, r.Form[&quot;password&quot;])
+    &#125;
+&#125;
+
+func main() &#123;
+    http.HandleFunc(&quot;&#x2F;&quot;, sayhelloName)       &#x2F;&#x2F;设置访问的路由
+    http.HandleFunc(&quot;&#x2F;login&quot;, login)         &#x2F;&#x2F;设置访问的路由
+    err :&#x3D; http.ListenAndServe(&quot;:9090&quot;, nil) &#x2F;&#x2F;设置监听的端口
+    if err !&#x3D; nil &#123;
+        log.Fatal(&quot;ListenAndServe: &quot;, err)
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/login<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>post<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    用户名:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    密码:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>登陆<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们输入用户名和密码之后发现在服务器端是不会打印出来任何输出的，为什么呢？默认情况下，Handler里面是不会自动解析form的，必须显式的调用<code>r.ParseForm()</code>后，你才能对这个表单数据进行操作。我们修改一下代码，在<code>fmt.Println(&quot;username:&quot;, r.Form[&quot;username&quot;])</code>之前加一行<code>r.ParseForm()</code>,重新编译，再次测试输入递交，现在是不是在服务器端有输出你的输入的用户名和密码了。</p>
+<p><code>r.Form</code>里面包含了所有请求的参数，比如URL中query-string、POST的数据、PUT的数据，所有当你在URL的query-string字段和POST冲突时，会保存成一个slice，里面存储了多个值，Go官方文档中说在接下来的版本里面将会把POST、GET这些数据分离开来。</p>
+<p>…….</p>
+<p><code>request.Form</code>是一个url.Values类型，里面存储的是对应的类似<code>key=value</code>的信息，下面展示了可以对form数据进行的一些操作:</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">v :&#x3D; url.Values&#123;&#125;
+v.Set(&quot;name&quot;, &quot;Ava&quot;)
+v.Add(&quot;friend&quot;, &quot;Jess&quot;)
+v.Add(&quot;friend&quot;, &quot;Sarah&quot;)
+v.Add(&quot;friend&quot;, &quot;Zoe&quot;)
+&#x2F;&#x2F; v.Encode() &#x3D;&#x3D; &quot;name&#x3D;Ava&amp;friend&#x3D;Jess&amp;friend&#x3D;Sarah&amp;friend&#x3D;Zoe&quot;
+fmt.Println(v.Get(&quot;name&quot;))
+fmt.Println(v.Get(&quot;friend&quot;))
+fmt.Println(v[&quot;friend&quot;])<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p><strong>Tips</strong>: Request本身也提供了FormValue()函数来获取用户提交的参数。如r.Form[“username”]也可写成r.FormValue(“username”)。调用r.FormValue时会自动调用r.ParseForm，所以不必提前调用。r.FormValue只会返回同名参数中的第一个，若参数不存在则返回空字符串。</p>
+</blockquote>
+<h2 id="4-2-验证表单的输入"><a href="#4-2-验证表单的输入" class="headerlink" title="4.2 验证表单的输入"></a>4.2 验证表单的输入</h2><p>我们平常编写Web应用主要有两方面的数据验证，一个是在页面端的js验证(目前在这方面有很多的插件库，比如ValidationJS插件)，一个是在服务器端的验证，我们这小节讲解的是如何在服务器端验证。</p>
+<h3 id="必填字段"><a href="#必填字段" class="headerlink" title="必填字段"></a>必填字段</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go">if len(r.Form[&quot;username&quot;][0])&#x3D;&#x3D;0&#123;
+    &#x2F;&#x2F;为空的处理
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><code>r.Form</code>对不同类型的表单元素的留空有不同的处理， 对于空文本框、空文本区域以及文件上传，元素的值为空值,而如果是未选中的复选框和单选按钮，则根本不会在r.Form中产生相应条目，如果我们用上面例子中的方式去获取数据时程序就会报错。所以我们需要通过<code>r.Form.Get()</code>来获取值，因为如果字段不存在，通过该方式获取的是空值。但是通过<code>r.Form.Get()</code>只能获取单个的值，如果是map的值，必须通过上面的方式来获取。</p>
+<h3 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h3><p>如果我们是判断正整数，那么我们先转化成int类型，然后进行处理</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">getint,err:&#x3D;strconv.Atoi(r.Form.Get(&quot;age&quot;))
+if err!&#x3D;nil&#123;
+    &#x2F;&#x2F;数字转化出错了，那么可能就不是数字
+&#125;
+
+&#x2F;&#x2F;接下来就可以判断这个数字的大小范围了
+if getint &gt;100 &#123;
+    &#x2F;&#x2F;太大了
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>还有一种方式就是正则匹配的方式</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">if m, _ :&#x3D; regexp.MatchString(&quot;^[0-9]+$&quot;, r.Form.Get(&quot;age&quot;)); !m &#123;
+    return false
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="中文"><a href="#中文" class="headerlink" title="中文"></a>中文</h3><p>对于中文我们目前有两种方式来验证，可以使用 <code>unicode</code> 包提供的 <code>func Is(rangeTab *RangeTable, r rune) bool</code> 来验证，也可以使用正则方式来验证，这里使用最简单的正则方式，如下代码所示</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">if m, _ :&#x3D; regexp.MatchString(&quot;^\\p&#123;Han&#125;+$&quot;, r.Form.Get(&quot;realname&quot;)); !m &#123;
+    return false
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="电子邮件地址"><a href="#电子邮件地址" class="headerlink" title="电子邮件地址"></a>电子邮件地址</h3><p>你想知道用户输入的一个Email地址是否正确，通过如下这个方式可以验证：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">if m, _ :&#x3D; regexp.MatchString(&#96;^([\w\.\_]&#123;2,10&#125;)@(\w&#123;1,&#125;).([a-z]&#123;2,4&#125;)$&#96;, r.Form.Get(&quot;email&quot;)); !m &#123;
+    fmt.Println(&quot;no&quot;)
+&#125;else&#123;
+    fmt.Println(&quot;yes&quot;)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="手机号码"><a href="#手机号码" class="headerlink" title="手机号码"></a>手机号码</h3><p>你想要判断用户输入的手机号码是否正确，通过正则也可以验证：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">if m, _ :&#x3D; regexp.MatchString(&#96;^(1[3|4|5|8][0-9]\d&#123;4,8&#125;)$&#96;, r.Form.Get(&quot;mobile&quot;)); !m &#123;
+    return false
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="单选按钮"><a href="#单选按钮" class="headerlink" title="单选按钮"></a>单选按钮</h3><p>如果我们想要判断radio按钮是否有一个被选中了，我们页面的输出可能就是一个男、女性别的选择，但是也可能一个15岁大的无聊小孩，一手拿着http协议的书，另一只手通过telnet客户端向你的程序在发送请求呢，你设定的性别男值是1，女是2，他给你发送一个3，你的程序会出现异常吗？因此我们也需要像下拉菜单的判断方式类似，判断我们获取的值是我们预设的值，而不是额外的值。</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radio<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>gender<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>男
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radio<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>gender<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>女<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>那我们也可以类似下拉菜单的做法一样</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">slice:&#x3D;[]int&#123;1,2&#125;
+
+for _, v :&#x3D; range slice &#123;
+    if v &#x3D;&#x3D; r.Form.Get(&quot;gender&quot;) &#123;
+        return true
+    &#125;
+&#125;
+return false<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>复选框同理。</p>
+<h3 id="日期和时间"><a href="#日期和时间" class="headerlink" title="日期和时间"></a>日期和时间</h3><p>你想确定用户填写的日期或时间是否有效。例如 ，用户在日程表中安排8月份的第45天开会，或者提供未来的某个时间作为生日。</p>
+<p>Go里面提供了一个time的处理包，我们可以把用户的输入年月日转化成相应的时间，然后进行逻辑判断</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">t :&#x3D; time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
+fmt.Printf(&quot;Go launched at %s\n&quot;, t.Local())<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>获取time之后我们就可以进行很多时间函数的操作。具体的判断就根据自己的需求调整。</p>
+<h3 id="身份证号码"><a href="#身份证号码" class="headerlink" title="身份证号码"></a>身份证号码</h3><p>如果我们想验证表单输入的是否是身份证，通过正则也可以方便的验证，但是身份证有15位和18位，我们两个都需要验证</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">&#x2F;&#x2F;验证15位身份证，15位的是全部数字
+if m, _ :&#x3D; regexp.MatchString(&#96;^(\d&#123;15&#125;)$&#96;, r.Form.Get(&quot;usercard&quot;)); !m &#123;
+    return false
+&#125;
+
+&#x2F;&#x2F;验证18位身份证，18位前17位为数字，最后一位是校验位，可能为数字或字符X。
+if m, _ :&#x3D; regexp.MatchString(&#96;^(\d&#123;17&#125;)([0-9]|X)$&#96;, r.Form.Get(&quot;usercard&quot;)); !m &#123;
+    return false
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="4-3-预防跨站脚本"><a href="#4-3-预防跨站脚本" class="headerlink" title="4.3 预防跨站脚本"></a>4.3 预防跨站脚本</h2><p>cross-site-scripting （XSS）</p>
+<p>攻击者通常会在有漏洞的程序中插入JavaScript、VBScript、 ActiveX或Flash以欺骗用户。一旦得手，他们可以盗取用户帐户信息，修改用户设置，盗取/污染cookie和植入恶意广告等。</p>
+<p>对XSS最佳的防护应该结合以下两种方法：一是验证所有输入数据，有效检测攻击(这个我们前面小节已经有过介绍);另一个是对所有输出数据进行适当的处理，以防止任何已成功注入的脚本在浏览器端运行。</p>
+<p>那么Go里面是怎么做这个有效防护的呢？Go的html/template里面带有下面几个函数可以帮你转义</p>
+<ul>
+<li>func HTMLEscape(w io.Writer, b []byte) //把b进行转义之后写到w</li>
+<li>func HTMLEscapeString(s string) string //转义s之后返回结果字符串</li>
+<li>func HTMLEscaper(args …interface{}) string //支持多个参数一起转义，返回结果字符串</li>
+</ul>
+<p>我们看4.1小节的例子</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">fmt.Println(&quot;username:&quot;, template.HTMLEscapeString(r.Form.Get(&quot;username&quot;))) &#x2F;&#x2F;输出到服务器端
+fmt.Println(&quot;password:&quot;, template.HTMLEscapeString(r.Form.Get(&quot;password&quot;)))
+template.HTMLEscape(w, []byte(r.Form.Get(&quot;username&quot;))) &#x2F;&#x2F;输出到客户端<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>如果我们输入的username是<code>&lt;script&gt;alert()&lt;/script&gt;</code>,那么我们可以在浏览器上面看到输出如下所示：</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/4.3.escape.png?raw=true" alt="img"></p>
+<p>图4.3 Javascript过滤之后的输出</p>
+<p>Go的html/template包默认帮你过滤了html标签，但是有时候你只想要输出这个<code>&lt;script&gt;alert()&lt;/script&gt;</code>看起来正常的信息，该怎么处理？请使用text/template。请看下面的例子：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">import &quot;text&#x2F;template&quot;
+...
+t, err :&#x3D; template.New(&quot;foo&quot;).Parse(&#96;&#123;&#123;define &quot;T&quot;&#125;&#125;Hello, &#123;&#123;.&#125;&#125;!&#123;&#123;end&#125;&#125;&#96;)
+err &#x3D; t.ExecuteTemplate(out, &quot;T&quot;, &quot;&lt;script&gt;alert(&#39;you have been pwned&#39;)&lt;&#x2F;script&gt;&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">Hello, <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript"><span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'you have been pwned'</span><span class="token punctuation">)</span></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>!<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>或者使用template.HTML类型</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">import &quot;html&#x2F;template&quot;
+...
+t, err :&#x3D; template.New(&quot;foo&quot;).Parse(&#96;&#123;&#123;define &quot;T&quot;&#125;&#125;Hello, &#123;&#123;.&#125;&#125;!&#123;&#123;end&#125;&#125;&#96;)
+err &#x3D; t.ExecuteTemplate(out, &quot;T&quot;, template.HTML(&quot;&lt;script&gt;alert(&#39;you have been pwned&#39;)&lt;&#x2F;script&gt;&quot;))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">Hello, <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript"><span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'you have been pwned'</span><span class="token punctuation">)</span></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>!<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>转换成<code>template.HTML</code>后，变量的内容也不会被转义</p>
+<h2 id="4-4-防止多次递交表单"><a href="#4-4-防止多次递交表单" class="headerlink" title="4.4 防止多次递交表单"></a>4.4 防止多次递交表单</h2><p>解决方案是在表单中添加一个带有唯一值的隐藏字段。在验证表单时，先检查带有该惟一值的表单是否已经递交过了。如果是，拒绝再次递交；如果不是，则处理表单进行逻辑处理。另外，如果是采用了Ajax模式递交表单的话，当表单递交后，通过javascript来禁用表单的递交按钮。</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">用户名:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+密码:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>token<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>&#123;&#123;.&#125;&#125;<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>登陆<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>隐藏字段<code>token</code>，这个值我们通过MD5(时间戳)来获取惟一值，然后我们把这个值存储到服务器端(session来控制，</strong>我们将在第六章讲解如何保存)，以方便表单提交时比对判定。</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">func login(w http.ResponseWriter, r *http.Request) &#123;
+    fmt.Println(&quot;method:&quot;, r.Method) &#x2F;&#x2F;获取请求的方法
+    if r.Method &#x3D;&#x3D; &quot;GET&quot; &#123;
+        crutime :&#x3D; time.Now().Unix()
+        h :&#x3D; md5.New()
+        io.WriteString(h, strconv.FormatInt(crutime, 10))
+        token :&#x3D; fmt.Sprintf(&quot;%x&quot;, h.Sum(nil))
+
+        t, _ :&#x3D; template.ParseFiles(&quot;login.gtpl&quot;)
+        t.Execute(w, token)
+    &#125; else &#123;
+        &#x2F;&#x2F;请求的是登陆数据，那么执行登陆的逻辑判断
+        r.ParseForm()
+        token :&#x3D; r.Form.Get(&quot;token&quot;)
+        if token !&#x3D; &quot;&quot; &#123;
+            &#x2F;&#x2F;验证token的合法性
+        &#125; else &#123;
+            &#x2F;&#x2F;不存在token报错
+        &#125;
+        fmt.Println(&quot;username length:&quot;, len(r.Form[&quot;username&quot;][0]))
+        fmt.Println(&quot;username:&quot;, template.HTMLEscapeString(r.Form.Get(&quot;username&quot;))) &#x2F;&#x2F;输出到服务器端
+        fmt.Println(&quot;password:&quot;, template.HTMLEscapeString(r.Form.Get(&quot;password&quot;)))
+        template.HTMLEscape(w, []byte(r.Form.Get(&quot;username&quot;))) &#x2F;&#x2F;输出到客户端
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面的代码输出到页面的源码如下：</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/4.4.token.png?raw=true" alt="img"></p>
+<p>图4.4 增加token之后在客户端输出的源码信息</p>
+<p>每次刷新这个token的value都会变化。这样就保证了每次显示Form表单的时候都是唯一的，用户递交的表单保持了唯一性</p>
+<p>我们的解决方案可以防止非恶意的攻击，并能使恶意用户暂时不知所措，然后，它却不能排除所有的欺骗性的动机，对此类情况还需要更复杂的工作</p>
+<h2 id="4-5-处理文件上传"><a href="#4-5-处理文件上传" class="headerlink" title="4.5 处理文件上传"></a>4.5 处理文件上传</h2><p>要使表单能够上传文件，首先第一步就是要添加form的<code>enctype</code>属性，<code>enctype</code>属性有如下三种情况:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">application&#x2F;x-www-form-urlencoded   表示在发送前编码所有字符（默认）
+multipart&#x2F;form-data      不对字符编码。在使用包含文件上传控件的表单时，必须使用该值。
+text&#x2F;plain      空格转换为 &quot;+&quot; 加号，但不对特殊字符编码。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>所以，表单的html代码应该类似于:</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>上传文件<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">enctype</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>multipart/form-data<span class="token punctuation">"</span></span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://127.0.0.1:9090/upload<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>post<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>uploadfile<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>token<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>&#123;&#123;.&#125;&#125;<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>upload<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在服务器端，我们增加一个handlerFunc:</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">http.HandleFunc(&quot;&#x2F;upload&quot;, upload)
+
+&#x2F;&#x2F; 处理&#x2F;upload 逻辑
+func upload(w http.ResponseWriter, r *http.Request) &#123;
+    fmt.Println(&quot;method:&quot;, r.Method) &#x2F;&#x2F;获取请求的方法
+    if r.Method &#x3D;&#x3D; &quot;GET&quot; &#123;
+        crutime :&#x3D; time.Now().Unix()
+        h :&#x3D; md5.New()
+        io.WriteString(h, strconv.FormatInt(crutime, 10))
+        token :&#x3D; fmt.Sprintf(&quot;%x&quot;, h.Sum(nil))
+
+        t, _ :&#x3D; template.ParseFiles(&quot;upload.gtpl&quot;)
+        t.Execute(w, token)
+    &#125; else &#123;
+        r.ParseMultipartForm(32 &lt;&lt; 20)
+        file, handler, err :&#x3D; r.FormFile(&quot;uploadfile&quot;)
+        if err !&#x3D; nil &#123;
+            fmt.Println(err)
+            return
+        &#125;
+        defer file.Close()
+        fmt.Fprintf(w, &quot;%v&quot;, handler.Header)
+        f, err :&#x3D; os.OpenFile(&quot;.&#x2F;test&#x2F;&quot;+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+        if err !&#x3D; nil &#123;
+            fmt.Println(err)
+            return
+        &#125;
+        defer f.Close()
+        io.Copy(f, file)
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过上面的代码可以看到，处理文件上传我们需要调用<code>r.ParseMultipartForm</code>，里面的参数表示<code>maxMemory</code>，调用<code>ParseMultipartForm</code>之后，上传的文件存储在<code>maxMemory</code>大小的内存里面，如果文件大小超过了<code>maxMemory</code>，那么剩下的部分将存储在系统的临时文件中。我们可以通过<code>r.FormFile</code>获取上面的文件句柄，然后实例中使用了<code>io.Copy</code>来存储文件。</p>
+<blockquote>
+<p>获取其他非文件字段信息的时候就不需要调用<code>r.ParseForm</code>，因为在需要的时候Go自动会去调用。而且<code>ParseMultipartForm</code>调用一次之后，后面再次调用不会再有效果。</p>
+</blockquote>
+<p>通过上面的实例我们可以看到我们上传文件主要三步处理：</p>
+<ol>
+<li>表单中增加enctype=”multipart/form-data”</li>
+<li>服务端调用<code>r.ParseMultipartForm</code>,把上传的文件存储在内存和临时文件中</li>
+<li>使用<code>r.FormFile</code>获取文件句柄，然后对文件进行存储等处理。</li>
+</ol>
+<p>文件handler是multipart.FileHeader,里面存储了如下结构信息</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type FileHeader struct &#123;
+    Filename string
+    Header   textproto.MIMEHeader
+    &#x2F;&#x2F; contains filtered or unexported fields
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过上面的实例代码打印出来上传文件的信息如下</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/4.5.upload2.png?raw=true" alt="img"></p>
+<p>图4.5 打印文件上传后服务器端接受的信息</p>
+<h3 id="客户端上传文件"><a href="#客户端上传文件" class="headerlink" title="客户端上传文件"></a>客户端上传文件</h3><p>我们上面的例子演示了如何通过表单上传文件，然后在服务器端处理文件，其实Go支持模拟客户端表单功能支持文件上传，详细用法请看如下示例：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;bytes&quot;
+    &quot;fmt&quot;
+    &quot;io&quot;
+    &quot;io&#x2F;ioutil&quot;
+    &quot;mime&#x2F;multipart&quot;
+    &quot;net&#x2F;http&quot;
+    &quot;os&quot;
+)
+
+func postFile(filename string, targetUrl string) error &#123;
+    bodyBuf :&#x3D; &amp;bytes.Buffer&#123;&#125;
+    bodyWriter :&#x3D; multipart.NewWriter(bodyBuf)
+
+    &#x2F;&#x2F;关键的一步操作
+    fileWriter, err :&#x3D; bodyWriter.CreateFormFile(&quot;uploadfile&quot;, filename)
+    if err !&#x3D; nil &#123;
+        fmt.Println(&quot;error writing to buffer&quot;)
+        return err
+    &#125;
+
+    &#x2F;&#x2F;打开文件句柄操作
+    fh, err :&#x3D; os.Open(filename)
+    if err !&#x3D; nil &#123;
+        fmt.Println(&quot;error opening file&quot;)
+        return err
+    &#125;
+    defer fh.Close()
+
+    &#x2F;&#x2F;iocopy
+    _, err &#x3D; io.Copy(fileWriter, fh)
+    if err !&#x3D; nil &#123;
+        return err
+    &#125;
+
+    contentType :&#x3D; bodyWriter.FormDataContentType()
+    bodyWriter.Close()
+
+    resp, err :&#x3D; http.Post(targetUrl, contentType, bodyBuf)
+    if err !&#x3D; nil &#123;
+        return err
+    &#125;
+    defer resp.Body.Close()
+    resp_body, err :&#x3D; ioutil.ReadAll(resp.Body)
+    if err !&#x3D; nil &#123;
+        return err
+    &#125;
+    fmt.Println(resp.Status)
+    fmt.Println(string(resp_body))
+    return nil
+&#125;
+
+&#x2F;&#x2F; sample usage
+func main() &#123;
+    target_url :&#x3D; &quot;http:&#x2F;&#x2F;localhost:9090&#x2F;upload&quot;
+    filename :&#x3D; &quot;.&#x2F;astaxie.pdf&quot;
+    postFile(filename, target_url)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面的例子详细展示了客户端如何向服务器上传一个文件的例子，客户端通过multipart.Write把文件的文本流写入一个缓存中，然后调用http的Post方法把缓存传到服务器。</p>
+<blockquote>
+<p>如果你还有其他普通字段例如username之类的需要同时写入，那么可以调用multipart的WriteField方法写很多其他类似的字段。</p>
+</blockquote>
+<h1 id="5-访问数据库"><a href="#5-访问数据库" class="headerlink" title="5 访问数据库"></a>5 访问数据库</h1><p>Go没有内置的驱动支持任何的数据库，但是Go定义了database/sql接口，用户可以基于驱动接口开发相应数据库的驱动，5.1小节里面介绍Go设计的一些驱动，介绍Go是如何设计数据库驱动接口的。5.2至5.4小节介绍目前使用的比较多的一些关系型数据驱动以及如何使用，5.5小节介绍我自己开发一个ORM库，基于database/sql标准接口开发的，可以兼容几乎所有支持database/sql的数据库驱动，可以方便的使用Go style来进行数据库操作。</p>
+<p>目前NOSQL已经成为Web开发的一个潮流，很多应用采用了NOSQL作为数据库，而不是以前的缓存，5.6小节将介绍MongoDB和Redis两种NOSQL数据库。</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/navi5.png?raw=true" alt="img"></p>
+<h2 id="5-1-database-sql接口"><a href="#5-1-database-sql接口" class="headerlink" title="5.1 database/sql接口"></a>5.1 database/sql接口</h2><p>开发者可以根据定义的接口来开发相应的数据库驱动，这样做有一个好处，只要是按照标准接口开发的代码， 以后需要迁移数据库时，不需要任何修改。</p>
+<h3 id="SQL-Register"><a href="#SQL-Register" class="headerlink" title="SQL.Register"></a>SQL.Register</h3><p>这个存在于database/sql的函数是用来注册数据库驱动的，当第三方开发者开发数据库驱动时，都会实现init函数，在init里面会调用这个<code>Register(name string, driver driver.Driver)</code>完成本驱动的注册。</p>
+<p>我们来看一下mymysql、sqlite3的驱动里面都是怎么调用的：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">&#x2F;&#x2F;https:&#x2F;&#x2F;github.com&#x2F;mattn&#x2F;go-sqlite3驱动
+func init() &#123;
+    sql.Register(&quot;sqlite3&quot;, &amp;SQLiteDriver&#123;&#125;)
+&#125;
+
+&#x2F;&#x2F;https:&#x2F;&#x2F;github.com&#x2F;mikespook&#x2F;mymysql驱动
+&#x2F;&#x2F; Driver automatically registered in database&#x2F;sql
+var d &#x3D; Driver&#123;proto: &quot;tcp&quot;, raddr: &quot;127.0.0.1:3306&quot;&#125;
+func init() &#123;
+    Register(&quot;SET NAMES utf8&quot;)
+    sql.Register(&quot;mymysql&quot;, &amp;d)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们看到第三方数据库驱动都是通过调用这个函数来注册自己的数据库驱动名称以及相应的driver实现。在database/sql内部通过一个map来存储用户定义的相应驱动。</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">var drivers &#x3D; make(map[string]driver.Driver)
+
+drivers[name] &#x3D; driver<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>因此通过database/sql的注册函数可以同时注册多个数据库驱动，只要不重复。</p>
+<blockquote>
+<p>在我们使用database/sql接口和第三方库的时候经常看到如下:</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">import (
+    &quot;database&#x2F;sql&quot;
+     _ &quot;github.com&#x2F;mattn&#x2F;go-sqlite3&quot;
+)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>新手都会被这个<code>_</code>所迷惑，其实这个就是Go设计的巧妙之处，我们在变量赋值的时候经常看到这个符号，它是用来忽略变量赋值的占位符，那么包引入用到这个符号也是相似的作用，这儿使用<code>_</code>的意思是引入后面的包名而不直接使用这个包中定义的函数，变量等资源。</p>
+<p>包在引入的时候会自动调用包的init函数以完成对包的初始化。因此，我们引入上面的数据库驱动包之后会自动去调用init函数，然后在init函数里面注册这个数据库驱动，这样我们就可以在接下来的代码中直接使用这个数据库驱动了。</p>
+</blockquote>
+<h3 id="driver-Driver"><a href="#driver-Driver" class="headerlink" title="driver.Driver"></a>driver.Driver</h3><p>Driver是一个数据库驱动的接口，他定义了一个method： Open(name string)，这个方法返回一个数据库的Conn接口。</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type Driver interface &#123;
+    Open(name string) (Conn, error)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>返回的Conn只能用来进行一次goroutine的操作，也就是说不能把这个Conn应用于Go的多个goroutine里面。如下代码会出现错误</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">...
+go goroutineA (Conn)  &#x2F;&#x2F;执行查询操作
+go goroutineB (Conn)  &#x2F;&#x2F;执行插入操作
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面这样的代码可能会使Go不知道某个操作究竟是由哪个goroutine发起的,从而导致数据混乱，比如可能会把goroutineA里面执行的查询操作的结果返回给goroutineB从而使B错误地把此结果当成自己执行的插入数据。</p>
+<p>第三方驱动都会定义这个函数，它会解析name参数来获取相关数据库的连接信息，解析完成后，它将使用此信息来初始化一个Conn并返回它。</p>
+<h3 id="driver-Conn"><a href="#driver-Conn" class="headerlink" title="driver.Conn"></a>driver.Conn</h3><p>Conn是一个数据库连接的接口定义，他定义了一系列方法，这个Conn只能应用在一个goroutine里面，不能使用在多个goroutine里面，</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type Conn interface &#123;
+    Prepare(query string) (Stmt, error)
+    Close() error
+    Begin() (Tx, error)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Prepare函数返回与当前连接相关的执行Sql语句的准备状态，可以进行查询、删除等操作。</p>
+<p>Close函数关闭当前的连接，执行释放连接拥有的资源等清理工作。因为驱动实现了database/sql里面建议的conn pool，所以你不用再去实现缓存conn之类的，这样会容易引起问题。</p>
+<p>Begin函数返回一个代表事务处理的Tx，通过它你可以进行查询,更新等操作，或者对事务进行回滚、递交。</p>
+<h3 id="driver-Stmt"><a href="#driver-Stmt" class="headerlink" title="driver.Stmt"></a>driver.Stmt</h3><p>Stmt是一种准备好的状态，和Conn相关联，而且只能应用于一个goroutine中，不能应用于多个goroutine。</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type Stmt interface &#123;
+    Close() error
+    NumInput() int
+    Exec(args []Value) (Result, error)
+    Query(args []Value) (Rows, error)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Close函数关闭当前的链接状态，但是如果当前正在执行query，query还是有效返回rows数据。</p>
+<p>NumInput函数返回当前预留参数的个数，当返回&gt;=0时数据库驱动就会智能检查调用者的参数。当数据库驱动包不知道预留参数的时候，返回-1。</p>
+<p>Exec函数执行Prepare准备好的sql，传入参数执行update/insert等操作，返回Result数据</p>
+<p>Query函数执行Prepare准备好的sql，传入需要的参数执行select操作，返回Rows结果集</p>
+<h3 id="Driver-Tx"><a href="#Driver-Tx" class="headerlink" title="Driver.Tx"></a>Driver.Tx</h3><p>事务处理一般就两个过程，递交或者回滚。数据库驱动里面也只需要实现这两个函数就可以</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type Tx interface &#123;
+    Commit() error
+    Rollback() error
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这两个函数一个用来递交一个事务，一个用来回滚事务。</p>
+<h3 id="driver-Execer"><a href="#driver-Execer" class="headerlink" title="driver.Execer"></a>driver.Execer</h3><p>这是一个Conn可选择实现的接口</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type Execer interface &#123;
+    Exec(query string, args []Value) (Result, error)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>如果这个接口没有定义，那么在调用DB.Exec,就会首先调用Prepare返回Stmt，然后执行Stmt的Exec，然后关闭Stmt。</p>
+<h3 id="driver-Result"><a href="#driver-Result" class="headerlink" title="driver.Result"></a>driver.Result</h3><p>这个是执行Update/Insert等操作返回的结果接口定义</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type Result interface &#123;
+    LastInsertId() (int64, error)
+    RowsAffected() (int64, error)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>LastInsertId函数返回由数据库执行插入操作得到的自增ID号。</p>
+<p>RowsAffected函数返回query操作影响的数据条目数。</p>
+<h3 id="driver-Rows"><a href="#driver-Rows" class="headerlink" title="driver.Rows"></a>driver.Rows</h3><p>Rows是执行查询返回的结果集接口定义</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type Rows interface &#123;
+    Columns() []string
+    Close() error
+    Next(dest []Value) error
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Columns函数返回查询数据库表的字段信息，这个返回的slice和sql查询的字段一一对应，而不是返回整个表的所有字段。</p>
+<p>Close函数用来关闭Rows迭代器。</p>
+<p>Next函数用来返回下一条数据，把数据赋值给dest。dest里面的元素必须是driver.Value的值除了string，返回的数据里面所有的string都必须要转换成[]byte。如果最后没数据了，Next函数最后返回io.EOF。</p>
+<p>……..</p>
+<h2 id="5-2-使用MySQL数据库"><a href="#5-2-使用MySQL数据库" class="headerlink" title="5.2 使用MySQL数据库"></a>5.2 使用MySQL数据库</h2><p>目前Internet上流行的网站构架方式是LAMP，其中的M即MySQL,</p>
+<h3 id="MySQL驱动"><a href="#MySQL驱动" class="headerlink" title="MySQL驱动"></a>MySQL驱动</h3><p>通过上面的代码我们可以看出，Go操作Mysql数据库是很方便的。</p>
+<p>关键的几个函数我解释一下：</p>
+<p>sql.Open()函数用来打开一个注册过的数据库驱动，go-sql-driver中注册了mysql这个数据库驱动，第二个参数是DSN(Data Source Name)，它是go-sql-driver定义的一些数据库链接和配置信息。它支持如下格式：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">[email protected](&#x2F;path&#x2F;to&#x2F;socket)&#x2F;dbname?charset&#x3D;utf8
+user:[email protected](localhost:5555)&#x2F;dbname?charset&#x3D;utf8
+user:[email protected]&#x2F;dbname
+user:[email protected]([de:ad:be:ef::ca:fe]:80)&#x2F;dbname<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>db.Prepare()函数用来返回准备要执行的sql操作，然后返回准备完毕的执行状态。</p>
+<p>db.Query()函数用来直接执行Sql返回Rows结果。</p>
+<p>stmt.Exec()函数用来执行stmt准备好的SQL语句</p>
+<p>我们可以看到我们传入的参数都是=?对应的数据，这样做的方式可以一定程度上防止SQL注入。</p>
+<h2 id="5-3-使用SQLite数据库"><a href="#5-3-使用SQLite数据库" class="headerlink" title="5.3 使用SQLite数据库"></a>5.3 使用SQLite数据库</h2><p>SQLite 是一个开源的嵌入式关系数据库，实现自包容、零配置、支持事务的SQL数据库引擎。其特点是高度便携、使用方便、结构紧凑、高效、可靠。 与其他数据库管理系统不同，SQLite 的安装和运行非常简单，在大多数情况下,只要确保SQLite的二进制文件存在即可开始创建、连接和使用数据库。如果您正在寻找一个嵌入式数据库项目或解决方案，SQLite是绝对值得考虑。SQLite可以是说开源的Access</p>
+<h2 id="5-4-使用PostgreSQL数据库"><a href="#5-4-使用PostgreSQL数据库" class="headerlink" title="5.4 使用PostgreSQL数据库"></a>5.4 使用PostgreSQL数据库</h2><p>PostgreSQL 是一个自由的对象-关系数据库服务器(数据库管理系统)，它在灵活的 BSD-风格许可证下发行。它提供了相对其他开放源代码数据库系统(比如 MySQL 和 Firebird)，和对专有系统比如 Oracle、Sybase、IBM 的 DB2 和 Microsoft SQL Server的一种选择。</p>
+<p>PostgreSQL和MySQL比较，它更加庞大一点，因为它是用来替代Oracle而设计的。所以在企业应用中采用PostgreSQL是一个明智的选择。</p>
+<p>MySQL被Oracle收购之后正在逐步的封闭（自MySQL 5.5.31以后的所有版本将不再遵循GPL协议），鉴于此，将来我们也许会选择PostgreSQL而不是MySQL作为项目的后端数据库。</p>
+<h2 id="5-5-使用beedb库进行ORM开发"><a href="#5-5-使用beedb库进行ORM开发" class="headerlink" title="5.5 使用beedb库进行ORM开发"></a>5.5 使用beedb库进行ORM开发</h2><p>beedb是我开发的一个Go进行ORM操作的库，它采用了Go style方式对数据库进行操作，实现了struct到数据表记录的映射。beedb是一个十分轻量级的Go ORM框架，开发这个库的本意降低复杂的ORM学习曲线，尽可能在ORM的运行效率和功能之间寻求一个平衡，beedb是目前开源的Go ORM框架中实现比较完整的一个库，而且运行效率相当不错，功能也基本能满足需求。但是目前还不支持关系关联，这个是接下来版本升级的重点。</p>
+<h2 id="5-6-NOSQL数据库操作"><a href="#5-6-NOSQL数据库操作" class="headerlink" title="5.6 NOSQL数据库操作"></a>5.6 NOSQL数据库操作</h2><p>NoSQL(Not Only SQL)，指的是非关系型的数据库。随着Web2.0的兴起，传统的关系数据库在应付Web2.0网站，特别是超大规模和高并发的SNS类型的Web2.0纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。</p>
+<p>而Go语言作为21世纪的C语言，对NOSQL的支持也是很好，目前流行的NOSQL主要有redis、mongoDB、Cassandra和Membase等。这些数据库都有高性能、高并发读写等特点，目前已经广泛应用于各种应用中。我接下来主要讲解一下redis和mongoDB的操作。</p>
+<h3 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h3><p>redis是一个key-value存储系统。和Memcached类似，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)和zset(有序集合)。</p>
+<p>目前应用redis最广泛的应该是新浪微博平台，其次还有Facebook收购的图片社交网站instagram。</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;github.com&#x2F;astaxie&#x2F;goredis&quot;
+    &quot;fmt&quot;
+)
+
+func main() &#123;
+    var client goredis.Client
+    &#x2F;&#x2F; 设置端口为redis默认端口
+    client.Addr &#x3D; &quot;127.0.0.1:6379&quot;
+
+    &#x2F;&#x2F;字符串操作
+    client.Set(&quot;a&quot;, []byte(&quot;hello&quot;))
+    val, _ :&#x3D; client.Get(&quot;a&quot;)
+    fmt.Println(string(val))
+    client.Del(&quot;a&quot;)
+
+    &#x2F;&#x2F;list操作
+    vals :&#x3D; []string&#123;&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;&#125;
+    for _, v :&#x3D; range vals &#123;
+        client.Rpush(&quot;l&quot;, []byte(v))
+    &#125;
+    dbvals,_ :&#x3D; client.Lrange(&quot;l&quot;, 0, 4)
+    for i, v :&#x3D; range dbvals &#123;
+        println(i,&quot;:&quot;,string(v))
+    &#125;
+    client.Del(&quot;l&quot;)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们可以看到操作redis非常的方便，而且我实际项目中应用下来性能也很高。client的命令和redis的命令基本保持一致。所以和原生态操作redis非常类似。</p>
+<h3 id="mongoDB"><a href="#mongoDB" class="headerlink" title="mongoDB"></a>mongoDB</h3><p>MongoDB是一个高性能，开源，无模式的文档型数据库，是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。他支持的数据结构非常松散，采用的是类似json的bjson格式来存储数据，因此可以存储比较复杂的数据类型。Mongo最大的特点是他支持的查询语言非常强大，其语法有点类似于面向对象的查询语言，几乎可以实现类似关系数据库单表查询的绝大部分功能，而且还支持对数据建立索引。</p>
+<p>下图展示了mysql和mongoDB之间的对应关系，我们可以看出来非常的方便，但是mongoDB的性能非常好。</p>
+<p> <img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/5.6.mongodb.png?raw=true" alt="img"></p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;labix.org&#x2F;v2&#x2F;mgo&quot;
+    &quot;labix.org&#x2F;v2&#x2F;mgo&#x2F;bson&quot;
+)
+
+type Person struct &#123;
+    Name string
+    Phone string
+&#125;
+
+func main() &#123;
+    session, err :&#x3D; mgo.Dial(&quot;server1.example.com,server2.example.com&quot;)
+    if err !&#x3D; nil &#123;
+        panic(err)
+    &#125;
+    defer session.Close()
+
+    session.SetMode(mgo.Monotonic, true)
+
+    c :&#x3D; session.DB(&quot;test&quot;).C(&quot;people&quot;)
+    err &#x3D; c.Insert(&amp;Person&#123;&quot;Ale&quot;, &quot;+55 53 8116 9639&quot;&#125;,
+        &amp;Person&#123;&quot;Cla&quot;, &quot;+55 53 8402 8510&quot;&#125;)
+    if err !&#x3D; nil &#123;
+        panic(err)
+    &#125;
+
+    result :&#x3D; Person&#123;&#125;
+    err &#x3D; c.Find(bson.M&#123;&quot;name&quot;: &quot;Ale&quot;&#125;).One(&amp;result)
+    if err !&#x3D; nil &#123;
+        panic(err)
+    &#125;
+
+    fmt.Println(&quot;Phone:&quot;, result.Phone)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们可以看出来mgo的操作方式和beedb的操作方式几乎类似，都是基于struct的操作方式，这个就是Go Style。</p>
+<h1 id="6-session和数据存储"><a href="#6-session和数据存储" class="headerlink" title="6 session和数据存储"></a>6 session和数据存储</h1><p>Web开发中一个很重要的议题就是如何做好用户的整个浏览过程的控制，因为HTTP协议是无状态的，所以用户的每一次请求都是无状态的，我们不知道在整个Web操作过程中哪些连接与该用户有关，我们应该如何来解决这个问题呢？Web里面经典的解决方案是cookie和session，cookie机制是一种客户端机制，把用户数据保存在客户端，而session机制是一种服务器端的机制，服务器使用一种类似于散列表的结构来保存信息，每一个网站访客都会被分配给一个唯一的标志符,即sessionID,它的存放形式无非两种:要么经过url传递,要么保存在客户端的cookies里.当然,你也可以将Session保存到数据库里,这样会更安全,但效率方面会有所下降。</p>
+<p>6.1小节里面讲介绍session机制和cookie机制的关系和区别，6.2讲解Go语言如何来实现session，里面讲实现一个简易的session管理器，6.3小节讲解如何防止session被劫持的情况，如何有效的保护session。我们知道session其实可以存储在任何地方，6.3小节里面实现的session是存储在内存中的，但是如果我们的应用进一步扩展了，要实现应用的session共享，那么我们可以把session存储在数据库中(memcache或者redis)，6.4小节将详细的讲解如何实现这些功能。</p>
+<h2 id="6-1-Session-amp-amp-Cookie"><a href="#6-1-Session-amp-amp-Cookie" class="headerlink" title="6.1 Session&amp;&amp;Cookie"></a>6.1 Session&amp;&amp;Cookie</h2><p>当用户来到微博登陆页面，输入用户名和密码之后点击“登录”后浏览器将认证信息POST给远端的服务器，服务器执行验证逻辑，如果验证通过，则浏览器会跳转到登录用户的微博首页，在登录成功后，服务器如何验证我们对其他受限制页面的访问呢？因为HTTP协议是无状态的，所以很显然服务器不可能知道我们已经在上一次的HTTP请求中通过了验证。当然，最简单的解决方案就是所有的请求里面都带上用户名和密码，这样虽然可行，但大大加重了服务器的负担（对于每个request都需要到数据库验证），也大大降低了用户体验(每个页面都需要重新输入用户名密码，每个页面都带有登录表单)。既然直接在请求中带上用户名与密码不可行，那么就只有在服务器或客户端保存一些类似的可以代表身份的信息了，所以就有了cookie与session。</p>
+<p>cookie，简而言之就是在本地计算机保存一些用户操作的历史信息（当然包括登录信息），并在用户再次访问该站点时浏览器通过HTTP协议将本地cookie内容发送给服务器，从而完成验证，或继续上一步操作。</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.1.cookie2.png?raw=true" alt="img"></p>
+<p>session，简而言之就是在服务器上保存用户操作的历史信息。服务器使用session id来标识session，session id由服务器负责产生，保证随机性与唯一性，相当于一个随机密钥，避免在握手或传输中暴露用户真实密码。但该方式下，仍然需要将发送请求的客户端与session进行对应，所以可以借助cookie机制来获取客户端的标识（即session id），也可以通过GET方式将id提交给服务器。</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.1.session.png?raw=true" alt="img"></p>
+<h3 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h3><p>Cookie是由浏览器维持的，存储在客户端的一小段文本信息，伴随着用户请求和页面在Web服务器和浏览器之间传递。用户每次访问站点时，Web应用程序都可以读取cookie包含的信息。浏览器设置里面有cookie隐私数据选项，打开它，可以看到很多已访问网站的cookies，</p>
+<p>cookie是有时间限制的，根据生命期不同分成两种：会话cookie和持久cookie；</p>
+<p>如果不设置过期时间，则表示这个cookie生命周期为从创建到浏览器关闭止，只要关闭浏览器窗口，cookie就消失了。这种生命期为浏览会话期的cookie被称为会话cookie。会话cookie一般不保存在硬盘上而是保存在内存里。</p>
+<p>如果设置了过期时间(setMaxAge(60<em>60</em>24))，浏览器就会把cookie保存到硬盘上，关闭后再次打开浏览器，这些cookie依然有效直到超过设定的过期时间。存储在硬盘上的cookie可以在不同的浏览器进程间共享，比如两个IE窗口。而对于保存在内存的cookie，不同的浏览器有不同的处理方式</p>
+<p>Go语言中通过net/http包中的SetCookie来设置：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">http.SetCookie(w ResponseWriter, cookie *Cookie)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>w表示需要写入的response，cookie是一个struct，让我们来看一下cookie对象是怎么样的</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type Cookie struct &#123;
+    Name       string
+    Value      string
+    Path       string
+    Domain     string
+    Expires    time.Time
+    RawExpires string
+
+&#x2F;&#x2F; MaxAge&#x3D;0 means no &#39;Max-Age&#39; attribute specified.
+&#x2F;&#x2F; MaxAge&lt;0 means delete cookie now, equivalently &#39;Max-Age: 0&#39;
+&#x2F;&#x2F; MaxAge&gt;0 means Max-Age attribute present and given in seconds
+    MaxAge   int
+    Secure   bool
+    HttpOnly bool
+    Raw      string
+    Unparsed []string &#x2F;&#x2F; Raw text of unparsed attribute-value pairs
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们来看一个例子，如何设置cookie</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">expiration :&#x3D; time.Now()
+expiration &#x3D; expiration.AddDate(1, 0, 0)
+cookie :&#x3D; http.Cookie&#123;Name: &quot;username&quot;, Value: &quot;astaxie&quot;, Expires: expiration&#125;
+http.SetCookie(w, &amp;cookie)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>　　</p>
+<h4 id="Go读取cookie"><a href="#Go读取cookie" class="headerlink" title="Go读取cookie"></a>Go读取cookie</h4><p>上面的例子演示了如何设置cookie数据，我们这里来演示一下如何读取cookie</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">cookie, _ :&#x3D; r.Cookie(&quot;username&quot;)
+fmt.Fprint(w, cookie)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>还有另外一种读取方式 </p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">for _, cookie :&#x3D; range r.Cookies() &#123;
+    fmt.Fprint(w, cookie.Name)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>可以看到通过request获取cookie非常方便。</p>
+<h3 id="session"><a href="#session" class="headerlink" title="session"></a>session</h3><p>当session一词与网络协议相关联时，它又往往隐含了“面向连接”和/或“保持状态”这样两个含义。</p>
+<p>session在Web开发环境下的语义又有了新的扩展，它的含义是指一类用来在客户端与服务器端之间保持状态的解决方案。有时候Session也用来指这种解决方案的存储结构。</p>
+<p>session机制是一种服务器端的机制，服务器使用一种类似于散列表的结构(也可能就是使用散列表)来保存信息。</p>
+<p>但程序需要为某个客户端的请求创建一个session的时候，服务器首先检查这个客户端的请求里是否包含了一个session标识－称为session id，如果已经包含一个session id则说明以前已经为此客户创建过session，服务器就按照session id把这个session检索出来使用(如果检索不到，可能会新建一个，这种情况可能出现在服务端已经删除了该用户对应的session对象，但用户人为地在请求的URL后面附加上一个JSESSION的参数)。如果客户请求不包含session id，则为此客户创建一个session并且同时生成一个与此session相关联的session id，这个session id将在本次响应中返回给客户端保存。</p>
+<p>session机制本身并不复杂，然而其实现和配置上的灵活性却使得具体情况复杂多变。这也要求我们不能把仅仅某一次的经验或者某一个浏览器，服务器的经验当作普遍适用的</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>session和cookie的目的相同，都是为了克服http协议无状态的缺陷，但完成的方法不同。session通过cookie，在客户端保存session id，而将用户的其他会话消息保存在服务端的session对象中，与此相对的，cookie需要将所有信息都保存在客户端。因此cookie存在着一定的安全隐患，例如本地cookie中保存的用户名密码被破译，或cookie被其他网站收集（例如：1. appA主动设置域B cookie，让域B cookie获取；2. XSS，在appA上通过javascript获取document.cookie，并传递给自己的appB）。</p>
+<h2 id="6-2-Go语言如何使用Session"><a href="#6-2-Go语言如何使用Session" class="headerlink" title="6.2 Go语言如何使用Session"></a>6.2 Go语言如何使用Session</h2><p>目前Go标准包没有为session提供任何支持，这小节我们将会自己动手来实现go版本的session管理和创建。</p>
+<h3 id="Session创建过程"><a href="#Session创建过程" class="headerlink" title="Session创建过程"></a>Session创建过程</h3><p>ession的基本原理是由服务器为每个会话维护一份信息数据，客户端和服务端依靠一个全局唯一的标识来访问这份数据，以达到交互的目的。当用户访问Web应用时，服务端程序会随需要创建session，这个过程可以概括为三个步骤：</p>
+<ul>
+<li>生成全局唯一标识符（sessionid）；</li>
+<li>开辟数据存储空间。一般会在内存中创建相应的数据结构，但这种情况下，系统一旦掉电，所有的会话数据就会丢失，如果是电子商务类网站，这将造成严重的后果。所以为了解决这类问题，你可以将会话数据写到文件里或存储在数据库中，当然这样会增加I/O开销，但是它可以实现某种程度的session持久化，也更有利于session的共享；</li>
+<li>将session的全局唯一标示符发送给客户端。</li>
+</ul>
+<p>以上三个步骤中，最关键的是如何发送这个session的唯一标识这一步上。考虑到HTTP协议的定义，数据无非可以放到请求行、头域或Body里，所以一般来说会有两种常用的方式：cookie和URL重写。</p>
+<ol>
+<li>Cookie 服务端通过设置Set-cookie头就可以将session的标识符传送到客户端，而客户端此后的每一次请求都会带上这个标识符，另外一般包含session信息的cookie会将失效时间设置为0(会话cookie)，即浏览器进程有效时间。至于浏览器怎么处理这个0，每个浏览器都有自己的方案，但差别都不会太大(一般体现在新建浏览器窗口的时候)；</li>
+<li>URL重写 所谓URL重写，就是在返回给用户的页面里的所有的URL后面追加session标识符，这样用户在收到响应之后，无论点击响应页面里的哪个链接或提交表单，都会自动带上session标识符，从而就实现了会话的保持。虽然这种做法比较麻烦，但是，如果客户端禁用了cookie的话，此种方案将会是首选。</li>
+</ol>
+<h3 id="Go实现session管理"><a href="#Go实现session管理" class="headerlink" title="Go实现session管理"></a>Go实现session管理</h3><p>下面我们将结合session的生命周期（lifecycle），来实现go语言版本的session管理。</p>
+<h4 id="Session管理设计"><a href="#Session管理设计" class="headerlink" title="Session管理设计"></a>Session管理设计</h4><p>session管理涉及到如下几个因素</p>
+<ul>
+<li>全局session管理器</li>
+<li>保证sessionid 的全局唯一性</li>
+<li>为每个客户关联一个session</li>
+<li>session 的存储(可以存储到内存、文件、数据库等)</li>
+<li>session 过期处理</li>
+</ul>
+<p>有过Web开发经验的读者知道，对Session的处理基本就 设置值、读取值、删除值以及获取当前sessionID这四个操作，所以我们的Session接口也就实现这四个操作。</p>
+<p><strong>这里有些代码跑不了（推测是修改了goroutine的部分），这本书是14年的用的go1.4，我在22年使用的是Go1.18，因此我决定从这里开始这本书就略读了，以后再用别的方式学习go web吧，有时候看书确实不如看视频合适，交互反馈太少了。其实这个属于我自己的判断错误，应该早点发现的！</strong></p>
+<h2 id="6-4-预防session劫持"><a href="#6-4-预防session劫持" class="headerlink" title="6.4 预防session劫持"></a>6.4 预防session劫持</h2><p>session劫持是一种广泛存在的比较严重的安全威胁，在session技术中，客户端和服务端通过session的标识符来维护会话， 但这个标识符很容易就能被嗅探到，从而被其他人利用.它是中间人攻击的一种类型。</p>
+<p>本节将通过一个实例来演示会话劫持，希望通过这个实例，能让读者更好地理解session的本质。</p>
+<h3 id="session劫持过程"><a href="#session劫持过程" class="headerlink" title="session劫持过程"></a>session劫持过程</h3><p>我们写了如下的代码来展示一个count计数器：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">func count(w http.ResponseWriter, r *http.Request) &#123;
+    sess :&#x3D; globalSessions.SessionStart(w, r)
+    ct :&#x3D; sess.Get(&quot;countnum&quot;)
+    if ct &#x3D;&#x3D; nil &#123;
+        sess.Set(&quot;countnum&quot;, 1)
+    &#125; else &#123;
+        sess.Set(&quot;countnum&quot;, (ct.(int) + 1))
+    &#125;
+    t, _ :&#x3D; template.ParseFiles(&quot;count.gtpl&quot;)
+    w.Header().Set(&quot;Content-Type&quot;, &quot;text&#x2F;html&quot;)
+    t.Execute(w, sess.Get(&quot;countnum&quot;))
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>count.gtpl的代码如下所示：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">Hi. Now count:&#123;&#123;.&#125;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>然后我们在浏览器里面刷新可以看到如下内容：</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.4.hijack.png?raw=true" alt="img"></p>
+<p>图6.4 浏览器端显示count数</p>
+<p>随着刷新，数字将不断增长，当数字显示为6的时候，打开浏览器(以chrome为例）的cookie管理器，可以看到类似如下的信息：</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.4.cookie.png?raw=true" alt="img"></p>
+<p>图6.5 获取浏览器端保存的cookie</p>
+<p>下面这个步骤最为关键: 打开另一个浏览器(这里我打开了firefox浏览器),复制chrome地址栏里的地址到新打开的浏览器的地址栏中。然后打开firefox的cookie模拟插件，新建一个cookie，把按上图中cookie内容原样在firefox中重建一份:</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.4.setcookie.png?raw=true" alt="img"></p>
+<p>图6.6 模拟cookie</p>
+<p>回车后，你将看到如下内容：</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/6.4.hijacksuccess.png?raw=true" alt="img"></p>
+<p>图6.7 劫持session成功</p>
+<p>可以看到虽然换了浏览器，但是我们却获得了sessionID，然后模拟了cookie存储的过程。这个例子是在同一台计算机上做的，不过即使换用两台来做，其结果仍然一样。此时如果交替点击两个浏览器里的链接你会发现它们其实操纵的是同一个计数器。不必惊讶，此处firefox盗用了chrome和goserver之间的维持会话的钥匙，即gosessionid，这是一种类型的“会话劫持”。在goserver看来，它从http请求中得到了一个gosessionid，由于HTTP协议的无状态性，它无法得知这个gosessionid是从chrome那里“劫持”来的，它依然会去查找对应的session，并执行相关计算。与此同时 chrome也无法得知自己保持的会话已经被“劫持”</p>
+<h1 id="7"><a href="#7" class="headerlink" title="7"></a>7</h1><h2 id="7-4-模板处理"><a href="#7-4-模板处理" class="headerlink" title="7.4 模板处理"></a>7.4 模板处理</h2><p>在Go语言中，我们使用<code>template</code>包来进行模板处理，使用类似<code>Parse</code>、<code>ParseFile</code>、<code>Execute</code>等方法从文件或者字符串加载模板，然后执行类似上面图片展示的模板的merge操作。请看下面的例子：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">func handler(w http.ResponseWriter, r *http.Request) &#123;
+    t :&#x3D; template.New(&quot;some template&quot;) &#x2F;&#x2F;创建一个模板
+    t, _ &#x3D; t.ParseFiles(&quot;tmpl&#x2F;welcome.html&quot;, nil)  &#x2F;&#x2F;解析模板文件
+    user :&#x3D; GetUser() &#x2F;&#x2F;获取当前用户信息
+    t.Execute(w, user)  &#x2F;&#x2F;执行模板的merger操作
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过上面的例子我们可以看到Go语言的模板操作非常的简单方便，和其他语言的模板处理类似，都是先获取数据，然后渲染数据。</p>
+<p>为了演示和测试代码的方便，我们在接下来的例子中采用如下格式的代码</p>
+<ul>
+<li>使用Parse代替ParseFiles，因为Parse可以直接测试一个字符串，而不需要额外的文件</li>
+<li>不使用handler来写演示代码，而是每个测试一个main，方便测试</li>
+<li>使用<code>os.Stdout</code>代替<code>http.ResponseWriter</code>，因为<code>os.Stdout</code>实现了<code>io.Writer</code>接口</li>
+</ul>
+<h3 id="字段操作"><a href="#字段操作" class="headerlink" title="字段操作"></a>字段操作</h3><p>Go语言的模板通过<code>&#123;&#123;&#125;&#125;</code>来包含需要在渲染时被替换的字段，<code>&#123;&#123;.&#125;&#125;</code>表示当前的对象，这和Java或者C++中的this类似，如果要访问当前对象的字段通过<code>&#123;&#123;.FieldName&#125;&#125;</code>,但是需要注意一点：这个字段必须是导出的(字段首字母必须是大写的),否则在渲染的时候就会报错</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;html&#x2F;template&quot;
+    &quot;os&quot;
+)
+
+type Person struct &#123;
+    UserName string
+&#125;
+
+func main() &#123;
+    t :&#x3D; template.New(&quot;fieldname example&quot;)
+    t, _ &#x3D; t.Parse(&quot;hello &#123;&#123;.UserName&#125;&#125;!&quot;)
+    p :&#x3D; Person&#123;UserName: &quot;Astaxie&quot;&#125;
+    t.Execute(os.Stdout, p)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="输出嵌套字段内容"><a href="#输出嵌套字段内容" class="headerlink" title="输出嵌套字段内容"></a>输出嵌套字段内容</h3><p>上面我们例子展示了如何针对一个对象的字段输出，那么如果字段里面还有对象，如何来循环的输出这些内容呢？我们可以使用<code>&#123;&#123;with …&#125;&#125;…&#123;&#123;end&#125;&#125;</code>和<code>&#123;&#123;range …&#125;&#125;&#123;&#123;end&#125;&#125;</code>来进行数据的输出。</p>
+<ul>
+<li>function range(start, stop, step) {
+      if (typeof stop === 'undefined') {
+        stop = start;
+        start = 0;
+        step = 1;
+      } else if (!step) {
+        step = 1;
+      }
+      var arr = [];
+      if (step > 0) {
+        for (var i = start; i < stop; i += step) {
+          arr.push(i);
+        }
+      } else {
+        for (var _i = start; _i > stop; _i += step) {
+          // eslint-disable-line for-direction
+          arr.push(_i);
+        }
+      }
+      return arr;
+    } 这个和Go语法里面的range类似，循环操作数据</li>
+<li>操作是指当前对象的值，类似上下文的概念</li>
+</ul>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;html&#x2F;template&quot;
+    &quot;os&quot;
+)
+
+type Friend struct &#123;
+    Fname string
+&#125;
+
+type Person struct &#123;
+    UserName string
+    Emails   []string
+    Friends  []*Friend
+&#125;
+
+func main() &#123;
+    f1 :&#x3D; Friend&#123;Fname: &quot;minux.ma&quot;&#125;
+    f2 :&#x3D; Friend&#123;Fname: &quot;xushiwei&quot;&#125;
+    t :&#x3D; template.New(&quot;fieldname example&quot;)
+    t, _ &#x3D; t.Parse(&#96;hello &#123;&#123;.UserName&#125;&#125;!
+            &#123;&#123;range .Emails&#125;&#125;
+                an email &#123;&#123;.&#125;&#125;
+            &#123;&#123;end&#125;&#125;
+            &#123;&#123;with .Friends&#125;&#125;
+            &#123;&#123;range .&#125;&#125;
+                my friend name is &#123;&#123;.Fname&#125;&#125;
+            &#123;&#123;end&#125;&#125;
+            &#123;&#123;end&#125;&#125;
+            &#96;)
+    p :&#x3D; Person&#123;UserName: &quot;Astaxie&quot;,
+        Emails:  []string&#123;&quot;astaxie@beego.me&quot;, &quot;astaxie@gmail.com&quot;&#125;,
+        Friends: []*Friend&#123;&amp;f1, &amp;f2&#125;&#125;
+    t.Execute(os.Stdout, p)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="条件处理"><a href="#条件处理" class="headerlink" title="条件处理"></a>条件处理</h3><p>在Go模板里面如果需要进行条件判断，那么我们可以使用和Go语言的<code>if-else</code>语法类似的方式来处理，如果pipeline为空，那么if就认为是false，下面的例子展示了如何使用<code>if-else</code>语法：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;os&quot;
+    &quot;text&#x2F;template&quot;
+)
+
+func main() &#123;
+    tEmpty :&#x3D; template.New(&quot;template test&quot;)
+    tEmpty &#x3D; template.Must(tEmpty.Parse(&quot;空 pipeline if demo: &#123;&#123;if &#96;&#96;&#125;&#125; 不会输出. &#123;&#123;end&#125;&#125;\n&quot;))
+    tEmpty.Execute(os.Stdout, nil)
+
+    tWithValue :&#x3D; template.New(&quot;template test&quot;)
+    tWithValue &#x3D; template.Must(tWithValue.Parse(&quot;不为空的 pipeline if demo: &#123;&#123;if &#96;anything&#96;&#125;&#125; 我有内容，我会输出. &#123;&#123;end&#125;&#125;\n&quot;))
+    tWithValue.Execute(os.Stdout, nil)
+
+    tIfElse :&#x3D; template.New(&quot;template test&quot;)
+    tIfElse &#x3D; template.Must(tIfElse.Parse(&quot;if-else demo: &#123;&#123;if &#96;anything&#96;&#125;&#125; if部分 &#123;&#123;else&#125;&#125; else部分.&#123;&#123;end&#125;&#125;\n&quot;))
+    tIfElse.Execute(os.Stdout, nil)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过上面的演示代码我们知道<code>if-else</code>语法相当的简单，在使用过程中很容易集成到我们的模板代码中。</p>
+<blockquote>
+<p>注意：if里面无法使用条件判断，例如.Mail==”astaxie@gmail.com”，这样的判断是不正确的，if里面只能是bool值</p>
+</blockquote>
+<h3 id="pipelines"><a href="#pipelines" class="headerlink" title="pipelines"></a>pipelines</h3><p>Unix用户已经很熟悉什么是<code>pipe</code>了，<code>ls | grep &quot;beego&quot;</code>类似这样的语法你是不是经常使用，过滤当前目录下面的文件，显示含有”beego”的数据，表达的意思就是前面的输出可以当做后面的输入，最后显示我们想要的数据，而Go语言模板最强大的一点就是支持pipe数据，在Go语言里面任何<code>&#123;&#123;&#125;&#125;</code>里面的都是pipelines数据，例如我们上面输出的email里面如果还有一些可能引起XSS注入的，那么我们如何来进行转化呢？</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">&#123;&#123;. | html&#125;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>在email输出的地方我们可以采用如上方式可以把输出全部转化html的实体，上面的这种方式和我们平常写Unix的方式是不是一模一样，操作起来相当的简便，调用其他的函数也是类似的方式。</p>
+<h3 id="模板函数"><a href="#模板函数" class="headerlink" title="模板函数"></a>模板函数</h3><p>模板在输出对象的字段值时，采用了<code>fmt</code>包把对象转化成了字符串。但是有时候我们的需求可能不是这样的，例如有时候我们为了防止垃圾邮件发送者通过采集网页的方式来发送给我们的邮箱信息，我们希望把<code>@</code>替换成<code>at</code>例如：<code>astaxie at beego.me</code>，如果要实现这样的功能，我们就需要自定义函数来做这个功能。</p>
+<p>每一个模板函数都有一个唯一值的名字，然后与一个Go函数关联，通过如下的方式来关联</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">type FuncMap map[string]interface&#123;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>例如，如果我们想要的email函数的模板函数名是<code>emailDeal</code>，它关联的Go函数名称是<code>EmailDealWith</code>,那么我们可以通过下面的方式来注册这个函数</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">t &#x3D; t.Funcs(template.FuncMap&#123;&quot;emailDeal&quot;: EmailDealWith&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><code>EmailDealWith</code>这个函数的参数和返回值定义如下：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">func EmailDealWith(args …interface&#123;&#125;) string<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>我们来看下面的实现例子：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;html&#x2F;template&quot;
+    &quot;os&quot;
+    &quot;strings&quot;
+)
+
+type Friend struct &#123;
+    Fname string
+&#125;
+
+type Person struct &#123;
+    UserName string
+    Emails   []string
+    Friends  []*Friend
+&#125;
+
+func EmailDealWith(args ...interface&#123;&#125;) string &#123;
+    ok :&#x3D; false
+    var s string
+    if len(args) &#x3D;&#x3D; 1 &#123;
+        s, ok &#x3D; args[0].(string)
+    &#125;
+    if !ok &#123;
+        s &#x3D; fmt.Sprint(args...)
+    &#125;
+    &#x2F;&#x2F; find the @ symbol
+    substrs :&#x3D; strings.Split(s, &quot;@&quot;)
+    if len(substrs) !&#x3D; 2 &#123;
+        return s
+    &#125;
+    &#x2F;&#x2F; replace the @ by &quot; at &quot;
+    return (substrs[0] + &quot; at &quot; + substrs[1])
+&#125;
+
+func main() &#123;
+    f1 :&#x3D; Friend&#123;Fname: &quot;minux.ma&quot;&#125;
+    f2 :&#x3D; Friend&#123;Fname: &quot;xushiwei&quot;&#125;
+    t :&#x3D; template.New(&quot;fieldname example&quot;)
+    t &#x3D; t.Funcs(template.FuncMap&#123;&quot;emailDeal&quot;: EmailDealWith&#125;)
+    t, _ &#x3D; t.Parse(&#96;hello &#123;&#123;.UserName&#125;&#125;!
+                &#123;&#123;range .Emails&#125;&#125;
+                    an emails &#123;&#123;.|emailDeal&#125;&#125;
+                &#123;&#123;end&#125;&#125;
+                &#123;&#123;with .Friends&#125;&#125;
+                &#123;&#123;range .&#125;&#125;
+                    my friend name is &#123;&#123;.Fname&#125;&#125;
+                &#123;&#123;end&#125;&#125;
+                &#123;&#123;end&#125;&#125;
+                &#96;)
+    p :&#x3D; Person&#123;UserName: &quot;Astaxie&quot;,
+        Emails:  []string&#123;&quot;astaxie@beego.me&quot;, &quot;astaxie@gmail.com&quot;&#125;,
+        Friends: []*Friend&#123;&amp;f1, &amp;f2&#125;&#125;
+    t.Execute(os.Stdout, p)
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面演示了如何自定义函数，其实，在模板包内部已经有内置的实现函数，下面代码截取自模板包里面</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">var builtins &#x3D; FuncMap&#123;
+    &quot;and&quot;:      and,
+    &quot;call&quot;:     call,
+    &quot;html&quot;:     HTMLEscaper,
+    &quot;index&quot;:    index,
+    &quot;js&quot;:       JSEscaper,
+    &quot;len&quot;:      length,
+    &quot;not&quot;:      not,
+    &quot;or&quot;:       or,
+    &quot;print&quot;:    fmt.Sprint,
+    &quot;printf&quot;:   fmt.Sprintf,
+    &quot;println&quot;:  fmt.Sprintln,
+    &quot;urlquery&quot;: URLQueryEscaper,
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="Must操作"><a href="#Must操作" class="headerlink" title="Must操作"></a>Must操作</h2><p>模板包里面有一个函数<code>Must</code>，它的作用是检测模板是否正确，例如大括号是否匹配，注释是否正确的关闭，变量是否正确的书写。接下来我们演示一个例子，用Must来判断模板是否正确：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;text&#x2F;template&quot;
+)
+
+func main() &#123;
+    tOk :&#x3D; template.New(&quot;first&quot;)
+    template.Must(tOk.Parse(&quot; some static text &#x2F;* and a comment *&#x2F;&quot;))
+    fmt.Println(&quot;The first one parsed OK.&quot;)
+
+    template.Must(template.New(&quot;second&quot;).Parse(&quot;some static text &#123;&#123; .Name &#125;&#125;&quot;))
+    fmt.Println(&quot;The second one parsed OK.&quot;)
+
+    fmt.Println(&quot;The next one ought to fail.&quot;)
+    tErr :&#x3D; template.New(&quot;check parse error with Must&quot;)
+    template.Must(tErr.Parse(&quot; some static text &#123;&#123; .Name &#125;&quot;))
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>讲输出如下内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">The first one parsed OK.
+The second one parsed OK.
+The next one ought to fail.
+panic: template: check parse error with Must:1: unexpected &quot;&#125;&quot; in command<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="8-Web服务"><a href="#8-Web服务" class="headerlink" title="8 Web服务"></a>8 Web服务</h1><p>Web服务背后的关键在于平台的无关性，你可以运行你的服务在Linux系统，可以与其他Windows的asp.net程序交互，同样的，也可以通过同一个接口和运行在FreeBSD上面的JSP无障碍地通信。</p>
+<p>目前主流的有如下几种Web服务：REST、SOAP。</p>
+<p>REST请求是很直观的，因为REST是基于HTTP协议的一个补充，他的每一次请求都是一个HTTP请求，然后根据不同的method来处理不同的逻辑，很多Web开发者都熟悉HTTP协议，所以学习REST是一件比较容易的事情。所以我们在8.3小节讲详细的讲解如何在Go语言中来实现REST方式。</p>
+<p>SOAP是W3C在跨网络信息传递和远程计算机函数调用方面的一个标准。但是SOAP非常复杂，其完整的规范篇幅很长，而且内容仍然在增加。Go语言是以简单著称，所以我们不会介绍SOAP这样复杂的东西。而Go语言提供了一种天生性能很不错，开发起来很方便的RPC机制，我们将会在8.4小节详细介绍如何使用Go语言来实现RPC。</p>
+<h2 id="8-3-REST"><a href="#8-3-REST" class="headerlink" title="8.3 REST"></a>8.3 REST</h2><p>RESTful，是目前最为流行的一种互联网软件架构。因为它结构清晰、符合标准、易于理解、扩展方便，所以正得到越来越多网站的采用。</p>
+<p>REST就是根据不同的method访问同一个资源的时候实现不同的逻辑处理。</p>
+<h1 id="9-安全与加密"><a href="#9-安全与加密" class="headerlink" title="9 安全与加密"></a>9 安全与加密</h1><p>很多Web应用程序中的安全问题都是由于轻信了第三方提供的数据造成的。比如对于用户的输入数据，在对其进行验证之前都应该将其视为不安全的数据。如果直接把这些不安全的数据输出到客户端，就可能造成跨站脚本攻击(XSS)的问题。如果把不安全的数据用于数据库查询，那么就可能造成SQL注入问题，</p>
+<p>在使用第三方提供的数据，包括用户提供的数据时，首先检验这些数据的合法性非常重要，这个过程叫做过滤，我们将在9.2小节介绍如何保证对所有输入的数据进行过滤处理。</p>
+<p>过滤输入和转义输出并不能解决所有的安全问题，我们将会在9.1讲解的CSRF攻击，会导致受骗者发送攻击者指定的请求从而造成一些破坏。</p>
+<p>与安全加密相关的，能够增强我们的Web应用程序的强大手段就是加密，CSDN泄密事件就是因为密码保存的是明文，使得攻击拿手库之后就可以直接实施一些破坏行为了。不过，和其他工具一样，加密手段也必须运用得当。我们将在9.5小节介绍如何存储密码，如何让密码存储的安全。</p>
+<p>加密的本质就是扰乱数据，某些不可恢复的数据扰乱我们称为单向加密或者散列算法。另外还有一种双向加密方式，也就是可以对加密后的数据进行解密。我们将会在9.6小节介绍如何实现这种双向加密方式。</p>
+<h2 id="9-1-预防CSRF攻击"><a href="#9-1-预防CSRF攻击" class="headerlink" title="9.1 预防CSRF攻击"></a>9.1 预防CSRF攻击</h2><h3 id="什么是CSRF"><a href="#什么是CSRF" class="headerlink" title="什么是CSRF"></a>什么是CSRF</h3><p>CSRF（Cross-site request forgery），中文名称：跨站请求伪造，也被称为：one click attack/session riding，缩写为：CSRF/XSRF。</p>
+<p>那么CSRF到底能够干嘛呢？你可以这样简单的理解：攻击者可以盗用你的登陆信息，以你的身份模拟发送各种请求。攻击者只要借助少许的社会工程学的诡计，例如通过QQ等聊天软件发送的链接(有些还伪装成短域名，用户无法分辨)，攻击者就能迫使Web应用的用户去执行攻击者预设的操作。例如，当用户登录网络银行去查看其存款余额，在他没有退出时，就点击了一个QQ好友发来的链接，那么该用户银行帐户中的资金就有可能被转移到攻击者指定的帐户中。</p>
+<p>所以遇到CSRF攻击时，将对终端用户的数据和操作指令构成严重的威胁；当受攻击的终端用户具有管理员帐户的时候，CSRF攻击将危及整个Web应用程序。</p>
+<h3 id="CSRF的原理"><a href="#CSRF的原理" class="headerlink" title="CSRF的原理"></a>CSRF的原理</h3><p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/9.1.csrf.png?raw=true" alt="img"></p>
+<p>从上图可以看出，要完成一次CSRF攻击，受害者必须依次完成两个步骤 ：</p>
+<ul>
+<li>1.登录受信任网站A，并在本地生成Cookie 。</li>
+<li>2.在不退出A的情况下，访问危险网站B。</li>
+</ul>
+<p>读者也许会问：“如果我不满足以上两个条件中的任意一个，就不会受到CSRF的攻击”。是的，确实如此，但你不能保证以下情况不会发生：</p>
+<ul>
+<li>你不能保证你登录了一个网站后，不再打开一个tab页面并访问另外的网站，特别现在浏览器都是支持多tab的。</li>
+<li>你不能保证你关闭浏览器了后，你本地的Cookie立刻过期，你上次的会话已经结束。</li>
+<li>上图中所谓的攻击网站，可能是一个存在其他漏洞的可信任的经常被人访问的网站。</li>
+</ul>
+<p>CSRF攻击主要是因为Web的隐式身份验证机制，Web的身份验证机制虽然可以保证一个请求是来自于某个用户的浏览器，但却无法保证该请求是用户批准发送的。</p>
+<h3 id="如何预防CSRF"><a href="#如何预防CSRF" class="headerlink" title="如何预防CSRF"></a>如何预防CSRF</h3><p>CSRF的防御可以从服务端和客户端两方面着手，防御效果是从服务端着手效果比较好，现在一般的CSRF防御也都在服务端进行。</p>
+<p>服务端的预防CSRF攻击的方式方法有多种，但思想上都是差不多的，主要从以下2个方面入手：</p>
+<ul>
+<li>1、正确使用GET,POST和Cookie；</li>
+<li>2、在非GET请求中增加伪随机数；</li>
+</ul>
+<p>一般而言，普通的Web应用都是以GET、POST为主，还有一种请求是Cookie方式。我们一般都是按照如下方式设计应用：</p>
+<p>1、GET常用在查看，列举，展示等不需要改变资源属性的时候；</p>
+<p>2、POST常用在下达订单，改变一个资源的属性或者做其他一些事情；</p>
+<h2 id="9-4-避免SQL注入"><a href="#9-4-避免SQL注入" class="headerlink" title="9.4 避免SQL注入"></a>9.4 避免SQL注入</h2><h3 id="什么是SQL注入"><a href="#什么是SQL注入" class="headerlink" title="什么是SQL注入"></a>什么是SQL注入</h3><p>SQL注入攻击（SQL Injection），简称注入攻击，是Web开发中最常见的一种安全漏洞。可以用它来从数据库获取敏感信息，或者利用数据库的特性执行添加用户，导出文件等一系列恶意操作，甚至有可能获取数据库乃至系统用户最高权限。</p>
+<p>而造成SQL注入的原因是因为程序没有有效过滤用户的输入，使攻击者成功的向服务器提交恶意的SQL查询代码，程序在接收后错误的将攻击者的输入作为查询语句的一部分执行，导致原始的查询逻辑被改变，额外的执行了攻击者精心构造的恶意代码。</p>
+<h3 id="SQL注入实例"><a href="#SQL注入实例" class="headerlink" title="SQL注入实例"></a>SQL注入实例</h3><p>很多Web开发者没有意识到SQL查询是可以被篡改的，从而把SQL查询当作可信任的命令。殊不知，SQL查询是可以绕开访问控制，从而绕过身份验证和权限检查的。更有甚者，有可能通过SQL查询去运行主机系统级的命令。</p>
+<p>下面将通过一些真实的例子来详细讲解SQL注入的方式。</p>
+<p>考虑以下简单的登录表单：</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/login<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>POST<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>Username: <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>Password: <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>登陆<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们的处理里面的SQL可能是这样的：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">username:&#x3D;r.Form.Get(&quot;username&quot;)
+password:&#x3D;r.Form.Get(&quot;password&quot;)
+sql:&#x3D;&quot;SELECT * FROM user WHERE username&#x3D;&#39;&quot;+username+&quot;&#39; AND password&#x3D;&#39;&quot;+password+&quot;&#39;&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>如果用户的输入的用户名如下，密码任意</p>
+<blockquote>
+<p>myuser’ or ‘foo’ = ‘foo’ —</p>
+</blockquote>
+<p>那么我们的SQL变成了如下所示：</p>
+<blockquote>
+<p>SELECT *<br>FROM user<br>WHERE username = ‘myuser’ or ‘foo’==’foo’ —‘’ AND password=’xxx’</p>
+</blockquote>
+<p>在SQL里面—是注释标记，所以查询语句会在此中断。这就让攻击者在不知道任何合法用户名和密码的情况下成功登录了。</p>
+<p>PS：这行sql注入确实牛逼，hexo博客里的用来高亮代码的prismJs在这里报错了，查了很久才查出来，索性就在这句话里不用高亮了（狗头，看似半小时搞完，实则好几个月才解决掉）</p>
+<h1 id="10-国际化与本地化"><a href="#10-国际化与本地化" class="headerlink" title="10 国际化与本地化"></a>10 国际化与本地化</h1><h2 id="10-1-设置默认地区"><a href="#10-1-设置默认地区" class="headerlink" title="10.1 设置默认地区"></a>10.1 设置默认地区</h2><p>Locale是一组描述世界上某一特定区域文本格式和语言习惯的设置的集合。locale名通常由三个部分组成：第一部分，是一个强制性的，表示语言的缩写，例如”en”表示英文或”zh”表示中文。第二部分，跟在一个下划线之后，是一个可选的国家说明符，用于区分讲同一种语言的不同国家，例如”en_US”表示美国英语，而”en_UK”表示英国英语。最后一部分，跟在一个句点之后，是可选的字符集说明符，例如”zh_CN.gb2312”表示中国使用gb2312字符集。</p>
+<p>设置Locale的办法这一就是在应用运行的时候采用域名分级的方式，例如，我们采用www.asta.com当做我们的英文站(默认站)，而把域名www.asta.cn当做中文站。</p>
+<p>但是我们一般开发Web应用的时候不会采用这种方式，因为首先域名成本比较高，开发一个Locale就需要一个域名，而且往往统一名称的域名不一定能申请的到，其次我们不愿意为每个站点去本地化一个配置，而更多的是采用url后面带参数的方式</p>
+<h4 id="从域名参数设置Locale"><a href="#从域名参数设置Locale" class="headerlink" title="从域名参数设置Locale"></a>从域名参数设置Locale</h4><p>目前最常用的设置Locale的方式是在URL里面带上参数，例如www.asta.com/hello?locale=zh或者www.asta.com/zh/hello。这样我们就可以设置地区：<code>i18n.SetLocale(params[&quot;locale&quot;])</code></p>
+<h3 id="本地化文本消息"><a href="#本地化文本消息" class="headerlink" title="本地化文本消息"></a>本地化文本消息</h3><p>本信息是编写Web应用中最常用到的，也是本地化资源中最多的信息，想要以适合本地语言的方式来显示文本信息，可行的一种方案是:建立需要的语言相应的map来维护一个key-value的关系，在输出之前按需从适合的map中去获取相应的文本，如下是一个简单的示例：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+var locales map[string]map[string]string
+
+func main() &#123;
+    locales &#x3D; make(map[string]map[string]string, 2)
+    en :&#x3D; make(map[string]string, 10)
+    en[&quot;pea&quot;] &#x3D; &quot;pea&quot;
+    en[&quot;bean&quot;] &#x3D; &quot;bean&quot;
+    locales[&quot;en&quot;] &#x3D; en
+    cn :&#x3D; make(map[string]string, 10)
+    cn[&quot;pea&quot;] &#x3D; &quot;豌豆&quot;
+    cn[&quot;bean&quot;] &#x3D; &quot;毛豆&quot;
+    locales[&quot;zh-CN&quot;] &#x3D; cn
+    lang :&#x3D; &quot;zh-CN&quot;
+    fmt.Println(msg(lang, &quot;pea&quot;))
+    fmt.Println(msg(lang, &quot;bean&quot;))
+&#125;
+
+func msg(locale, key string) string &#123;
+    if v, ok :&#x3D; locales[locale]; ok &#123;
+        if v2, ok :&#x3D; v[key]; ok &#123;
+            return v2
+        &#125;
+    &#125;
+    return &quot;&quot;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="本地化视图和资源"><a href="#本地化视图和资源" class="headerlink" title="本地化视图和资源"></a>本地化视图和资源</h3><p>我们可能会根据Locale的不同来展示视图，这些视图包含不同的图片、css、js等各种静态资源。那么应如何来处理这些信息呢？首先我们应按locale来组织文件信息，请看下面的文件目录安排：</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">views
+|--en  &#x2F;&#x2F;英文模板
+    |--images     &#x2F;&#x2F;存储图片信息
+    |--js         &#x2F;&#x2F;存储JS文件
+    |--css        &#x2F;&#x2F;存储css文件
+    index.tpl     &#x2F;&#x2F;用户首页
+    login.tpl     &#x2F;&#x2F;登陆首页
+|--zh-CN &#x2F;&#x2F;中文模板
+    |--images
+    |--js
+    |--css
+    index.tpl
+    login.tpl<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>有了这个目录结构后我们就可以在渲染的地方这样来实现代码：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">s1, _ :&#x3D; template.ParseFiles(&quot;views&quot;+lang+&quot;index.tpl&quot;)
+VV.Lang&#x3D;lang
+s1.Execute(os.Stdout, VV)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>而对于里面的index.tpl里面的资源设置如下：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// js文件</span>
+<span class="token operator">&lt;</span>script type<span class="token operator">=</span><span class="token string">"text/javascript"</span> src<span class="token operator">=</span><span class="token string">"views/&#123;&#123;.VV.Lang&#125;&#125;/js/jquery/jquery-1.8.0.min.js"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span>
+<span class="token comment">// css文件</span>
+<span class="token operator">&lt;</span>link href<span class="token operator">=</span><span class="token string">"views/&#123;&#123;.VV.Lang&#125;&#125;/css/bootstrap-responsive.min.css"</span> rel<span class="token operator">=</span><span class="token string">"stylesheet"</span><span class="token operator">></span>
+<span class="token comment">// 图片文件</span>
+<span class="token operator">&lt;</span>img src<span class="token operator">=</span><span class="token string">"views/&#123;&#123;.VV.Lang&#125;&#125;/images/btn.png"</span><span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>采用这种方式来本地化视图以及资源时，我们就可以很容易的进行扩展了。</p>
+<p>本小节介绍了如何使用及存储本地资源，有时需要通过转换函数来实现，有时通过lang来设置，但是最终都是通过key-value的方式来存储Locale对应的数据，在需要时取出相应于Locale的信息后，如果是文本信息就直接输出，如果是时间日期或者货币，则需要先通过<code>fmt.Printf</code>或其他格式化函数来处理，而对于不同Locale的视图和资源则是最简单的，只要在路径里面增加lang就可以实现了。</p>
+<h2 id="10-3-国际化站点"><a href="#10-3-国际化站点" class="headerlink" title="10.3 国际化站点"></a>10.3 国际化站点</h2><h3 id="管理多个本地包"><a href="#管理多个本地包" class="headerlink" title="管理多个本地包"></a>管理多个本地包</h3><p>在开发一个应用的时候，首先我们要决定是只支持一种语言，还是多种语言，如果要支持多种语言，我们则需要制定一个组织结构，以方便将来更多语言的添加。在此我们设计如下：Locale有关的文件放置在config/locales下，假设你要支持中文和英文，那么你需要在这个文件夹下放置en.json和zh.json。大概的内容如下所示：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"># zh<span class="token punctuation">.</span>json
+
+<span class="token punctuation">&#123;</span>
+<span class="token string-property property">"zh"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token string-property property">"submit"</span><span class="token operator">:</span> <span class="token string">"提交"</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"create"</span><span class="token operator">:</span> <span class="token string">"创建"</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+#en<span class="token punctuation">.</span>json
+
+<span class="token punctuation">&#123;</span>
+<span class="token string-property property">"en"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token string-property property">"submit"</span><span class="token operator">:</span> <span class="token string">"Submit"</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"create"</span><span class="token operator">:</span> <span class="token string">"Create"</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>为了支持国际化，在此我们使用了一个国际化相关的包——<a target="_blank" rel="noopener" href="https://github.com/astaxie/go-i18n">go-i18n</a>，首先我们向go-i18n包注册config/locales这个目录,以加载所有的locale文件</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">Tr:&#x3D;i18n.NewLocale()
+Tr.LoadPath(&quot;config&#x2F;locales&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h1 id="11-错误处理，调试和测试"><a href="#11-错误处理，调试和测试" class="headerlink" title="11 错误处理，调试和测试"></a>11 错误处理，调试和测试</h1><p>在C语言里面是通过返回-1或者NULL之类的信息来表示错误，但是对于使用者来说，不查看相应的API说明文档，根本搞不清楚这个返回值究竟代表什么意思，比如:返回0是成功，还是失败,而Go定义了一个叫做error的类型，来显式表达错误。在使用时，通过把返回的error变量与nil的比较，来判定操作是否成功</p>
+<h2 id="11-2-使用GDB调试"><a href="#11-2-使用GDB调试" class="headerlink" title="11.2 使用GDB调试"></a>11.2 使用GDB调试</h2><p>开发程序过程中调试代码是开发者经常要做的一件事情，Go语言不像PHP、Python等动态语言，只要修改不需要编译就可以直接输出，而且可以动态的在运行环境下打印数据</p>
+<h1 id="12-部署与维护"><a href="#12-部署与维护" class="headerlink" title="12 部署与维护"></a>12 部署与维护</h1><h1 id="13-如何设计一个WEB框架"><a href="#13-如何设计一个WEB框架" class="headerlink" title="13 如何设计一个WEB框架"></a>13 如何设计一个WEB框架</h1><h2 id="13-1-项目规划"><a href="#13-1-项目规划" class="headerlink" title="13.1 项目规划"></a>13.1 项目规划</h2><h2 id="应用程序流程图"><a href="#应用程序流程图" class="headerlink" title="应用程序流程图"></a>应用程序流程图</h2><p>博客系统是基于模型-视图-控制器这一设计模式的。MVC是一种将应用程序的逻辑层和表现层进行分离的结构方式。在实践中，由于表现层从Go中分离了出来，所以它允许你的网页中只包含很少的脚本。</p>
+<ul>
+<li>模型 (Model) 代表数据结构。通常来说，模型类将包含取出、插入、更新数据库资料等这些功能。</li>
+<li>视图 (View) 是展示给用户的信息的结构及样式。一个视图通常是一个网页，但是在Go中，一个视图也可以是一个页面片段，如页头、页尾。它还可以是一个 RSS 页面，或其它类型的“页面”，Go实现的template包已经很好的实现了View层中的部分功能。</li>
+<li>控制器 (Controller) 是模型、视图以及其他任何处理HTTP请求所必须的资源之间的中介，并生成网页。</li>
+</ul>
+<p>下图显示了项目设计中框架的数据流是如何贯穿整个系统:</p>
+<p><img src="https://wizardforcel.gitbooks.io/build-web-application-with-golang/content/images/13.1.flow.png?raw=true" alt="img"></p>
+<p>图13.3 框架的数据流</p>
+<ol>
+<li>main.go作为应用入口，初始化一些运行博客所需要的基本资源，配置信息，监听端口。</li>
+<li>路由功能检查HTTP请求，根据URL以及method来确定谁(控制层)来处理请求的转发资源。</li>
+<li>如果缓存文件存在，它将绕过通常的流程执行，被直接发送给浏览器。</li>
+<li>安全检测：应用程序控制器调用之前，HTTP请求和任一用户提交的数据将被过滤。</li>
+<li>控制器装载模型、核心库、辅助函数，以及任何处理特定请求所需的其它资源，控制器主要负责处理业务逻辑。</li>
+<li>输出视图层中渲染好的即将发送到Web浏览器中的内容。如果开启缓存，视图首先被缓存，将用于以后的常规请求。</li>
+</ol>
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><p>根据上面的应用程序流程设计，博客的目录结构设计如下：</p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">|——main.go         入口文件
+|——conf            配置文件和处理模块
+|——controllers     控制器入口
+|——models          数据库处理模块
+|——utils           辅助函数库
+|——static          静态文件目录
+|——views           视图库<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="框架设计"><a href="#框架设计" class="headerlink" title="框架设计"></a>框架设计</h3><p>为了实现博客的快速搭建，打算基于上面的流程设计开发一个最小化的框架，框架包括路由功能、支持REST的控制器、自动化的模板渲染，日志系统、配置管理等。</p>
+<h2 id="13-2-自定义路由器设计"><a href="#13-2-自定义路由器设计" class="headerlink" title="13.2 自定义路由器设计"></a>13.2 自定义路由器设计</h2><p>Go默认的路由添加是通过函数<code>http.Handle</code>和<code>http.HandleFunc</code>等来添加，底层都是调用了<code>DefaultServeMux.Handle(pattern string, handler Handler)</code>,这个函数会把路由信息存储在一个map信息中<code>map[string]muxEntry</code></p>
+<h2 id="13-3-controller设计"><a href="#13-3-controller设计" class="headerlink" title="13.3 controller设计"></a>13.3 controller设计</h2><h1 id="14-拓展Web框架"><a href="#14-拓展Web框架" class="headerlink" title="14 拓展Web框架"></a>14 拓展Web框架</h1><h2 id="14-1-静态文件支持"><a href="#14-1-静态文件支持" class="headerlink" title="14.1 静态文件支持"></a>14.1 静态文件支持</h2>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="ChangQingAAS 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>ChangQingAAS
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://changqingaas.github.io/%E4%B9%A6%E6%91%98/Go/GoWeb%E7%BC%96%E7%A8%8B/" title="《Go Web编程》阅读笔记">https://changqingaas.github.io/书摘/Go/GoWeb编程/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"># Go</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/%E4%B9%A6%E6%91%98/Go/Go%E8%AF%AD%E8%A8%80%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/" rel="prev" title="《Go语言高级编程》阅读笔记">
+                  <i class="fa fa-chevron-left"></i> 《Go语言高级编程》阅读笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/Record/Thinkings/%E5%85%B3%E4%BA%8E%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E7%9A%84%E6%84%9F%E6%83%B3/" rel="next" title="创新者的困境">
+                  创新者的困境 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy;
+
+  
+    2021–
+  
+  <span itemprop="copyrightYear">2024</span>
+
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+
+  <span class="author" itemprop="copyrightHolder">ChangQingAAS</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">408k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">33:58</span>
+  </span>
+</div>
+
+
+  <div class="busuanzi-count">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      <span class="post-meta-divider"> | </span>
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人
+    </span>
+  </div>
+
+
+<script>
+var now = new Date();
+  function createtime() {
+      var grt= new Date("07/15/2021 12:00:00");//此处修改你的建站时间或者网站上线时间
+
+      now.setTime(now.getTime()+250);
+
+      days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+      hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+
+      if( String(hnum).length ==1 ){
+        hnum = "0" + hnum;
+      }
+
+      minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+      mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+      seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+      snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+
+      document.getElementById("times").innerHTML = "本站已安全运行 "+dnum+" 天 " + hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+  setInterval("createtime()",250);
+</script>
+
+<div id="times"></div>
+
+    </div>
+
+    <!-- 添加这个异常标签以消除原本的点击效果 -->
+    <script>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdn.jsdelivr.net/npm/pdfobject@2.2.5/pdfobject.min.js","integrity":"sha256-YuNlP9i6s/WH7EaU2kErloo9Vc85C3WVqhoMDgsEVpY="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js"></script>
+
+
+  <script class="next-config" data-name="nprogress" type="application/json">{"enable":true,"spinner":true}</script>
+  <script src="/js/third-party/nprogress.js"></script>
+
+  
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","cdn":"//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"ChangQingAAS/Blog_Comments","issue_term":"pathname","theme":"github-dark"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- 樱花特效 -->
+
+    <script async src="/js/fairyDustCursor.js"></script>
+
